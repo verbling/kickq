@@ -64,3 +64,4 @@ Kue sucks because:
 Nice to have:
 * Retry
 * Tombstoning
+* Simple aggregation stats
