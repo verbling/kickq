@@ -24,9 +24,9 @@ opts = { cron: '* * * 10'};
 
 k.create('job name', data, opts, function(err, key) {
 
-  err is something went wrong
+  err = is something went wrong
   
-  key is the key of the job that can be used to delete a job
+  key = the key of the job that can be used to delete a job
   
 });
 
@@ -35,11 +35,15 @@ k.create('job name', data, opts, function(err, key) {
 // Process job
 
 <code>
+
 k.process(['job name'], function(jobName, data, cb) {
 
   cb('error'); <-- error
+  
   cb(); <-- no error
+  
 });
+
 </code>
 
 // Deletes a job
