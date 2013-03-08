@@ -47,8 +47,11 @@ k.process(['job name'], function(jobName, data, cb) {
 </code>
 
 // Deletes a job
+
 <code>
+
 k.delete(key);
+
 </code>
 
 Kue sucks because:
