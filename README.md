@@ -19,7 +19,9 @@ singleton job data is croned, repeated by cron format (https://github.com/ncb000
 opts = { cron: '* * * 10'};
 
 // Creates job
+
 <code>
+
 k.create('job name', data, opts, function(err, key) {
 
   err is something went wrong
@@ -27,6 +29,7 @@ k.create('job name', data, opts, function(err, key) {
   key is the key of the job that can be used to delete a job
   
 });
+
 </code>
 
 // Process job
