@@ -3,6 +3,9 @@ kickq API
 Kick jobs out the door. Quickly.
 A job queue for node.
 
+
+## General API overview
+
 ```js
 var KickQ = require('kickq');
 
@@ -18,7 +21,7 @@ var opts = {delay: 1000 };
 var opts = { cron: '* * * 10'};
 ```
 
-## Create a Job
+### Create a Job
 ```js
 k.create('job name', data, opts, function(err, key) {
 
@@ -29,7 +32,7 @@ k.create('job name', data, opts, function(err, key) {
 });
 ```
 
-## Process job
+### Process job
 ```js
 k.process(['job name'], function(jobName, data, cb) {
   cb('error'); <-- error
@@ -39,15 +42,17 @@ k.process(['job name'], function(jobName, data, cb) {
 });
 ```
 
-## Delete a job
+### Delete a job
 ```js
 k.delete(key);
 ```
 
-Kue won't do because:
-* They put all their focus on UI vs functionality
-* They leave old jobs hanging
-* It's buggy
+## Notes
+
+### Problems Kue has we want to solve
+* There's a lot of effort on UI vs functionality
+* There are old jobs hanging
+* There are unaddressed bugs
 * There is no cron functionality
 * It is no longer maintained
 
