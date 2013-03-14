@@ -49,6 +49,8 @@
     "queue",
     "jobs",
     "job queue",
-    "kue"
+    "kue",
+    "worker",
+    "redis"
   ]
 }

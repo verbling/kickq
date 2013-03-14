@@ -1,7 +1,7 @@
-kickq
+kickq API
 =====
 Kick jobs out the door. Quickly.
-A job queue that doesn't suck.
+A job queue for node.
 
 
 var KickQ = require('kickq');
@@ -25,9 +25,9 @@ opts = { cron: '* * * 10'};
 k.create('job name', data, opts, function(err, key) {
 
   err = is something went wrong
-  
+
   key = the key of the job that can be used to delete a job
-  
+
 });
 
 </code>
@@ -39,9 +39,9 @@ k.create('job name', data, opts, function(err, key) {
 k.process(['job name'], function(jobName, data, cb) {
 
   cb('error'); <-- error
-  
+
   cb(); <-- no error
-  
+
 });
 
 </code>
