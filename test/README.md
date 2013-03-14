@@ -6,10 +6,19 @@ A job queue for node.
 
 ## General API overview
 
+### One time setup
 ```js
 var KickQ = require('kickq');
 
-var k = new KickQueue(config.redis);
+KickQ.config(config.redis);
+```
+
+### Create a Job
+
+```js
+var KickQ = require('kickq');
+
+var k = new KickQueue();
 
 var data = {some:'stuff'};
 
@@ -21,8 +30,6 @@ var opts = {delay: 1000 };
 var opts = { cron: '* * * 10'};
 ```
 
-### Create a Job
-```js
 k.create('job name', data, opts, function(err, key) {
 
   err = is something went wrong
@@ -57,7 +64,7 @@ k.delete(key);
 * It is no longer maintained
 
 
-Nice to have:
+### Nice to have:
 * Retry
 * Tombstoning
 * Simple aggregation stats
