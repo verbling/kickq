@@ -41,10 +41,10 @@ k.create('job name', data, opts, function(err, key) {
 
 ### Process job
 ```js
-k.process(['job name'], function(jobName, data, cb) {
-  cb('error'); <-- error
+k.process(['job name'], optMaxJobsNum, function(jobName, data, cb) {
+  cb('error'); // <-- error
 
-  cb(); <-- no error
+  cb(); // <-- no error
 
 });
 ```
