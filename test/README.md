@@ -10,13 +10,12 @@ var k = new KickQueue(config.redis);
 
 var data = {some:'stuff'};
 
-this is delayed by x amount of time from scheduling time
+// this is delayed by x amount of time from scheduling time
+var opts = {delay: 1000 };
 
-opts = {delay: 1000 };
-
-singleton job data is croned, repeated by cron format (https://github.com/ncb000gt/node-cron)
-
-opts = { cron: '* * * 10'};
+// ...or singleton job data is croned
+// repeated by cron format (https://github.com/ncb000gt/node-cron)
+var opts = { cron: '* * * 10'};
 ```
 
 ## Create a Job
