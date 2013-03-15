@@ -28,7 +28,6 @@ var opts = {delay: 1000 };
 // ...or singleton job data is croned
 // repeated by cron format (https://github.com/ncb000gt/node-cron)
 var opts = { cron: '* * * 10'};
-```
 
 k.create('job name', data, opts, function(err, key) {
 
