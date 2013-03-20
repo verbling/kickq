@@ -103,11 +103,9 @@ var opts = {
   retry: true,
   retryCount: 5 // times, default for job set via kickQ.config()
 };
-kickq.create('job name', data, opts, function(err, key, promise) {
+kickq.create('job name', data, opts, function(err, key) {
   err = is something went wrong
   key = the key of the job that can be used to delete a job
-
-  promise.then(fnOnJobComplete, fnOnJobFailOrTimeout);
 });
 ```
 
