@@ -6,21 +6,28 @@ A job queue for node.
 
 ## General API overview
 
-### One time setup
+### Configuration
 ```js
-var KickQ = require('kickq');
+var Kickq = require('kickq');
 
-KickQ.config({
+Kickq.config({
   redis: config.redis
 });
+
+// can add config parameters run-time
+Kickq.config(anotherConfigObject);
+
+// reset all config params, return to original state.
+Kickq.reset();
+
 ```
 
 ### Creating a Job
 
 ```js
-var KickQ = require('kickq');
+var Kickq = require('kickq');
 
-var kickq = new KickQueue();
+var kickq = new Kickq();
 
 var data = {some:'stuff'};
 
