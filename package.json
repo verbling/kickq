@@ -36,7 +36,8 @@
     "collections": "~0.1.15",
     "async": "~0.2.6",
     "config": "~0.4.20",
-    "yaml": "~0.2.3"
+    "yaml": "~0.2.3",
+    "redis": "~0.8.2"
   },
   "devDependencies": {
     "grunt-mocha-test": "~0.2.0",

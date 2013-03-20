@@ -30,6 +30,26 @@ var opts = {delay: 1000 };
 var opts = { cron: '* * * 10'};
 
 k.create('job name', data, opts, function(err, key) {
+  err = is something went wrong
+  key = the key of the job that can be used to delete a job
+});
+
+// Create a Tombstoning Job
+var opts = {
+  tombstone: true,
+  tombstoneTimeout: 10 // seconds, default set via kickQ.config()
+};
+k.create('job name', data, opts, function(err, key) {
+  err = is something went wrong
+  key = the key of the job that can be used to delete a job
+});
+
+
+```
+
+
+```js
+k.createTombed('job name', data, opts, function(err, key) {
 
   err = is something went wrong
 
