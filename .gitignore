@@ -4,3 +4,4 @@ config/actual.yaml
 config/runtime.json
 npm-debug.log
 temp/
+sandbox

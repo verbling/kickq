@@ -21,5 +21,4 @@ suite('API scaffolding', function() {
     assert.isFunction(kickq.process, 'should have the "process" method');
     assert.isFunction(kickq.delete, 'should have the "delete" method');
   });
-
 });

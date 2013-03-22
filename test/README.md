@@ -1,12 +1,9 @@
-kickq API
-=====
+# kickq API Scaffolding
+
 Kick jobs out the door. Quickly.
 A job queue for node.
 
-
-## General API overview
-
-### Configuration
+## Configuration
 ```js
 var Kickq = require('kickq');
 
@@ -22,7 +19,49 @@ Kickq.reset();
 
 ```
 
-### Creating a Job
+### Configuration Options
+
+
+#### Option `redisNamespace`
+
+**Type**: `string` **Default**: `kickq`
+
+Define the master key namespace for redis, that kickq will use to store data.
+
+#### Option `jobFlags`
+
+**Type**: `Object` **Default**: None
+
+Allow for job specific configuration options. Each key of the `Object` references a *job name* and the value is another Object with the required job specific options. Find an example with all available job-specific options:
+
+```js
+KickQ.config({
+  jobFlags: {
+    'job name': {
+      // tombstoning allows for *run-time* invocation of the new job.
+      // The job creator has a chance to wait for the completion of the
+      // new job within the timeout defined.
+      tombstone: true, // default: false
+
+      // the tombstoning timeout in seconds.
+      tombstoneTimeout: 10, // default: 10
+
+      // Allow for a failed job to retry execution.
+      retry: true, // default: false
+
+      // how many times to retry before finally giving up
+      retryCount: 3, // default: 3
+
+      // How long to wait before retrying in minutes.
+      // TODO: accept a function that returns a number.
+      retryInterval: 30 // default: 30 (half an hour)
+    }
+  }
+});
+```
+
+
+## Creating a Job
 
 ```js
 var Kickq = require('kickq');
@@ -45,7 +84,7 @@ kickq.create('job name', data, opts, function(err, key) {
 ```
 
 
-#### Create a Tombstoning Job
+### Create a Tombstoning Job
 
 ```js
 
@@ -96,7 +135,7 @@ KickQ.config({
 ```
 
 
-#### Create a Job With Retries
+### Create a Job With Retries
 
 ```js
 var opts = {
@@ -125,7 +164,7 @@ KickQ.config({
 ```
 
 
-### Process job
+## Process job
 ```js
 k.process(['job name'], optMaxJobsNum, function(jobName, data, cb) {
   cb('error'); // <-- error
@@ -135,7 +174,7 @@ k.process(['job name'], optMaxJobsNum, function(jobName, data, cb) {
 });
 ```
 
-### Delete a job
+## Delete a job
 ```js
 k.delete(key);
 ```
