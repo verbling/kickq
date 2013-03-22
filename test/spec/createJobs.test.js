@@ -188,8 +188,8 @@ suite('Job Creation', function() {
         tombstoneTimeout: 4
       };
 
-      // raise timeout to 14s
-      this.timeout(8000);
+      // raise timeout to 5s
+      this.timeout(5000);
 
       function onJobCreate(err, id, promise) {
         assert.isFulfilled( promise.then(function( respObj ) {
@@ -198,13 +198,10 @@ suite('Job Creation', function() {
           var endTime = new Date().getTime();
           assert.ok( (endTime - startTime) > 3000, 'Promise should timeout' +
             'at least after 3000ms');
-          assert.ok( (endTime - startTime) < 5000, 'Promise should timeout' +
-            'in less than 5000ms');
 
         }), 'tombstone Promise should be fulfilled')
           .notify(done);
       }
-
       kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
     });
 

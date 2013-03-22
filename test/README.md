@@ -165,12 +165,20 @@ KickQ.config({
 
 ## Process job
 ```js
-k.process(['job name'], optMaxJobsNum, function(jobName, data, cb) {
+// options for what jobs are assigned to the worker and how.
+var options = {
+  maxJobsNum: 10 // total number of concurent jobs
+}
+
+kickq.process(['job name'], options, processJob);
+
+// options can be ommited
+kickq.process(['another job name'], processJob);
+
+function processJob(jobName, data, cb) {
   cb('error'); // <-- error
-
   cb(); // <-- no error
-
-});
+}
 ```
 
 ## Delete a job
