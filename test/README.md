@@ -170,6 +170,7 @@ var options = {
   maxJobsNum: 10 // total number of concurent jobs
 }
 
+// first argument can be a string or an array of strings.
 kickq.process(['job name'], options, processJob);
 
 // options can be ommited
