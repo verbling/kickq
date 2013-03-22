@@ -73,13 +73,9 @@ var data = {some:'stuff'};
 // this is delayed by x amount of time from scheduling time
 var opts = {delay: 1000 };
 
-// ...or singleton job data is croned
-// repeated by cron format (https://github.com/ncb000gt/node-cron)
-var opts = { cron: '* * * 10'};
-
-kickq.create('job name', data, opts, function(err, key) {
+kickq.create('job name', data, opts, function(err, id) {
   // err = is something went wrong
-  // key = the key of the job that can be used to delete a job
+  // id = the id of the job that can be used to delete a job
 });
 ```
 
@@ -89,11 +85,16 @@ kickq.create('job name', data, opts, function(err, key) {
 ```js
 
 /**
- * Callback when the job complets
- * @param  {string} key The job unique key.
+ * Callback when the job completes
+ * @param  {Object} respObj A response object.
  */
-function fnOnJobComplete(key) {
-
+function fnOnJobComplete(respObj) {
+  // breakout of respObj
+  respObj = {
+    id: 0, // number, the unique id of the job.
+    jobName: 'job name', // string, job's name
+    complete: true // if job is complete, if false means tombstoneTimeout expired
+  };
 };
 
 /**
@@ -102,20 +103,18 @@ function fnOnJobComplete(key) {
  * @param  {string}  err The error message
  * @param  {boolean} hasTimeout Indicates if the job timed-out.
  */
-function fnOnJobFailOrTimeout(err, hasTimeout) {
-
-};
+function fnOnJobFailed(err) {};
 
 
 var opts = {
   tombstone: true,
   tombstoneTimeout: 10 // seconds, default set via kickQ.config()
 };
-kickq.create('job name', data, opts, function(err, key, promise) {
+kickq.create('job name', data, opts, function(err, id, promise) {
   // err = is something went wrong
-  // key = the key of the job that can be used to delete a job
+  // id = the id of the job that can be used to delete a job
 
-  promise.then(fnOnJobComplete, fnOnJobFailOrTimeout);
+  promise.then(fnOnJobComplete, fnOnJobFailed);
 });
 ```
 
@@ -142,9 +141,9 @@ var opts = {
   retry: true,
   retryCount: 5 // times, default for job set via kickQ.config()
 };
-kickq.create('job name', data, opts, function(err, key) {
+kickq.create('job name', data, opts, function(err, id) {
   err = is something went wrong
-  key = the key of the job that can be used to delete a job
+  id = the id of the job that can be used to delete a job
 });
 ```
 
@@ -176,7 +175,7 @@ k.process(['job name'], optMaxJobsNum, function(jobName, data, cb) {
 
 ## Delete a job
 ```js
-k.delete(key);
+k.delete(id);
 ```
 
 ## Notes

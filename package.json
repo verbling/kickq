@@ -44,7 +44,10 @@
     "chai": "~1.5.0",
     "sinon": "~1.5.2",
     "grunt-contrib-watch": "~0.2.0",
-    "grunt-contrib-clean": "~0.4.0"
+    "grunt-contrib-clean": "~0.4.0",
+    "mocha-as-promised": "~1.2.1",
+    "chai-as-promised": "~3.2.5",
+    "mocha": "~1.8.2"
   },
   "keywords": [
     "queue",
