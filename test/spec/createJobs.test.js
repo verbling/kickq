@@ -207,4 +207,29 @@ suite('Job Creation', function() {
 
   });
 
+  suite('A Job With Retries', function() {
+    test('Create a job with 3 retries with an interval of 2 seconds', function(done){
+      var opts = {
+        retry: true,
+        retryCount: 3,
+        retryInterval: 1
+      };
+
+      var retryCount = 0;
+      var startTime = new Date().getTime();
+      this.timeout(7000);
+
+      kickq.create('retry_job', 'retry job data', opts);
+      kickq.process('retry_job', function(jobName, data, cb) {
+        retryCount++;
+        cb(false);
+        if (3 === retryCount) {
+          var endTime = new Date().getTime();
+          assert.ok( (endTime - startTime) > 4000, 'All 3 retries should complete' +
+            ' in less than 7000ms');
+          done();
+        }
+      });
+    });
+  });
 });

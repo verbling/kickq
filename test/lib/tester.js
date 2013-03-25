@@ -8,10 +8,10 @@ var rBuster = require('./redis-buster');
 // setup promise env
 // https://github.com/domenic/mocha-as-promised#node
 // https://github.com/domenic/chai-as-promised/#installation-and-setup
-require('mocha-as-promised')();
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-chai.use(chaiAsPromised);
+// require('mocha-as-promised')();
+// var chai = require('chai');
+// var chaiAsPromised = require('chai-as-promised');
+// chai.use(chaiAsPromised);
 
 
 var tester = module.exports = {};

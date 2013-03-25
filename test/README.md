@@ -52,9 +52,9 @@ KickQ.config({
       // how many times to retry before finally giving up
       retryCount: 3, // default: 3
 
-      // How long to wait before retrying in minutes.
-      // TODO: accept a function that returns a number.
-      retryInterval: 30 // default: 30 (half an hour)
+      // How long to wait before retrying in seconds.
+      // TODO: accept as value a function that returns a number.
+      retryInterval: 1800 // default: 1800 (half an hour)
     }
   }
 });
