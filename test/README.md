@@ -22,59 +22,59 @@ Kickq.reset();
 ### Configuration Options
 
 
-#### Option `redisNamespace`
+#### Option :: `redisNamespace`
 
 **Type**: `string` **Default**: `"kickq"`
 
 Define the master key namespace for redis, that kickq will use to store data.
 
-#### Option `processTimeout`
-**Type**: `number` **Default**: 600 (10s) **✓ per job option**
+#### Option :: `processTimeout`
+**Type**: `number` **Default**: `600` (10s) **✓ per job option**
 
 The global timeout for processing tasks, in seconds.
 
-#### Option `delay`
+#### Option :: `delay`
 **Type**: `?number` **default** `null` **✓ per job option**
 
 Delay queuing for processing of jobs.
 
-#### Option `ghostRetry`
+#### Option :: `ghostRetry`
 **Type**: `boolean` **default** `true` **✓ per job option**
 
 A job gets ghosted when the process function does not invoke the callback or return a promise, triggering the `processTimeout` limit.
 
-#### Option `ghostCount`
+#### Option :: `ghostCount`
 **Type**: `number` **default** `1` **✓ per job option**
 
 How many times to retry processing a ghost job.
 
-#### Option `ghostInterval`
+#### Option :: `ghostInterval`
 **Type**: `number` **default** `1800` (half an hour) **✓ per job option**
 
 A job gets ghosted when the process function does not invoke the callback or return a promise, triggering the `processTimeout` limit.
 
 
-#### Option `tombstone`
+#### Option :: `tombstone`
 **Type**: `boolean` **default** `false` **✓ per job option**
 
 Tombstoning allows for *run-time* invocation of the new job. The job creator has a chance to wait for the completion of the new job within the timeout defined.
 
-#### Option `tombstoneTimeout`
+#### Option :: `tombstoneTimeout`
 **Type**: `number` **default** `10` (seconds) **✓ per job option**
 
 Time to wait for a job to get processed before tombstone callbacks timeout, in seconds.
 
-#### Option `retry`
+#### Option :: `retry`
 **Type**: `boolean` **default** `false` **✓ per job option**
 
 Allow for a failed job to retry execution.
 
-#### Option `retryCount`
+#### Option :: `retryCount`
 **Type**: `number` **default** `3` **✓ per job option**
 
 How many times to retry before finally giving up
 
-#### Option `retryInterval`
+#### Option :: `retryInterval`
 **Type**: `number` **default** `1800` (half an hour) **✓ per job option**
 
 How long to wait before retrying in seconds.
@@ -82,13 +82,13 @@ How long to wait before retrying in seconds.
 TODO: accept a function as value, which returns a number.
 
 
-#### Option `jobFlags`
+#### Option :: `jobFlags`
 
 **Type**: `Object` **Default**: None
 
-Allow options per job type. Each key representa a job type.
+Allow options per job type. Each key represents a job type.
 
-You can use any of the options marked with **✓ per job option** from the list above:
+You can use any of the options marked with **✓ per job option** from the list above, options are applied cascadingly with the more specific overiding.
 
 ```js
 KickQ.config({
