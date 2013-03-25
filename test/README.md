@@ -24,37 +24,75 @@ Kickq.reset();
 
 #### Option `redisNamespace`
 
-**Type**: `string` **Default**: `kickq`
+**Type**: `string` **Default**: `"kickq"`
 
 Define the master key namespace for redis, that kickq will use to store data.
+
+#### Option `processTimeout`
+**Type**: `number` **Default**: 600 (10s) **✓ per job option**
+
+The global timeout for processing tasks, in seconds.
+
+#### Option `ghostRetry`
+**Type**: `boolean` **default** `true` **✓ per job option**
+
+A job gets ghosted when the process function does not invoke the callback or return a promise, triggering the `processTimeout` limit.
+
+#### Option `ghostCount`
+**Type**: `number` **default** `1` **✓ per job option**
+
+How many times to retry processing a ghost job.
+
+#### Option `ghostInterval`
+**Type**: `number` **default** `1800` (half an hour) **✓ per job option**
+
+A job gets ghosted when the process function does not invoke the callback or return a promise, triggering the `processTimeout` limit.
+
+
+#### Option `tombstone`
+**Type**: `boolean` **default** `false` **✓ per job option**
+
+Tombstoning allows for *run-time* invocation of the new job. The job creator has a chance to wait for the completion of the new job within the timeout defined.
+
+#### Option `tombstoneTimeout`
+**Type**: `number` **default** `10` (seconds) **✓ per job option**
+
+Time to wait for a job to get processed before tombstone callbacks timeout, in seconds.
+
+#### Option `retry`
+**Type**: `boolean` **default** `false` **✓ per job option**
+
+Allow for a failed job to retry execution.
+
+#### Option `retryCount`
+**Type**: `number` **default** `3` **✓ per job option**
+
+How many times to retry before finally giving up
+
+#### Option `retryInterval`
+**Type**: `number` **default** `1800` (half an hour) **✓ per job option**
+
+How long to wait before retrying in seconds.
+
+TODO: accept a function as value, which returns a number.
+
 
 #### Option `jobFlags`
 
 **Type**: `Object` **Default**: None
 
-Allow for job specific configuration options. Each key of the `Object` references a *job name* and the value is another Object with the required job specific options. Find an example with all available job-specific options:
+Allow options per job type. Each key representa a job type.
+
+You can use any of the options marked with **✓ per job option** from the list above:
 
 ```js
 KickQ.config({
+
   jobFlags: {
     'job name': {
-      // tombstoning allows for *run-time* invocation of the new job.
-      // The job creator has a chance to wait for the completion of the
-      // new job within the timeout defined.
-      tombstone: true, // default: false
-
-      // the tombstoning timeout in seconds.
-      tombstoneTimeout: 10, // default: 10
-
-      // Allow for a failed job to retry execution.
-      retry: true, // default: false
-
-      // how many times to retry before finally giving up
-      retryCount: 3, // default: 3
-
-      // How long to wait before retrying in seconds.
-      // TODO: accept as value a function that returns a number.
-      retryInterval: 1800 // default: 1800 (half an hour)
+      // all options that allow "per job" configuration, e.g:
+      retry: true,
+      retryCount: 1
     }
   }
 });
@@ -81,10 +119,11 @@ kickq.create('job name', data, opts, function(err, job) {
 
 Read more about the callback's argument `job` in [The Job Instance](#the-job-instance).
 
-### Create a Tombstoning Job
+### Create a Tombstoning Job (!! CHECK CHECK !!)
+
+> **CHECK CHECK** I did a fast check for the tombstoning term and didn't find lots of relevant examples. Should we consider renaming this featureset ?
 
 ```js
-
 /**
  * Callback when the job completes
  * @param {Kickq.Job} job A response object.
@@ -216,12 +255,24 @@ function processJob(job, data, cb) {
 
   cb('error'); // <-- error
   cb(); // <-- no error
+}
+```
 
-  // or use a promise
+### Process a Job Using a Promise
+
+```js
+kickq.process(['another job name'], processJob);
+
+function processJob(job, data, cb) {
+  // Create a deferred object
   var deferred = when.defer();
 
-  deferred.resolve(); // complete the job successfully
-  deferred.reject('error message'); // fail the job
+  anAsyncOperation(function() {
+
+    deferred.resolve(); // complete the job successfully
+    deferred.reject('error message'); // fail the job
+
+  });
 
   return deferred.promise;
 }
@@ -266,6 +317,11 @@ This is the breakout:
   tombPromise: null, // {?when.Promise} Tombstone promise
 
   data: null, // {*} Any type, passed data on job creation
+
+  // processing runs performed for this job. Can be 1 up to n retries.
+  runs: [
+
+  ]
 
 }
 
