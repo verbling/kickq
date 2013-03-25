@@ -305,6 +305,7 @@ This is the breakout:
   success: false, // {boolean} turns true when complete and executed with success
   createTime: 1364226587925, // {number} JS timestamp
   finishTime: null, // {?number} JS timestamp or null
+  totalProcessTime: null, // {?number} total process time in ms or null
 
   // the state can be one of:
   //   - new
@@ -325,9 +326,17 @@ This is the breakout:
 
   data: null, // {*} Any type, passed data on job creation
 
-  // processing runs performed for this job. Can be 1 up to n retries.
+  // Processing runs performed for this job. Can be 1 up to n retries.
+  // When the job is new this is an empty array.
   runs: [
+    {
+      processCount: 1, // {number} the process count of this process item.
+      processStart: 1364226587925, // {number} JS timestamp
+      processTime: null, // {?number} Processing time on ms or null
 
+      // same as job.state except states: 'new', 'delayed', 'retrying'
+      state: 'processing'
+    }
   ]
 
 }
