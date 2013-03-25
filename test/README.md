@@ -176,7 +176,11 @@ kickq.process(['job name'], options, processJob);
 // options can be ommited
 kickq.process(['another job name'], processJob);
 
-function processJob(jobName, data, cb) {
+function processJob(jobObj, data, cb) {
+  // jobObj contains all the information of the job:
+  jobObj.id; // the id
+  jobObj.name; // the job's name
+
   cb('error'); // <-- error
   cb(); // <-- no error
 }

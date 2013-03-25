@@ -26,9 +26,11 @@ suite('Job Creation', function() {
     Kickq.reset();
   });
 
+
+  var kickq = new Kickq();
+
   suite('A "plain job"', function() {
     test('Create a "plain job"', function(done) {
-      var kickq = new Kickq();
       kickq.create(tester.fix.jobname, 'data', {}, function(err, key) {
         assert.isNull(err, 'The "err" arg should be null');
         assert.isString(key, '"key" arg should be string');
@@ -36,7 +38,7 @@ suite('Job Creation', function() {
       });
     });
     test('Verify "plain job" was created', function(done) {
-      kickq.process(tester.fix.jobname, function(jobName, data, cb) {
+      kickq.process(tester.fix.jobname, function(jobObj, data, cb) {
         cb();
         done();
       });
@@ -45,7 +47,6 @@ suite('Job Creation', function() {
 
   suite('A "plain job" with Object Data', function() {
     test('Create a "plain job"', function(done) {
-      var kickq = new Kickq();
       kickq.create(tester.fix.jobname, tester.fix.plain.data, {}, function(err, key) {
         assert.isNull(err, 'The "err" arg should be null');
         assert.isString(key, '"key" arg should be string');
@@ -53,9 +54,9 @@ suite('Job Creation', function() {
       });
     });
     test('Verify "plain job" with Object Data was created', function(done) {
-      kickq.process(tester.fix.jobname, function(jobName, data, cb) {
+      kickq.process(tester.fix.jobname, function(jobObj, data, cb) {
         assert.deepEqual(data, tester.fix.plain.data, 'data provided should deep equal value passed');
-        assert.equal(jobName, tester.fix.jobname, 'job name provided should equal value passed');
+        assert.equal(jobObj.name, tester.fix.jobname, 'job name provided should equal value passed');
         cb();
         done();
       });
@@ -76,7 +77,7 @@ suite('Job Creation', function() {
       });
     });
     test('Verify "delayed job" was created', function(done) {
-      kickq.process('delayed_job', function(jobName, data, cb) {
+      kickq.process('delayed_job', function(jobObj, data, cb) {
         cb();
 
         var processTime = new Date().getTime();
@@ -102,7 +103,7 @@ suite('Job Creation', function() {
       }
 
       kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(jobName, data, cb) {
+      kickq.process('tombstoned_job', function(jobObj, data, cb) {
         cb();
       });
     });
@@ -130,7 +131,7 @@ suite('Job Creation', function() {
       }
 
       kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(jobName, data, cb) {
+      kickq.process('tombstoned_job', function(jobObj, data, cb) {
         cb();
       });
     });
@@ -151,7 +152,7 @@ suite('Job Creation', function() {
       }
 
       kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(jobName, data, cb) {
+      kickq.process('tombstoned_job', function(jobObj, data, cb) {
         cb('error message');
       });
     });
@@ -220,7 +221,7 @@ suite('Job Creation', function() {
       this.timeout(7000);
 
       kickq.create('retry_job', 'retry job data', opts);
-      kickq.process('retry_job', function(jobName, data, cb) {
+      kickq.process('retry_job', function(jobObj, data, cb) {
         retryCount++;
         cb(false);
         if (3 === retryCount) {
