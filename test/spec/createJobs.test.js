@@ -31,14 +31,42 @@ suite('Job Creation', function() {
 
   suite('A "plain job"', function() {
     test('Create a "plain job"', function(done) {
-      kickq.create(tester.fix.jobname, 'data', {}, function(err, key) {
+      kickq.create(tester.fix.jobname, 'data', {}, function(err, job) {
         assert.isNull(err, 'The "err" arg should be null');
-        assert.isString(key, '"key" arg should be string');
+        assert.instanceOf(job, Kickq.Job, 'job is instance of Kickq.Job class');
         done();
       });
     });
     test('Verify "plain job" was created', function(done) {
-      kickq.process(tester.fix.jobname, function(jobObj, data, cb) {
+      kickq.process(tester.fix.jobname, function(job, data, cb) {
+        cb();
+        done();
+      });
+    });
+    test('Create a "plain job" with no callback', function(done) {
+      kickq.create('create-no-callback', 'data', {});
+      kickq.process('create-no-callback', function(job, data, cb) {
+        cb();
+        done();
+      });
+    });
+    test('Create a "plain job" with no options', function(done) {
+      kickq.create('create-no-options', 'data', function(err, key) {});
+      kickq.process('create-no-options', function(job, data, cb) {
+        cb();
+        done();
+      });
+    });
+    test('Create a "plain job" with no data and no options', function(done) {
+      kickq.create('create-no-data', function(err, key) {});
+      kickq.process('create-no-data', function(job, data, cb) {
+        cb();
+        done();
+      });
+    });
+    test('Create a "plain job" with only the name', function(done) {
+      kickq.create('create-only-name');
+      kickq.process('create-only-name', function(job, data, cb) {
         cb();
         done();
       });
@@ -47,16 +75,12 @@ suite('Job Creation', function() {
 
   suite('A "plain job" with Object Data', function() {
     test('Create a "plain job"', function(done) {
-      kickq.create(tester.fix.jobname, tester.fix.plain.data, {}, function(err, key) {
-        assert.isNull(err, 'The "err" arg should be null');
-        assert.isString(key, '"key" arg should be string');
-        done();
-      });
+      kickq.create('create-data-object', tester.fix.plain.data, {}, done);
     });
     test('Verify "plain job" with Object Data was created', function(done) {
-      kickq.process(tester.fix.jobname, function(jobObj, data, cb) {
+      kickq.process('create-data-object', function(job, data, cb) {
         assert.deepEqual(data, tester.fix.plain.data, 'data provided should deep equal value passed');
-        assert.equal(jobObj.name, tester.fix.jobname, 'job name provided should equal value passed');
+        assert.equal(job.name, 'create-data-object', 'job name provided should equal value passed');
         cb();
         done();
       });
@@ -66,18 +90,16 @@ suite('Job Creation', function() {
   suite('A "delayed job"', function() {
     var startTime;
 
-    this.timeout(3000);
-
     test('Create a "delayed job"', function(done) {
-      kickq.create('delayed_job', 'delayed job data', {delay: 1}, function(err, key) {
-        assert.isNull(err, 'The "err" arg should be null');
-        assert.isString(key, '"key" arg should be string');
+      this.timeout(3000);
+      kickq.create('delayed_job', 'delayed job data', {delay: 1}, function(err, job) {
         startTime = new Date().getTime();
         done();
       });
     });
     test('Verify "delayed job" was created', function(done) {
-      kickq.process('delayed_job', function(jobObj, data, cb) {
+      this.timeout(3000);
+      kickq.process('delayed_job', function(job, data, cb) {
         cb();
 
         var processTime = new Date().getTime();
@@ -96,14 +118,14 @@ suite('Job Creation', function() {
         tombstone: true
       };
 
-      function onJobCreate(err, id, promise) {
+      function onJobCreate(err, job, promise) {
         assert.ok( when.isPromise(promise), 'create callback should yield' +
         ' a promise in the callback');
         assert.isFulfilled(promise, 'tombstone promise should resolve').notify(done);
       }
 
       kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(jobObj, data, cb) {
+      kickq.process('tombstoned_job', function(job, data, cb) {
         cb();
       });
     });
@@ -114,24 +136,17 @@ suite('Job Creation', function() {
         tombstone: true
       };
 
-      function onJobCreate(err, id, promise) {
+      function onJobCreate(err, job, promise) {
         assert.ok( when.isPromise(promise), 'create callback should yield' +
         ' a promise in the callback');
-        assert.isFulfilled(promise.then(function(respObj) {
-          assert.isNumber(respObj.id, 'the Promise response object should have' +
-            ' an "id" property, numeric');
-          assert.isString(respObj.jobName, 'the Promise response object should' +
-            ' have a "jobName" property, string');
-          assert.isBoolean(respObj.complete, 'the Promise response object ' +
-            'should have a "complete" property, boolean');
-
-          assert.ok(respObj.complete, '"complete" property should be true');
-          assert.equal(respObj.jobName, 'tombstoned_job', '"jobName" property should have proper value');
+        assert.isFulfilled(promise.then(function(job) {
+          assert.ok(job.complete, '"complete" property should be true');
+          assert.equal(job.name, 'tombstoned_job', '"jobName" property should have proper value');
         }), 'tombstone promise should resolve').notify(done);
       }
 
       kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(jobObj, data, cb) {
+      kickq.process('tombstoned_job', function(job, data, cb) {
         cb();
       });
     });
@@ -152,7 +167,7 @@ suite('Job Creation', function() {
       }
 
       kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(jobObj, data, cb) {
+      kickq.process('tombstoned_job', function(job, data, cb) {
         cb('error message');
       });
     });
@@ -209,7 +224,7 @@ suite('Job Creation', function() {
   });
 
   suite('A Job With Retries', function() {
-    test('Create a job with 3 retries with an interval of 2 seconds', function(done){
+    test('Create a job with 3 retries with an interval of 1 second', function(done){
       var opts = {
         retry: true,
         retryCount: 3,
@@ -221,7 +236,7 @@ suite('Job Creation', function() {
       this.timeout(7000);
 
       kickq.create('retry_job', 'retry job data', opts);
-      kickq.process('retry_job', function(jobObj, data, cb) {
+      kickq.process('retry_job', function(job, data, cb) {
         retryCount++;
         cb(false);
         if (3 === retryCount) {
@@ -233,4 +248,34 @@ suite('Job Creation', function() {
       });
     });
   });
+
+  suite('Promises returned by job creation', function() {
+    test('Job creation returns a promise', function() {
+      var createPromise = kickq.create('create-promise-test');
+      assert.ok(when.isPromise(createPromise), 'create job should return a promise');
+    });
+    test('Job creation promise resolves', function(done) {
+      var createPromise = kickq.create('create-promise-arguments');
+      assert.isFulfilled(createPromise, 'job create promise should resolve').notify(done);
+    });
+    test('Job creation promise resolves with proper arguments', function(done) {
+      var createPromise = kickq.create('create-promise-arguments');
+
+      assert.isFulfilled(createPromise.then(function(respObj) {
+          assert.isNumber(respObj.id, 'the Promise response object should have' +
+            ' an "id" property, numeric');
+          assert.isString(respObj.jobName, 'the Promise response object should' +
+            ' have a "jobName" property, string');
+          assert.isBoolean(respObj.complete, 'the Promise response object ' +
+            'should have a "complete" property, boolean');
+
+          assert.ok(respObj.complete, '"complete" property should be true');
+          assert.equal(respObj.jobName, 'tombstoned_job', '"jobName" property should have proper value');
+        }), 'tombstone promise should resolve').notify(done);
+
+    });
+
+
+  });
+
 });

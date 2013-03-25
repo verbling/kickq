@@ -73,12 +73,13 @@ var data = {some:'stuff'};
 // this is delayed by x amount of time from scheduling time
 var opts = {delay: 1000 };
 
-kickq.create('job name', data, opts, function(err, id) {
+kickq.create('job name', data, opts, function(err, job) {
   // err = is something went wrong
-  // id = the id of the job that can be used to delete a job
+  // job = The Kickq.Job instance, see bellow.
 });
 ```
 
+Read more about the callback's argument `job` in [The Job Instance](#the-job-instance).
 
 ### Create a Tombstoning Job
 
@@ -86,16 +87,9 @@ kickq.create('job name', data, opts, function(err, id) {
 
 /**
  * Callback when the job completes
- * @param  {Object} respObj A response object.
+ * @param {Kickq.Job} job A response object.
  */
-function fnOnJobComplete(respObj) {
-  // breakout of respObj
-  respObj = {
-    id: 0, // number, the unique id of the job.
-    jobName: 'job name', // string, job's name
-    complete: true // if job is complete, if false means tombstoneTimeout expired
-  };
-};
+function fnOnJobComplete(job) {};
 
 /**
  * Callback for when the job eventually fails or timeouts
@@ -103,22 +97,25 @@ function fnOnJobComplete(respObj) {
  * @param  {string}  err The error message
  * @param  {boolean} hasTimeout Indicates if the job timed-out.
  */
-function fnOnJobFailed(err) {};
+function fnOnJobFailed(err, hasTimeout) {};
 
 
 var opts = {
   tombstone: true,
   tombstoneTimeout: 10 // seconds, default set via kickQ.config()
 };
-kickq.create('job name', data, opts, function(err, id, promise) {
-  // err = is something went wrong
-  // id = the id of the job that can be used to delete a job
+kickq.create('job name', data, opts, function(err, job, tombPromise) {
+  job.tombPromise === tombPromise; // same reference
 
-  promise.then(fnOnJobComplete, fnOnJobFailed);
+  tombPromise.then(fnOnJobComplete, fnOnJobFailed);
 });
 ```
+Read more about the callback's argument `job` in [The Job Instance](#the-job-instance).
 
-Or set a default tombstone flag per job type via config:
+
+#### Set Tombstone Flag on Job Types
+
+Set a default tombstone flag per job type via config:
 
 ```js
 var KickQ = require('kickq');
@@ -141,10 +138,7 @@ var opts = {
   retry: true,
   retryCount: 5 // times, default for job set via kickQ.config()
 };
-kickq.create('job name', data, opts, function(err, id) {
-  err = is something went wrong
-  id = the id of the job that can be used to delete a job
-});
+kickq.create('job name', data, opts);
 ```
 
 Or set a default retry flag per job type via config:
@@ -156,10 +150,47 @@ KickQ.config({
   jobFlags: {
     'job name': {
       retry: true,
-      retryCount: 5
+      retryCount: 5,
+      retryInterval: 1800 // (half an hour)
     }
   }
 });
+```
+
+### Job Create Returns a Promise
+
+```js
+// data, options and callback are all optional
+var createPromise = kickq.create('job name');
+
+createPromise.then(handleResolve, handleFail);
+
+function handleResolve(job) {
+  console.log(job.id);
+}
+
+function handleFail(err) {
+  // do something with err
+}
+```
+
+Create multiple jobs:
+
+```js
+var createPromises = [];
+
+createPromises.push( kickq.create('job one') );
+createPromises.push( kickq.create('job two') );
+createPromises.push( kickq.create('job three') );
+createPromises.push( kickq.create('job four') );
+
+when.all(createPromises).then(function(jobs){
+  jobs[0].name === 'job one';
+  jobs[1].name === 'job two';
+  jobs[2].name === 'job three';
+  jobs[3].name === 'job four';
+}));
+
 ```
 
 
@@ -176,19 +207,68 @@ kickq.process(['job name'], options, processJob);
 // options can be ommited
 kickq.process(['another job name'], processJob);
 
-function processJob(jobObj, data, cb) {
-  // jobObj contains all the information of the job:
-  jobObj.id; // the id
-  jobObj.name; // the job's name
+function processJob(job, data, cb) {
+  // job is an instance of Kickq.Job
+  job.id; // the id
+  job.name; // the job's name
+  job.data === data; // same reference
+
 
   cb('error'); // <-- error
   cb(); // <-- no error
+
+  // or use a promise
+  var deferred = when.defer();
+
+  deferred.resolve(); // complete the job successfully
+  deferred.reject('error message'); // fail the job
+
+  return deferred.promise;
 }
 ```
 
 ## Delete a job
 ```js
-k.delete(id);
+k.delete(job.id);
+```
+
+## The Job Instance
+
+The *Job Instance* contains all the essential information of a job. It is passed on every Kickq callback. All properties are read-only, the only way you can interact with the *Job Instance* is by invoking its methods.
+
+This is the breakout:
+
+```js
+// job
+{
+  id: '0', // {string} the job id
+  name: 'job name', // {string} the job name
+  complete: false, // {boolean} irrespective of success / fail
+  success: false, // {boolean} turns true when complete and executed with success
+  createTime: 1364226587925, // {number} JS timestamp
+  finishTime: null, // {?number} JS timestamp or null
+
+  // the state can be one of:
+  //   - new
+  //   - delayed
+  //   - processing
+  //   - retrying
+  //   - ghost   :: A re-process state when callback does not report.
+  //   - success :: 'complete' flag is true
+  //   - fail    :: 'complete' flag is true
+  state: 'new',
+
+  retry: false, // {boolean} If this job will retry
+  retryCount: 5, // {number} How many times to retry
+  retryInterval: 1800 // {number} seconds of interval between retrying
+  tombstone: false, // {boolean} ???? RENAME???
+  tombstoneTimeout: 10, // {number} seconds
+  tombPromise: null, // {?when.Promise} Tombstone promise
+
+  data: null, // {*} Any type, passed data on job creation
+
+}
+
 ```
 
 ## Notes
