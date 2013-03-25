@@ -126,6 +126,27 @@ Read more about the callback's argument `job` in [The Job Instance](#the-job-ins
 
 All Job options marked with **✓ per job option** can be used for each job individually, [check out all the options](#configuration-options).
 
+### Danger Zone
+
+`data`, `opts` and `callback` are all optional, this will work:
+
+```js
+kickq.create('job name');
+```
+
+But this will result in unexpected behavior:
+```js
+// DO NOT DO THIS
+kickq.create('job name', opts);
+
+// Do this instead if no data:
+kickq.create('job name', null, opts);
+
+```
+
+
+
+
 ### Create a Tombstoning Job (!! CHECK CHECK !!)
 
 > **CHECK CHECK** I did a fast check for the tombstoning term and didn't find lots of relevant examples. Should we consider renaming this featureset ?
@@ -329,6 +350,7 @@ This is the breakout:
   // Processing runs performed for this job. Can be 1 up to n retries.
   // When the job is new this is an empty array.
   runs: [
+    // a process item
     {
       processCount: 1, // {number} the process count of this process item.
       processStart: 1364226587925, // {number} JS timestamp
@@ -338,7 +360,6 @@ This is the breakout:
       state: 'processing'
     }
   ]
-
 }
 
 ```
