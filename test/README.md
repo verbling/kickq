@@ -354,7 +354,7 @@ This is the breakout:
     {
       processCount: 1, // {number} the process count of this process item.
       processStart: 1364226587925, // {number} JS timestamp
-      processTime: null, // {?number} Processing time on ms or null
+      processTime: null, // {?number} Processing time in ms or null
 
       // same as job.state except states: 'new', 'delayed', 'retrying'
       state: 'processing'
