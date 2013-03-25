@@ -33,6 +33,11 @@ Define the master key namespace for redis, that kickq will use to store data.
 
 The global timeout for processing tasks, in seconds.
 
+#### Option `delay`
+**Type**: `?number` **default** `null` **✓ per job option**
+
+Delay queuing for processing of jobs.
+
 #### Option `ghostRetry`
 **Type**: `boolean` **default** `true` **✓ per job option**
 
@@ -118,6 +123,8 @@ kickq.create('job name', data, opts, function(err, job) {
 ```
 
 Read more about the callback's argument `job` in [The Job Instance](#the-job-instance).
+
+All Job options marked with **✓ per job option** can be used for each job individually, [check out all the options](#configuration-options).
 
 ### Create a Tombstoning Job (!! CHECK CHECK !!)
 
