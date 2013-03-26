@@ -8,6 +8,7 @@ var sinon  = require('sinon'),
     assert = require('chai').assert,
     Kickq  = require('../../'),
     tester = require('../lib/tester'),
+    jobTest = require('./jobClass.test'),
     when   = require('when');
 
 
@@ -71,6 +72,15 @@ suite('Job Creation', function() {
         done();
       });
     });
+    test('Create a "plain job" and check the returned Job instance', function(done) {
+      kickq.create('create-only-name');
+      kickq.process('create-only-name', function(job, data, cb) {
+        jobTest.testIntanceProps(job);
+
+        assert.equal(job.state, 'new', 'state of the job should be "new"' );
+      });
+    });
+
   });
 
   suite('A "plain job" with Object Data', function() {
@@ -249,8 +259,8 @@ suite('Job Creation', function() {
     });
   });
 
-  suite('Promises returned by job creation', function() {
-    test('Job creation returns a promise', function() {
+  suite('Job Creation returns a Promise', function() {
+    test('Job Creation returns a promise', function() {
       var createPromise = kickq.create('create-promise-test');
       assert.ok(when.isPromise(createPromise), 'create job should return a promise');
     });
@@ -260,21 +270,23 @@ suite('Job Creation', function() {
     });
     test('Job creation promise resolves with proper arguments', function(done) {
       var createPromise = kickq.create('create-promise-arguments');
-
-      assert.isFulfilled(createPromise.then(function(respObj) {
-          assert.isNumber(respObj.id, 'the Promise response object should have' +
-            ' an "id" property, numeric');
-          assert.isString(respObj.jobName, 'the Promise response object should' +
-            ' have a "jobName" property, string');
-          assert.isBoolean(respObj.complete, 'the Promise response object ' +
-            'should have a "complete" property, boolean');
-
-          assert.ok(respObj.complete, '"complete" property should be true');
-          assert.equal(respObj.jobName, 'tombstoned_job', '"jobName" property should have proper value');
-        }), 'tombstone promise should resolve').notify(done);
-
+      assert.isFulfilled(createPromise.then(function(job) {
+        jobTest.testIntanceProps(job);
+        assert.equal(respObj.name, 'create-promise-arguments', '"job.name" ' +
+          'property should have proper value');
+      }), 'job create promise should resolve').notify(done);
     });
 
+    test('Job creation with tombstoning', function(done) {
+      var createPromise = kickq.create('create-promise-arguments', 'data', {
+        tombstone: true
+      });
+      assert.isFulfilled(createPromise.then(function(job) {
+        jobTest.testIntanceProps(job);
+        assert.ok(job.tombstone, 'job.tombstone flag should be true in job instance');
+        assert.ok(when.isPromise(job.tombPromise), 'job.tombPromise should be a promise');
+      }), 'job create promise should resolve').notify(done);
+    });
 
   });
 

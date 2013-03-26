@@ -8,8 +8,10 @@ A job queue for node.
 var Kickq = require('kickq');
 
 Kickq.config({
-  redis: config.redis
+  redisNamespace: 'Kickq'
 });
+
+Kickq.config('redisNamespace', 'Kickq');
 
 // can add config parameters run-time
 Kickq.config(anotherConfigObject);
@@ -340,7 +342,7 @@ This is the breakout:
 
   retry: false, // {boolean} If this job will retry
   retryCount: 5, // {number} How many times to retry
-  retryInterval: 1800 // {number} seconds of interval between retrying
+  retryInterval: 1800, // {number} seconds of interval between retrying
   tombstone: false, // {boolean} ???? RENAME???
   tombstoneTimeout: 10, // {number} seconds
   tombPromise: null, // {?when.Promise} Tombstone promise
@@ -352,9 +354,9 @@ This is the breakout:
   runs: [
     // a process item
     {
-      processCount: 1, // {number} the process count of this process item.
-      processStart: 1364226587925, // {number} JS timestamp
-      processTime: null, // {?number} Processing time in ms or null
+      count: 1, // {number} the process count of this process item.
+      start: 1364226587925, // {number} JS timestamp
+      time: null, // {?number} Processing time in ms or null
 
       // same as job.state except states: 'new', 'delayed', 'retrying'
       state: 'processing'
