@@ -1,4 +1,4 @@
-# kickq API Scaffolding
+# Kickq API Scaffolding
 
 Kick jobs out the door. Quickly.
 A job queue for node.
