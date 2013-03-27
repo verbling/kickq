@@ -351,8 +351,8 @@ This is the breakout:
   complete: false, // {boolean} irrespective of success / fail
   success: false, // {boolean} turns true when complete and executed with success
   createTime: 1364226587925, // {number} JS timestamp
-  finishTime: null, // {?number} JS timestamp or null
-  totalProcessTime: null, // {?number} total process time in ms or null
+  finishTime: null, // {number | null} JS timestamp or null
+  totalProcessTime: null, // {number | null} total process time in ms or null
 
   // the state can be one of:
   //   - new
@@ -364,12 +364,13 @@ This is the breakout:
   //   - fail    :: 'complete' flag is true
   state: 'new',
 
+  delay: null, // {number | null} Delay in seconds.
   retry: false, // {boolean} If this job will retry
   retryCount: 5, // {number} How many times to retry
   retryInterval: 1800, // {number} seconds of interval between retrying
   tombstone: false, // {boolean} ???? RENAME???
   tombstoneTimeout: 10, // {number} seconds
-  tombPromise: null, // {?when.Promise} Tombstone promise
+  tombPromise: null, // {when.Promise | null} Tombstone promise
 
   data: null, // {*} Any type, passed data on job creation
 
