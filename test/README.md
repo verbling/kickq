@@ -23,6 +23,30 @@ Kickq.reset();
 
 ### Configuration Options
 
+#### Option :: `redisPort`
+
+**Type**: `number` **Default**: `6389`
+
+Define a different port for redis.
+
+#### Option :: `redisHost`
+
+**Type**: `string` **Default**: `"127.0.0.1"`
+
+Define a different host for redis.
+
+#### Option :: `redisPassword`
+
+**Type**: `string | null` **Default**: `null`
+
+Set a redis password if you have one.
+
+#### Option :: `redisOptions`
+
+**Type**: `Object | null` **Default**: `null`
+
+More specific options for the redis client [as defined in the redis package docs](https://github.com/mranney/node_redis#rediscreateclientport-host-options).
+
 
 #### Option :: `redisNamespace`
 

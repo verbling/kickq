@@ -37,8 +37,8 @@
     "async": "~0.2.6",
     "config": "~0.4.20",
     "yaml": "~0.2.3",
-    "redis": "git://github.com/mranney/node_redis.git",
-    "underscore": "~1.4.4"
+    "underscore": "~1.4.4",
+    "redis": "~0.8.2"
   },
   "devDependencies": {
     "grunt-mocha-test": "~0.2.0",
