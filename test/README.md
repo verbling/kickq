@@ -372,7 +372,6 @@ This is the breakout:
 
   tombstone: false, // {boolean} ???? RENAME???.
   tombstoneTimeout: 10, // {number} seconds.
-  tombPromise: null, // {when.Promise | null} Tombstone promise.
 
   data: null, // {*} Any type, passed data on job creation
 
