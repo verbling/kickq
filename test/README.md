@@ -54,8 +54,14 @@ More specific options for the redis client [as defined in the redis package docs
 
 Define the master key namespace for redis, that kickq will use to store data.
 
+#### Option :: `purgeTimeout`
+
+**Type**: `number` **Default**: `86400` (seconds, default is 1 day)
+
+When a job completes it moves to the purge queue. This timeout defines the time to wait before actually deleting the job record from redis.
+
 #### Option :: `processTimeout`
-**Type**: `number` **Default**: `600` (10s) **✓ per job option**
+**Type**: `number` **Default**: `10` (seconds) **✓ per job option**
 
 The global timeout for processing tasks, in seconds.
 
