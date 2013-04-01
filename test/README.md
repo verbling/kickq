@@ -173,40 +173,41 @@ kickq.create('job name', null, opts);
 
 
 
-### Create a Tombstoning Job (!! CHECK CHECK !!)
+### Create a hotjob
 
-> **CHECK CHECK** I did a fast check for the tombstoning term and didn't find lots of relevant examples. Should we consider renaming this featureset ?
+A hotjob is a job that the initiator waits with a callback for the job completion. A timeout ensures that the callback will eventually be called.
+
 
 ```js
 /**
- * Callback when the job completes
+ * Callback when the job completes.
+ * That includes failed or successfull processing.
+ *
  * @param {Kickq.Job} job A response object.
  */
 function fnOnJobComplete(job) {};
 
 /**
- * Callback for when the job eventually fails or timeouts
-
- * @param  {string}  err The error message
- * @param  {boolean} hasTimeout Indicates if the job timed-out.
+ * Callback for when the job eventually fails or timeouts.
+ *
+ * @param  {kickq.error.JSON|kickq.error.Timeout}  err The error object.
  */
-function fnOnJobFailed(err, hasTimeout) {};
-
+function fnOnJobFailed(err) {};
 
 var opts = {
   hotjob: true,
   hotjobTimeout: 10 // seconds, default set via kickQ.config()
 };
-kickq.create('job name', data, opts, function(err, job, tombPromise) {
-  job.tombPromise === tombPromise; // same reference
+kickq.create('job name', data, opts, function(err, job, hotjobPromise) {
+  job.hotjobPromise === hotjobPromise; // same reference
 
-  tombPromise.then(fnOnJobComplete, fnOnJobFailed);
+  hotjobPromise.then(fnOnJobComplete, fnOnJobFailed);
 });
 ```
 Read more about the callback's argument `job` in [The Job Instance](#the-job-instance).
 
 
-#### Set Tombstone Flag on Job Types
+#### Set hotjob Flag on Job Types
 
 Set a default hotjob flag per job type via config:
 
@@ -217,7 +218,7 @@ KickQ.config({
   jobFlags: {
     'job name': {
       hotjob: true,
-      hotjobTimeout: 10
+      hotjobTimeout: 10 // seconds
     }
   }
 });
