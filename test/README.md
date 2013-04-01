@@ -358,7 +358,7 @@ This is the breakout:
   //   - new
   //   - delayed
   //   - processing
-  //   - retrying
+  //   - retry
   //   - ghost   :: A re-process state when callback does not report.
   //   - success :: 'complete' flag is true
   //   - fail    :: 'complete' flag is true
@@ -384,7 +384,7 @@ This is the breakout:
       start: 1364226587925, // {number} JS timestamp
       time: null, // {?number} Processing time in ms or null
 
-      // same as job.state except states: 'new', 'delayed', 'retrying'
+      // same as job.state except states: 'new', 'delayed', 'retry'
       state: 'processing'
     }
   ]
