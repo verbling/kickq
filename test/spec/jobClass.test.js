@@ -31,8 +31,8 @@ jobTest.testIntanceProps = function( job, optDone ) {
   assert.isRetry(job.retry, 'should have a "retry" property, boolean');
   assert.isNumber(job.retryCount, 'should have a "retryCount" property, number');
   assert.isNumber(job.retryInterval, 'should have a "retryInterval" property, number');
-  assert.isBoolean(job.tombstone, 'should have a "tombstone" property, boolean');
-  assert.isNumber(job.tombstoneTimeout, 'should have a "tombstoneTimeout" property, number');
+  assert.isBoolean(job.hotjob, 'should have a "hotjob" property, boolean');
+  assert.isNumber(job.hotjobTimeout, 'should have a "hotjobTimeout" property, number');
   assert.isNull(job.tombPromise, 'should have a "tombPromise" property, null');
   assert.isNull(job.data, 'should have a "data" property, null');
   assert.isArray(job.runs, 'should have a "runs" property, Array');

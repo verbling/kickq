@@ -120,30 +120,30 @@ suite('Job Creation', function() {
     });
   });
 
-  suite('A "tombstoned job"', function() {
+  suite('A "hotjob job"', function() {
     var startTime;
 
-    test('Create a "tombstoned job"', function(done) {
+    test('Create a "hotjob job"', function(done) {
       var opts = {
-        tombstone: true
+        hotjob: true
       };
 
       function onJobCreate(err, job, promise) {
         assert.ok( when.isPromise(promise), 'create callback should yield' +
         ' a promise in the callback');
-        assert.isFulfilled(promise, 'tombstone promise should resolve').notify(done);
+        assert.isFulfilled(promise, 'hotjob promise should resolve').notify(done);
       }
 
-      kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(job, data, cb) {
+      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.process('hotjob_job', function(job, data, cb) {
         cb();
       });
     });
 
-    test('Create a "tombstoned job" and test the promise response object',
+    test('Create a "hotjob job" and test the promise response object',
       function(done) {
       var opts = {
-        tombstone: true
+        hotjob: true
       };
 
       function onJobCreate(err, job, promise) {
@@ -151,19 +151,19 @@ suite('Job Creation', function() {
         ' a promise in the callback');
         assert.isFulfilled(promise.then(function(job) {
           assert.ok(job.complete, '"complete" property should be true');
-          assert.equal(job.name, 'tombstoned_job', '"jobName" property should have proper value');
-        }), 'tombstone promise should resolve').notify(done);
+          assert.equal(job.name, 'hotjob_job', '"jobName" property should have proper value');
+        }), 'hotjob promise should resolve').notify(done);
       }
 
-      kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(job, data, cb) {
+      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.process('hotjob_job', function(job, data, cb) {
         cb();
       });
     });
 
-    test('Create a "tombstoned job" that will fail', function(done) {
+    test('Create a "hotjob job" that will fail', function(done) {
       var opts = {
-        tombstone: true
+        hotjob: true
       };
 
       function onJobCreate(err, id, promise) {
@@ -172,19 +172,19 @@ suite('Job Creation', function() {
 
         assert.isRejected( promise.otherwise(function(err) {
           assert.equal( err, 'error message');
-        }), 'tombstone Promise should be rejected')
+        }), 'hotjob Promise should be rejected')
           .notify(done);
       }
 
-      kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
-      kickq.process('tombstoned_job', function(job, data, cb) {
+      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.process('hotjob_job', function(job, data, cb) {
         cb('error message');
       });
     });
 
-    test('Create a "tombstoned job" that will timeout using default timeout value', function(done) {
+    test('Create a "hotjob job" that will timeout using default timeout value', function(done) {
       var opts = {
-        tombstone: true
+        hotjob: true
       };
 
       var startTime;
@@ -201,17 +201,17 @@ suite('Job Creation', function() {
           var endTime = new Date().getTime();
           assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
             'at least after 9000ms');
-        }), 'tombstone Promise should be fulfilled')
+        }), 'hotjob Promise should be fulfilled')
           .notify(done);
       }
 
-      kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
+      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
     });
 
-    test('Create a "tombstoned job" that will timeout using custom timeout value', function(done) {
+    test('Create a "hotjob job" that will timeout using custom timeout value', function(done) {
       var opts = {
-        tombstone: true,
-        tombstoneTimeout: 4
+        hotjob: true,
+        hotjobTimeout: 4
       };
 
       // raise timeout to 5s
@@ -225,10 +225,10 @@ suite('Job Creation', function() {
           assert.ok( (endTime - startTime) > 3000, 'Promise should timeout' +
             'at least after 3000ms');
 
-        }), 'tombstone Promise should be fulfilled')
+        }), 'hotjob Promise should be fulfilled')
           .notify(done);
       }
-      kickq.create('tombstoned_job', 'tombstoned job data', opts, onJobCreate);
+      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
     });
 
   });
@@ -279,11 +279,11 @@ suite('Job Creation', function() {
 
     test('Job creation with tombstoning', function(done) {
       var createPromise = kickq.create('create-promise-arguments', 'data', {
-        tombstone: true
+        hotjob: true
       });
       assert.isFulfilled(createPromise.then(function(job) {
         jobTest.testIntanceProps(job);
-        assert.ok(job.tombstone, 'job.tombstone flag should be true in job instance');
+        assert.ok(job.hotjob, 'job.hotjob flag should be true in job instance');
         assert.ok(when.isPromise(job.tombPromise), 'job.tombPromise should be a promise');
       }), 'job create promise should resolve').notify(done);
     });

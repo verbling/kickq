@@ -80,15 +80,15 @@ How many times to retry processing a ghost job.
 A job gets ghosted when the process function does not invoke the callback or return a promise, triggering the `processTimeout` limit.
 
 
-#### Option :: `tombstone`
+#### Option :: `hotjob`
 **Type**: `boolean` **default** `false` **✓ per job option**
 
 Tombstoning allows for *run-time* invocation of the new job. The job creator has a chance to wait for the completion of the new job within the timeout defined.
 
-#### Option :: `tombstoneTimeout`
+#### Option :: `hotjobTimeout`
 **Type**: `number` **default** `10` (seconds) **✓ per job option**
 
-Time to wait for a job to get processed before tombstone callbacks timeout, in seconds.
+Time to wait for a job to get processed before hotjob callbacks timeout, in seconds.
 
 #### Option :: `retry`
 **Type**: `boolean` **default** `false` **✓ per job option**
@@ -194,8 +194,8 @@ function fnOnJobFailed(err, hasTimeout) {};
 
 
 var opts = {
-  tombstone: true,
-  tombstoneTimeout: 10 // seconds, default set via kickQ.config()
+  hotjob: true,
+  hotjobTimeout: 10 // seconds, default set via kickQ.config()
 };
 kickq.create('job name', data, opts, function(err, job, tombPromise) {
   job.tombPromise === tombPromise; // same reference
@@ -208,7 +208,7 @@ Read more about the callback's argument `job` in [The Job Instance](#the-job-ins
 
 #### Set Tombstone Flag on Job Types
 
-Set a default tombstone flag per job type via config:
+Set a default hotjob flag per job type via config:
 
 ```js
 var KickQ = require('kickq');
@@ -216,8 +216,8 @@ var KickQ = require('kickq');
 KickQ.config({
   jobFlags: {
     'job name': {
-      tombstone: true,
-      tombstoneTimeout: 10
+      hotjob: true,
+      hotjobTimeout: 10
     }
   }
 });
@@ -370,8 +370,8 @@ This is the breakout:
   retryCount: 5, // {number} How many times to retry.
   retryInterval: 1800, // {number} seconds of interval between retrying.
 
-  tombstone: false, // {boolean} ???? RENAME???.
-  tombstoneTimeout: 10, // {number} seconds.
+  hotjob: false, // {boolean} ???? RENAME???.
+  hotjobTimeout: 10, // {number} seconds.
 
   data: null, // {*} Any type, passed data on job creation
 
