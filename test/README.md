@@ -298,7 +298,7 @@ when.all(createPromises).then(function(jobs){
 ```js
 // options for what jobs are assigned to the worker and how.
 var options = {
-  maxJobsNum: 10 // total number of concurent jobs
+  concurrentJobs: 10 // total number of concurent jobs
 }
 
 // first argument can be a string or an array of strings.
