@@ -75,7 +75,7 @@ Delay queuing for processing of jobs.
 
 A job gets ghosted when the process function does not invoke the callback or return a promise, triggering the `processTimeout` limit.
 
-#### Option :: `ghostCount`
+#### Option :: `ghostTimes`
 **Type**: `number` **default** `1` **✓ per job option**
 
 How many times to retry processing a ghost job.
@@ -101,7 +101,7 @@ Time to wait for a job to get processed before hotjob callbacks timeout, in seco
 
 Allow for a failed job to retry execution.
 
-#### Option :: `retryCount`
+#### Option :: `retryTimes`
 **Type**: `number` **default** `3` **✓ per job option**
 
 How many times to retry before finally giving up
