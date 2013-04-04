@@ -319,6 +319,8 @@ function processJob(job, data, cb) {
 }
 ```
 
+> **Beware** If you provide an array of job names, sequence matters! Jobs will be fetched in sequence as per [redis' blpop ordering](http://redis.io/commands/blpop).
+
 ### Process a Job Using a Promise
 
 ```js
