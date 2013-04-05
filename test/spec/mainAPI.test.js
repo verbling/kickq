@@ -16,7 +16,7 @@ describe('API scaffolding', function() {
 
   it('Instance Functions', function() {
     var kickq = new Kickq();
-    assert.isInstance(kickq, Kickq, 'should be an instance of Kickq');
+    assert.instanceOf(kickq, Kickq, 'should be an instance of Kickq');
     assert.isFunction(kickq.create, 'should have the "create" method');
     assert.isFunction(kickq.process, 'should have the "process" method');
     assert.isFunction(kickq.delete, 'should have the "delete" method');
