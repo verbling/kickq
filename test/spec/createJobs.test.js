@@ -277,14 +277,14 @@ suite('Job Creation', function() {
       }), 'job create promise should resolve').notify(done);
     });
 
-    test('Job creation with tombstoning', function(done) {
+    test('hotjob creation', function(done) {
       var createPromise = kickq.create('create-promise-arguments', 'data', {
         hotjob: true
       });
       assert.isFulfilled(createPromise.then(function(job) {
         jobTest.testIntanceProps(job);
         assert.ok(job.hotjob, 'job.hotjob flag should be true in job instance');
-        assert.ok(when.isPromise(job.tombPromise), 'job.tombPromise should be a promise');
+        assert.ok(when.isPromise(job.hotjobPromise), 'job.hotjobPromise should be a promise');
       }), 'job create promise should resolve').notify(done);
     });
 
