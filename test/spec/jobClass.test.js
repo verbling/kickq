@@ -19,7 +19,7 @@ var jobTest = module.exports = {};
  */
 jobTest.testInstanceProps = function( job, optDone ) {
   var done = optDone || function(){};
-  assert.isNumber(job.id, 'should have an "id" property, numeric');
+  assert.isString(job.id, 'should have an "id" property, numeric');
   assert.isString(job.name, 'should have a "name" property, string');
   assert.isBoolean(job.complete, 'should have a "complete" property, boolean');
   assert.isBoolean(job.success, 'should have a "success" property, boolean');
@@ -28,12 +28,11 @@ jobTest.testInstanceProps = function( job, optDone ) {
   assert.isNull(job.finishTime, 'should have a "finishTime" property, null');
   assert.isNull(job.totalProcessTime, 'should have a "totalProcessTime" property, null');
   assert.isString(job.state, 'should have a "state" property, string');
-  assert.isRetry(job.retry, 'should have a "retry" property, boolean');
-  assert.isNumber(job.retryCount, 'should have a "retryCount" property, number');
+  assert.isBoolean(job.retry, 'should have a "retry" property, boolean');
+  assert.isNumber(job.retryTimes, 'should have a "retryTimes" property, number');
   assert.isNumber(job.retryInterval, 'should have a "retryInterval" property, number');
   assert.isBoolean(job.hotjob, 'should have a "hotjob" property, boolean');
   assert.isNumber(job.hotjobTimeout, 'should have a "hotjobTimeout" property, number');
-  assert.isNull(job.tombPromise, 'should have a "tombPromise" property, null');
   assert.isNull(job.data, 'should have a "data" property, null');
   assert.isArray(job.runs, 'should have a "runs" property, Array');
   done();

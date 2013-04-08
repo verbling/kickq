@@ -54,7 +54,7 @@ suite('Job Creation', function() {
         });
       });
     });
-    test('Create a "plain job" with no callback', function(done) {
+    test('1.1.3 Create a "plain job" with no callback', function(done) {
       kickq.create('create-no-callback', 'data', {});
       kickq.process('create-no-callback', function(job, data, cb) {
         cb();
@@ -62,33 +62,34 @@ suite('Job Creation', function() {
       });
     });
     test('1.1.4 Create a "plain job" with no options', function(done) {
-      kickq.create('create-no-options', 'data', function(err, key) {});
-      kickq.process('create-no-options', function(job, data, cb) {
-        cb();
-        done();
+      kickq.create('create-no-options', 'data', function(err, key) {
+        kickq.process('create-no-options', function(job, data, cb) {
+          cb();
+          done();
+        });
       });
     });
-    test('Create a "plain job" with no data and no options', function(done) {
+    test('1.1.5 Create a "plain job" with no data and no options', function(done) {
       kickq.create('create-no-data', function(err, key) {});
-      kickq.process('create-no-data', function(job, data, cb) {
+      setTimeout(kickq.process('create-no-data', function(job, data, cb) {
         cb();
         done();
-      });
+      }), 300);
     });
-    test('Create a "plain job" with only the name', function(done) {
+    test('1.1.6 Create a "plain job" with only the name', function(done) {
       kickq.create('create-only-name');
-      kickq.process('create-only-name', function(job, data, cb) {
+      setTimeout(kickq.process('create-only-name', function(job, data, cb) {
         cb();
         done();
-      });
+      }), 300);
     });
-    test('Create a "plain job" and check the returned Job instance', function(done) {
+    test('1.1.7 Create a "plain job" and check the returned Job instance', function(done) {
       kickq.create('create-only-name');
-      kickq.process('create-only-name', function(job, data, cb) {
+      setTimeout(kickq.process('create-only-name', function(job, data, cb) {
         jobTest.testInstanceProps(job);
-
         assert.equal(job.state, 'new', 'state of the job should be "new"' );
-      });
+        done();
+      }), 300);
     });
 
   });
