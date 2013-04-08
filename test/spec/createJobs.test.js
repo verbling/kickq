@@ -2,19 +2,23 @@
  * @fileOverview Creating Jobs with kickq
  */
 
-var sinon  = require('sinon'),
-    expect = require('chai').expect,
-    grunt  = require('grunt'),
-    assert = require('chai').assert,
-    Kickq  = require('../../'),
-    tester = require('../lib/tester'),
-    jobTest = require('./jobClass.test'),
-    when   = require('when');
+var sinon  = require('sinon');
+var chai = require('chai');
+var expect = chai.expect;
+var grunt  = require('grunt');
+var assert = require('chai').assert;
+var when   = require('when');
+var chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+
+var Kickq  = require('../../');
+var tester = require('../lib/tester');
+var jobTest = require('./jobClass.test');
 
 
 suite('Job Creation', function() {
 
-  setup(function(done) {
+  setup(function() {
     Kickq.reset();
     Kickq.config({
       redisNamespace: tester.NS
@@ -22,7 +26,7 @@ suite('Job Creation', function() {
     tester.clear();
   });
 
-  teardown(function(done) {
+  teardown(function() {
     tester.clear();
     Kickq.reset();
   });
@@ -31,12 +35,14 @@ suite('Job Creation', function() {
   var kickq = new Kickq();
 
   suite('A "plain job"', function() {
-    test('Create a "plain job"', function(done) {
-      kickq.create(tester.fix.jobname, 'data', {}, function(err, job) {
-        assert.isNull(err, 'The "err" arg should be null');
-        assert.instanceOf(job, Kickq.Job, 'job is instance of Kickq.Job class');
-        done();
-      });
+    test('1.1.1 Create a "plain job"', function(done) {
+      // use the promised pattern so errors are visible
+      assert.isFulfilled( kickq.create( tester.fix.jobname, 'data', {},
+        function(err, job) {
+          assert.isNull(err, 'The "err" arg should be null');
+          done();
+        }),
+        'hotjob promise should resolve');
     });
     test('Verify "plain job" was created', function(done) {
       kickq.process(tester.fix.jobname, function(job, data, cb) {
