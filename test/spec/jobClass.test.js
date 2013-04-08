@@ -33,6 +33,7 @@ jobTest.testInstanceProps = function( job, optDone ) {
   assert.isNumber(job.retryInterval, 'should have a "retryInterval" property, number');
   assert.isBoolean(job.hotjob, 'should have a "hotjob" property, boolean');
   assert.isNumber(job.hotjobTimeout, 'should have a "hotjobTimeout" property, number');
+  assert.isNull(job.hotjobPromise, 'should have a "hotjobTimeout" property, null');
   assert.isNull(job.data, 'should have a "data" property, null');
   assert.isArray(job.runs, 'should have a "runs" property, Array');
   done();

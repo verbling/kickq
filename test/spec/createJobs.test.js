@@ -133,29 +133,38 @@ suite('Job Creation', function() {
 
   suite('1.4 A "hotjob job"', function() {
     var startTime;
+    var opts = {
+      hotjob: true
+    };
 
-    test('Create a "hotjob job"', function(done) {
-      var opts = {
-        hotjob: true
-      };
+    test('1.4.0 create callback returns a promise to use for hotjobs', function(done) {
 
       function onJobCreate(err, job, promise) {
         assert.ok( when.isPromise(promise), 'create callback should yield' +
         ' a promise in the callback');
-        assert.isFulfilled(promise, 'hotjob promise should resolve').notify(done);
+
+        done();
       }
 
       kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
-      kickq.process('hotjob_job', function(job, data, cb) {
-        cb();
-      });
     });
 
-    test('Create a "hotjob job" and test the promise response object',
+
+    test('1.4.1 Create a "hotjob job"', function(done) {
+
+      function onJobCreate(err, job, promise) {
+        assert.isFulfilled(promise, 'hotjob promise should resolve').notify(done);
+
+        kickq.process('hotjob_job', function(job, data, cb) {
+          cb();
+        });
+      }
+
+      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+    });
+
+    test('1.4.2 Create a "hotjob job" and test the promise response object',
       function(done) {
-      var opts = {
-        hotjob: true
-      };
 
       function onJobCreate(err, job, promise) {
         assert.ok( when.isPromise(promise), 'create callback should yield' +
@@ -173,9 +182,6 @@ suite('Job Creation', function() {
     });
 
     test('Create a "hotjob job" that will fail', function(done) {
-      var opts = {
-        hotjob: true
-      };
 
       function onJobCreate(err, id, promise) {
         assert.ok( when.isPromise(promise), 'create callback should yield' +
@@ -185,19 +191,16 @@ suite('Job Creation', function() {
           assert.equal( err, 'error message');
         }), 'hotjob Promise should be rejected')
           .notify(done);
+
+        kickq.process('hotjob_job', function(job, data, cb) {
+          cb('error message');
+        });
       }
 
       kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
-      kickq.process('hotjob_job', function(job, data, cb) {
-        cb('error message');
-      });
     });
 
     test('Create a "hotjob job" that will timeout using default timeout value', function(done) {
-      var opts = {
-        hotjob: true
-      };
-
       var startTime;
 
       // raise timeout to 14s
