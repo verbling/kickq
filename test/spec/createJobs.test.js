@@ -70,11 +70,12 @@ suite('Job Creation', function() {
       });
     });
     test('1.1.5 Create a "plain job" with no data and no options', function(done) {
-      kickq.create('create-no-data', function(err, key) {});
-      setTimeout(kickq.process('create-no-data', function(job, data, cb) {
-        cb();
-        done();
-      }), 300);
+      kickq.create('create-no-data', function(err, key) {
+        kickq.process('create-no-data', function(job, data, cb) {
+          cb();
+          done();
+        });
+      });
     });
     test('1.1.6 Create a "plain job" with only the name', function(done) {
       kickq.create('create-only-name');
