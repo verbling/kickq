@@ -95,21 +95,20 @@ suite('Job Creation', function() {
 
   });
 
-  suite('A "plain job" with Object Data', function() {
-    test('Create a "plain job"', function(done) {
-      kickq.create('create-data-object', tester.fix.plain.data, {}, done);
-    });
+  suite('1.2 A "plain job" with Object Data', function() {
     test('Verify "plain job" with Object Data was created', function(done) {
-      kickq.process('create-data-object', function(job, data, cb) {
-        assert.deepEqual(data, tester.fix.plain.data, 'data provided should deep equal value passed');
-        assert.equal(job.name, 'create-data-object', 'job name provided should equal value passed');
-        cb();
-        done();
+      kickq.create('create-data-object', tester.fix.plain.data, function(){
+        kickq.process('create-data-object', function(job, data, cb) {
+          assert.deepEqual(data, tester.fix.plain.data, 'data provided should deep equal value passed');
+          assert.equal(job.name, 'create-data-object', 'job name provided should equal value passed');
+          cb();
+          done();
+        });
       });
     });
   });
 
-  suite('A "delayed job"', function() {
+  suite('1.3 A "delayed job"', function() {
     var startTime;
 
     test('Create a "delayed job"', function(done) {
@@ -132,7 +131,7 @@ suite('Job Creation', function() {
     });
   });
 
-  suite('A "hotjob job"', function() {
+  suite('1.4 A "hotjob job"', function() {
     var startTime;
 
     test('Create a "hotjob job"', function(done) {
@@ -245,7 +244,7 @@ suite('Job Creation', function() {
 
   });
 
-  suite('A Job With Retries', function() {
+  suite('1.5 A Job With Retries', function() {
     test('Create a job with 3 retries with an interval of 1 second', function(done){
       var opts = {
         retry: true,
@@ -271,7 +270,7 @@ suite('Job Creation', function() {
     });
   });
 
-  suite('Job Creation returns a Promise', function() {
+  suite('1.6 Job Creation returns a Promise', function() {
     test('Job Creation returns a promise', function() {
       var createPromise = kickq.create('create-promise-test');
       assert.ok(when.isPromise(createPromise), 'create job should return a promise');
