@@ -36,7 +36,7 @@ suite('Job Creation', function() {
   // The purpose is to provide a unique string so specific tests are
   // run by using the mocha --grep "1.1.1" option.
 
-  suite('A "plain job"', function() {
+  suite('1.1 A "plain job"', function() {
     test('1.1.1 Create a "plain job"', function(done) {
       // use the promised pattern so errors are visible
       assert.isFulfilled( kickq.create( tester.fix.jobname, 'data', {},
@@ -61,7 +61,7 @@ suite('Job Creation', function() {
         done();
       });
     });
-    test('Create a "plain job" with no options', function(done) {
+    test('1.1.4 Create a "plain job" with no options', function(done) {
       kickq.create('create-no-options', 'data', function(err, key) {});
       kickq.process('create-no-options', function(job, data, cb) {
         cb();
@@ -85,7 +85,7 @@ suite('Job Creation', function() {
     test('Create a "plain job" and check the returned Job instance', function(done) {
       kickq.create('create-only-name');
       kickq.process('create-only-name', function(job, data, cb) {
-        jobTest.testIntanceProps(job);
+        jobTest.testInstanceProps(job);
 
         assert.equal(job.state, 'new', 'state of the job should be "new"' );
       });

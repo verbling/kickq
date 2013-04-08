@@ -17,7 +17,7 @@ var jobTest = module.exports = {};
  * @param {Function=} optDone the callback to call when all is done.
  * @param {string} testTitle [description]
  */
-jobTest.testIntanceProps = function( job, optDone ) {
+jobTest.testInstanceProps = function( job, optDone ) {
   var done = optDone || function(){};
   assert.isNumber(job.id, 'should have an "id" property, numeric');
   assert.isString(job.name, 'should have a "name" property, string');
