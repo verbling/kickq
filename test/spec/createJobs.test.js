@@ -146,7 +146,7 @@ suite('Job Creation', function() {
         done();
       }
 
-      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.create('hotjob_job 1.4.0', 'hotjob job promise check', opts, onJobCreate);
     });
 
 
@@ -154,13 +154,14 @@ suite('Job Creation', function() {
 
       function onJobCreate(err, job, promise) {
         assert.isFulfilled(promise, 'hotjob promise should resolve').notify(done);
-
-        kickq.process('hotjob_job', function(job, data, cb) {
+        promise.then(function(){
+        });
+        kickq.process('hotjob_job 1.4.1', function(job, data, cb) {
           cb();
         });
       }
 
-      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.create('hotjob_job 1.4.1', 'hotjob job data 1.4.1', opts, onJobCreate);
     });
 
     test('1.4.2 Create a "hotjob job" and test the promise response object',
@@ -175,13 +176,13 @@ suite('Job Creation', function() {
         }), 'hotjob promise should resolve').notify(done);
       }
 
-      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.create('hotjob_job 1.4.2', 'hotjob job data 1.4.2', opts, onJobCreate);
       kickq.process('hotjob_job', function(job, data, cb) {
         cb();
       });
     });
 
-    test('Create a "hotjob job" that will fail', function(done) {
+    test('1.4.3 Create a "hotjob job" that will fail', function(done) {
 
       function onJobCreate(err, id, promise) {
         assert.ok( when.isPromise(promise), 'create callback should yield' +
@@ -192,7 +193,7 @@ suite('Job Creation', function() {
         }), 'hotjob Promise should be rejected')
           .notify(done);
 
-        kickq.process('hotjob_job', function(job, data, cb) {
+        kickq.process('hotjob_job 1.4.3', function(job, data, cb) {
           cb('error message');
         });
       }
