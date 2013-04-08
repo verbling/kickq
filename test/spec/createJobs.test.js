@@ -8,8 +8,6 @@ var expect = chai.expect;
 var grunt  = require('grunt');
 var assert = require('chai').assert;
 var when   = require('when');
-var chaiAsPromised = require("chai-as-promised");
-chai.use(chaiAsPromised);
 
 var Kickq  = require('../../');
 var tester = require('../lib/tester');
@@ -18,21 +16,25 @@ var jobTest = require('./jobClass.test');
 
 suite('Job Creation', function() {
 
-  setup(function() {
+  setup(function(done) {
     Kickq.reset();
     Kickq.config({
       redisNamespace: tester.NS
     });
-    tester.clear();
+    tester.clear(done);
   });
 
-  teardown(function() {
-    tester.clear();
+  teardown(function(done) {
     Kickq.reset();
+    tester.clear(done);
   });
 
 
   var kickq = new Kickq();
+
+  // The numbering (e.g. 1.1.1) has nothing to do with order
+  // The purpose is to provide a unique string so specific tests are
+  // run by using the mocha --grep "1.1.1" option.
 
   suite('A "plain job"', function() {
     test('1.1.1 Create a "plain job"', function(done) {
@@ -44,10 +46,12 @@ suite('Job Creation', function() {
         }),
         'hotjob promise should resolve');
     });
-    test('Verify "plain job" was created', function(done) {
-      kickq.process(tester.fix.jobname, function(job, data, cb) {
-        cb();
-        done();
+    test('1.1.2 Verify "plain job" was created', function(done) {
+      kickq.create( 'create-verify', 'data', {}, function(err) {
+        kickq.process('create-verify', function(job, data, cb) {
+          cb();
+          done();
+        });
       });
     });
     test('Create a "plain job" with no callback', function(done) {

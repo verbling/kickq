@@ -24,6 +24,16 @@ buster.clear = function(done) {
       return;
     }
 
+    if (!Array.isArray(response)) {
+      done();
+      return;
+    }
+
+    if (0 === response.length) {
+      done();
+      return;
+    }
+
     client.del(response, done);
   });
 };
