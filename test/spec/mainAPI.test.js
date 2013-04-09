@@ -8,13 +8,13 @@ var sinon  = require('sinon'),
     assert = require('chai').assert,
     Kickq  = require('../../');
 
-suite('API scaffolding', function() {
-  test('Static Functions', function() {
+suite('0.0 API scaffolding', function() {
+  test('0.0.1 Static Functions', function() {
     assert.isFunction(Kickq.config, 'should have a "config" static method');
     assert.isFunction(Kickq.reset, 'should have a "reset" static method');
   });
 
-  test('Instance Functions', function() {
+  test('0.0.2 Instance Functions', function() {
     var kickq = new Kickq();
     assert.instanceOf(kickq, Kickq, 'should be an instance of Kickq');
     assert.isFunction(kickq.create, 'should have the "create" method');
