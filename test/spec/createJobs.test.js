@@ -226,6 +226,7 @@ suite('Job Creation', function() {
           .notify(done);
 
           clock.tick(11100);
+          clock.restore();
         }
 
         kickq.create('hotjob_job 1.4.4', 'hotjob job data', opts, onJobCreate);
@@ -252,6 +253,7 @@ suite('Job Creation', function() {
           .notify(done);
 
           clock.tick(4100);
+          clock.restore();
         }
         kickq.create('hotjob_job 1.4.5', 'hotjob job data', opts, onJobCreate);
       });
