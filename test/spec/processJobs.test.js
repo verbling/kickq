@@ -6,7 +6,7 @@ var sinon  = require('sinon'),
     expect = require('chai').expect,
     grunt  = require('grunt'),
     assert = require('chai').assert,
-    Kickq  = require('../../'),
+    kickq  = require('../../'),
     tester = require('../lib/tester'),
     jobTest = require('./jobClass.test'),
     when   = require('when');
@@ -16,19 +16,17 @@ var noop = function(){};
 suite('2.0 Job Processing', function() {
 
   setup(function(done) {
-    Kickq.reset();
-    Kickq.config({
+    kickq.reset();
+    kickq.config({
       redisNamespace: tester.NS
     });
     tester.clear(done);
   });
 
   teardown(function(done) {
-    Kickq.reset();
+    kickq.reset();
     tester.clear(done);
   });
-
-  var kickq = new Kickq();
 
   test('2.0.1 The job instance argument', function() {
     var jobid;

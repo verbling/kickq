@@ -9,7 +9,7 @@ var grunt  = require('grunt');
 var assert = require('chai').assert;
 var when   = require('when');
 
-var Kickq  = require('../../');
+var kickq  = require('../../');
 var tester = require('../lib/tester');
 var jobTest = require('./jobClass.test');
 
@@ -18,20 +18,18 @@ var noop = function(){};
 suite('Job Creation', function() {
 
   setup(function(done) {
-    Kickq.reset();
-    Kickq.config({
+    kickq.reset();
+    kickq.config({
       redisNamespace: tester.NS
     });
     tester.clear(done);
   });
 
   teardown(function(done) {
-    Kickq.reset();
+    kickq.reset();
     tester.clear(done);
   });
 
-
-  var kickq = new Kickq();
 
   // The numbering (e.g. 1.1.1) has nothing to do with order
   // The purpose is to provide a unique string so specific tests are
