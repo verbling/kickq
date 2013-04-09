@@ -216,6 +216,7 @@ suite('Job Creation', function() {
 
           assert.isFulfilled( promise.then(
             noop, function( err ) {
+              console.log('HOTJOB CALLBACK');
               var endTime = new Date().getTime();
               assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
                 ' at least after 9000ms');
@@ -224,7 +225,7 @@ suite('Job Creation', function() {
           )
           .notify(done);
 
-          clock.tick(10100);
+          clock.tick(11100);
         }
 
         kickq.create('hotjob_job 1.4.4', 'hotjob job data', opts, onJobCreate);
