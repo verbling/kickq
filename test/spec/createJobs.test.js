@@ -279,29 +279,28 @@ suite('Job Creation', function() {
   });
 
   suite('1.6 Job Creation returns a Promise', function() {
-    test('Job Creation returns a promise', function() {
+    test('1.6.1 Job Creation returns a promise', function() {
       var createPromise = kickq.create('create-promise-test');
       assert.ok(when.isPromise(createPromise), 'create job should return a promise');
     });
-    test('Job creation promise resolves', function(done) {
+    test('1.6.2 Job creation promise resolves', function(done) {
       var createPromise = kickq.create('create-promise-arguments');
       assert.isFulfilled(createPromise, 'job create promise should resolve').notify(done);
     });
-    test('Job creation promise resolves with proper arguments', function(done) {
+    test('1.6.3 Job creation promise resolves with proper arguments', function(done) {
       var createPromise = kickq.create('create-promise-arguments');
       assert.isFulfilled(createPromise.then(function(job) {
-        jobTest.testIntanceProps(job);
-        assert.equal(respObj.name, 'create-promise-arguments', '"job.name" ' +
+        jobTest.testInstanceProps(job);
+        assert.equal(job.name, 'create-promise-arguments', '"job.name" ' +
           'property should have proper value');
       }), 'job create promise should resolve').notify(done);
     });
 
-    test('hotjob creation', function(done) {
-      var createPromise = kickq.create('create-promise-arguments', 'data', {
-        hotjob: true
-      });
+    test('1.6.4 hotjob creation', function(done) {
+      var opts = {hotjob:true};
+      var createPromise = kickq.create('create-promise-arguments', 'data', opts);
+
       assert.isFulfilled(createPromise.then(function(job) {
-        jobTest.testIntanceProps(job);
         assert.ok(job.hotjob, 'job.hotjob flag should be true in job instance');
         assert.ok(when.isPromise(job.hotjobPromise), 'job.hotjobPromise should be a promise');
       }), 'job create promise should resolve').notify(done);
