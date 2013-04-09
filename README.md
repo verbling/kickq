@@ -1,6 +1,14 @@
 # kickq
 
-## Overview
+Kick Jobs out the door, quickly!
+
+[![Build Status](https://travis-ci.org/verbling/kickq.png?branch=master)](https://travis-ci.org/verbling/kickq)
+
+## Not there yet!
+
+kickq is still under development. The API is scaffolded in the [test folder](test/).
+
+**Ignore anything bellow this point, boilerplate**
 
 ## Install
 

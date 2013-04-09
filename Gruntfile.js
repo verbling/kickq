@@ -13,11 +13,20 @@
  *
  */
 
+var reporterUse;
+
+if ( 'true' === process.env.TRAVIS) {
+  reporterUse = 'dot';
+} else {
+  reporterUse = 'nyan';
+}
+
 module.exports = function( grunt ) {
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadTasks('tasks');
 
   //
   // Grunt configuration:
@@ -53,7 +62,7 @@ module.exports = function( grunt ) {
           // only add the tests that pass
           grep: /(\s1\.1|\s1\.2|\s1\.4|\s1\.6|\s0\.0|\s2\.0)/,
           ui: 'tdd',
-          reporter: 'nyan'
+          reporter: reporterUse
         }
       }
     }
@@ -63,6 +72,12 @@ module.exports = function( grunt ) {
 
   grunt.registerTask('test', [
     'clean',
+    'mochaTest:itterative'
+  ]);
+
+  grunt.registerTask('test:console', [
+    'clean',
+    'start',
     'mochaTest:itterative'
   ]);
 
