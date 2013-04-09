@@ -60,8 +60,8 @@ module.exports = function( grunt ) {
       itterative: {
         options: {
           // only add the tests that pass
-          //grep: /(\s1\.1|\s1\.2|\s1\.4|\s1\.6|\s0\.0|\s2\.0)/,
-          grep: /(\s1\.1\.2)/,
+          grep: /(\s1\.1|\s1\.2|\s1\.4|\s1\.6|\s0\.0|\s2\.0)/,
+          //grep: /(\s1\.1\.2)/,
           ui: 'tdd',
           reporter: reporterUse
         }
