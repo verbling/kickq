@@ -200,16 +200,19 @@ suite('Job Creation', function() {
     suite('Timeout tests', function(){
       var clock;
       setup(function() {
+        console.log('setup clock');
         clock = sinon.useFakeTimers();
       });
 
       teardown(function() {
+        console.log('teardown clock');
         clock.restore();
       });
       test('1.4.4 Create a "hotjob job" that will timeout using default timeout value', function(done) {
         var startTime;
         function onJobCreate(err, job, promise) {
           startTime = new Date().getTime();
+          console.log('ENTERED: ', startTime);
 
           assert.isFulfilled( promise.then(
             noop, function( err ) {
