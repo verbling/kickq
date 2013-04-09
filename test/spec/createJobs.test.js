@@ -199,49 +199,55 @@ suite('Job Creation', function() {
       kickq.create('hotjob_job 1.4.3', 'hotjob job data', opts, onJobCreate);
     });
 
-    test('Create a "hotjob job" that will timeout using default timeout value', function(done) {
+    test('1.4.4 Create a "hotjob job" that will timeout using default timeout value', function(done) {
       var startTime;
-
-      // raise timeout to 14s
-      this.timeout(14000);
-
+      var clock = sinon.useFakeTimers();
       function onJobCreate(err, job, promise) {
-
         startTime = new Date().getTime();
 
-        assert.isFulfilled( promise.then(function( respObj ) {
-          assert.ok( !respObj.complete, 'complete should be false');
-          var endTime = new Date().getTime();
-          assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
-            'at least after 9000ms');
-        }), 'hotjob Promise should be fulfilled')
-          .notify(done);
+        assert.isFulfilled( promise.then(
+          noop, function( err ) {
+            var endTime = new Date().getTime();
+            assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
+              ' at least after 9000ms');
+            clock.restore();
+          }),
+          'hotjob Promise should be fulfilled'
+        )
+        .notify(done);
+
+        clock.tick(10100);
       }
 
-      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.create('hotjob_job 1.4.4', 'hotjob job data', opts, onJobCreate);
     });
 
-    test('Create a "hotjob job" that will timeout using custom timeout value', function(done) {
+    test('1.4.5 Create a "hotjob job" that will timeout using custom ' +
+      'timeout value', function(done) {
+      var startTime;
       var opts = {
         hotjob: true,
         hotjobTimeout: 4
       };
-
-      // raise timeout to 5s
-      this.timeout(5000);
+      var clock = sinon.useFakeTimers();
 
       function onJobCreate(err, id, promise) {
-        assert.isFulfilled( promise.then(function( respObj ) {
-          assert.ok( respObj.complete, 'complete should be true');
+        startTime = new Date().getTime();
 
-          var endTime = new Date().getTime();
-          assert.ok( (endTime - startTime) > 3000, 'Promise should timeout' +
-            'at least after 3000ms');
+        assert.isFulfilled( promise.then(
+          noop, function( err ) {
+            var endTime = new Date().getTime();
+            assert.ok( (endTime - startTime) > 3000, 'Promise should timeout' +
+            ' at least after 3000ms');
+            clock.restore();
+          }),
+          'hotjob Promise should be fulfilled'
+        )
+        .notify(done);
 
-        }), 'hotjob Promise should be fulfilled')
-          .notify(done);
+        clock.tick(4100);
       }
-      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.create('hotjob_job 1.4.5', 'hotjob job data', opts, onJobCreate);
     });
 
   });
