@@ -11,25 +11,26 @@ var sinon  = require('sinon'),
     jobTest = require('./jobClass.test'),
     when   = require('when');
 
+var noop = function(){};
 
-suite('Job Processing', function() {
+suite('2.0 Job Processing', function() {
 
   setup(function(done) {
     Kickq.reset();
     Kickq.config({
       redisNamespace: tester.NS
     });
-    tester.clear();
+    tester.clear(done);
   });
 
   teardown(function(done) {
-    tester.clear();
     Kickq.reset();
+    tester.clear(done);
   });
 
   var kickq = new Kickq();
 
-  test('The job instance argument', function() {
+  test('2.0.1 The job instance argument', function() {
     var jobid;
 
     kickq.create('process-test-one', 'data', {}, function(err, key) {
@@ -52,20 +53,21 @@ suite('Job Processing', function() {
     });
   });
 
-  test('Concurent jobs', function(done) {
+  test('2.0.2 Concurrent jobs', function(done) {
     // allow some time to execute
-    this.timeout(10000);
+    this.timeout(5000);
 
     // create 20 jobs
     var jobPromises = [];
     for (var i = 0; i < 20; i++) {
-      jobPromises.push(kickq.create('process-test-concurent'));
+      jobPromises.push(kickq.create('process-test-Concurrent'));
     }
 
     var jobProcessCount = 0;
     var jobProcessQueue = [];
     function startProcess() {
-      kickq.process('process-test-concurent', 10, function(jobObj, data, cb) {
+      var opts = {concurrentJobs: 10};
+      kickq.process('process-test-Concurrent', opts, function(jobObj, data, cb) {
         jobProcessCount++;
         jobProcessQueue.push(cb);
       });
@@ -77,18 +79,22 @@ suite('Job Processing', function() {
     setTimeout(function(){
       assert.equal(jobProcessCount, 10, '10 jobs should be queued for processing');
       done();
-    }, 2000);
+    }, 1000);
   });
 
-  test('Process creates ghost by never reporting outcome', function(done){
-    kickq.create('process-ghost');
-    kickq.process('process-ghost', function(jobObj, data, cb) {});
+  test('2.0.3 Process creates ghost by never reporting outcome', function(done){
+    var clock = sinon.useFakeTimers();
 
-    // give time for jobs to process
-    setTimeout(function(){
-      ok(false, 'TODO create a test case for ghost jobs');
-      done();
-    }, 300);
+    var firstPop = true;
+    kickq.create('process-ghost', {processTimeout:2000}).then(function(){
+      kickq.process('process-ghost', function(jobObj, data, cb) {
+        if (firstPop) {
+          firstPop = false;
+          clock.tick(2100);
+          return;
+        }
+      });
+    });
   });
 
 

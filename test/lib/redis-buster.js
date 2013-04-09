@@ -5,7 +5,6 @@
 
 var redis = require('redis');
 
-
 var buster = module.exports = {};
 
 var client = redis.createClient();
