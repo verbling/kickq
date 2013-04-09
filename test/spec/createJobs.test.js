@@ -200,12 +200,10 @@ suite('Job Creation', function() {
     suite('Timeout tests', function(){
       var clock;
       setup(function() {
-        console.log('setup clock');
         //clock = sinon.useFakeTimers( +new Date());
       });
 
       teardown(function() {
-        console.log('teardown clock');
         //clock.restore();
       });
       test('1.4.4 Create a "hotjob job" that will timeout using default timeout value', function(done) {
@@ -217,12 +215,10 @@ suite('Job Creation', function() {
 
         function onJobCreate(err, job, promise) {
           startTime = new Date().getTime();
-          console.log('ENTERED: ', startTime);
 
           assert.isFulfilled( promise.then(
             noop, function( err ) {
               var endTime = new Date().getTime();
-              console.log('HOTJOB CALLBACK:', endTime, endTime - startTime);
 
               assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
                 ' at least after 9000ms');
