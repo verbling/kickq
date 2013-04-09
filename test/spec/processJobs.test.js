@@ -67,17 +67,16 @@ suite('2.0 Job Processing', function() {
       var opts = {concurrentJobs: 10};
       kickq.process('process-test-Concurrent', opts, function(jobObj, data, cb) {
         jobProcessCount++;
-        jobProcessQueue.push(cb);
+
       });
+      // allow for all to-process jobs to be collected
+      setTimeout(function(){
+        assert.equal(jobProcessCount, 10, '10 jobs should be queued for processing');
+        done();
+      }, 3000);
     }
 
     when.all(jobPromises).then(startProcess);
-
-    // give time for all to-process jobs to be collected
-    setTimeout(function(){
-      assert.equal(jobProcessCount, 10, '10 jobs should be queued for processing');
-      done();
-    }, 1000);
   });
 
   //
