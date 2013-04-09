@@ -1,14 +1,19 @@
 /*jshint camelcase:false */
 /*
- * node-asset-pipeline
- * https://github.com/thanpolas/node-asset-pipeline
+ * Kickq
+ * Kick jobs out the door, quickly.
+ *
+ * https://github.com/verbling/kickq
  *
  * Copyright (c) 2013 Verbling
  * Licensed under the MIT license.
+ *
+ * Authors:
+ *   Thanasis Polychronakis (http://thanpol.as)
+ *
  */
 
 module.exports = function( grunt ) {
-  'use strict';
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
@@ -39,12 +44,15 @@ module.exports = function( grunt ) {
     clean: ['temp/*'],
 
     mochaTest: {
-      itterative: [ 'test/spec/mainAPI.js' ]
+      itterative: [ 'test/spec/*.js' ]
     },
 
     mochaTestConfig: {
       itterative: {
         options: {
+          // only add the tests that pass
+          grep: /(\s1\.1|\s1\.2|\s1\.4|\s1\.6)/,
+          ui: 'tdd',
           reporter: 'nyan'
         }
       }
@@ -55,7 +63,7 @@ module.exports = function( grunt ) {
 
   grunt.registerTask('test', [
     'clean',
-    'mochaTest'
+    'mochaTest:itterative'
   ]);
 
   grunt.registerTask('default', ['test']);
