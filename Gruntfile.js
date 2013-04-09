@@ -77,7 +77,6 @@ module.exports = function( grunt ) {
 
   grunt.registerTask('test:console', [
     'clean',
-    'start',
     'mochaTest:itterative'
   ]);
 
