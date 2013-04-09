@@ -16,7 +16,7 @@
 var reporterUse;
 
 if ( 'true' === process.env.TRAVIS) {
-  reporterUse = 'dot';
+  reporterUse = 'spec';
 } else {
   reporterUse = 'nyan';
 }
