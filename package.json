@@ -28,7 +28,7 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt test:console"
+    "test": "grunt test:console --verbose"
   },
   "dependencies": {
     "grunt": "~0.4.0",
