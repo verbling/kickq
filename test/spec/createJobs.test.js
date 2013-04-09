@@ -201,7 +201,7 @@ suite('Job Creation', function() {
       var clock;
       setup(function() {
         console.log('setup clock');
-        clock = sinon.useFakeTimers();
+        clock = sinon.useFakeTimers( +new Date());
       });
 
       teardown(function() {
@@ -216,8 +216,9 @@ suite('Job Creation', function() {
 
           assert.isFulfilled( promise.then(
             noop, function( err ) {
-              console.log('HOTJOB CALLBACK');
               var endTime = new Date().getTime();
+              console.log('HOTJOB CALLBACK:', endTime, endTime - startTime);
+
               assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
                 ' at least after 9000ms');
             }),
@@ -226,7 +227,7 @@ suite('Job Creation', function() {
           .notify(done);
 
           clock.tick(11100);
-          clock.restore();
+          //clock.restore();
         }
 
         kickq.create('hotjob_job 1.4.4', 'hotjob job data', opts, onJobCreate);
@@ -253,7 +254,7 @@ suite('Job Creation', function() {
           .notify(done);
 
           clock.tick(4100);
-          clock.restore();
+          // clock.restore();
         }
         kickq.create('hotjob_job 1.4.5', 'hotjob job data', opts, onJobCreate);
       });
