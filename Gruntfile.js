@@ -62,12 +62,15 @@ module.exports = function( grunt ) {
           // only add the tests that pass
           grep: /(\s1\.1|\s1\.2|\s1\.4|\s1\.6|\s0\.0|\s2\.0)/,
           //grep: /(\s1\.1\.2)/,
+          //
+          // Shell version:
+          // mocha -b test/spec/ -u tdd -g "1.1| 1.2| 1.4| 1.6| 0.0| 2.0" -R spec
+          //
           ui: 'tdd',
           reporter: reporterUse
         }
       }
     }
-
 
   });
 

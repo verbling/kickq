@@ -200,18 +200,18 @@ suite('Job Creation', function() {
     suite('Timeout tests', function(){
       var clock;
       setup(function() {
-        //clock = sinon.useFakeTimers( +new Date());
+        clock = sinon.useFakeTimers( +new Date());
       });
 
       teardown(function() {
-        //clock.restore();
+        clock.restore();
       });
       test('1.4.4 Create a "hotjob job" that will timeout using default timeout value', function(done) {
         var startTime;
 
         // go back to natural timeout until sinon.useFakeTimers + travis resolves
         // https://github.com/cjohansen/Sinon.JS/issues/268
-        this.timeout(11000);
+        // this.timeout(11000);
 
         function onJobCreate(err, job, promise) {
           startTime = new Date().getTime();
@@ -227,8 +227,8 @@ suite('Job Creation', function() {
           )
           .notify(done);
 
-          //clock.tick(10100);
-          //clock.restore();
+          clock.tick(10100);
+          // clock.restore();
         }
 
         kickq.create('hotjob_job 1.4.4', 'hotjob job data', opts, onJobCreate);
@@ -239,7 +239,7 @@ suite('Job Creation', function() {
         var startTime;
         // go back to natural timeout until sinon.useFakeTimers + travis resolves
         // https://github.com/cjohansen/Sinon.JS/issues/268
-        this.timeout(5000);
+        // this.timeout(5000);
 
         var opts = {
           hotjob: true,
@@ -258,7 +258,7 @@ suite('Job Creation', function() {
           )
           .notify(done);
 
-          //clock.tick(4100);
+          clock.tick(4100);
           // clock.restore();
         }
         kickq.create('hotjob_job 1.4.5', 'hotjob job data', opts, onJobCreate);
