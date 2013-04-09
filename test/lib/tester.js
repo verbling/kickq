@@ -23,3 +23,11 @@ tester.fix = jobOpts;
 tester.NS = rBuster.KEY;
 
 tester.clear = rBuster.clear;
+
+
+var redis = require('redis');
+var client = redis.createClient();
+
+client.set('key', 'value', function(){
+  console.log('redis set:', arguments);
+});
