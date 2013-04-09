@@ -5,19 +5,19 @@ A job queue for node.
 
 ## Configuration
 ```js
-var Kickq = require('kickq');
+var kickq = require('kickq');
 
-Kickq.config({
-  redisNamespace: 'Kickq'
+kickq.config({
+  redisNamespace: 'kickq'
 });
 
-Kickq.config('redisNamespace', 'Kickq');
+kickq.config('redisNamespace', 'kickq');
 
 // can add config parameters run-time
-Kickq.config(anotherConfigObject);
+kickq.config(anotherConfigObject);
 
 // reset all config params, return to original state.
-Kickq.reset();
+kickq.reset();
 
 ```
 
@@ -123,7 +123,7 @@ Allow options per job type. Each key represents a job type.
 You can use any of the options marked with **✓ per job option** from the list above, options are applied cascadingly with the more specific overiding.
 
 ```js
-KickQ.config({
+kickq.config({
 
   jobFlags: {
     'job name': {
@@ -139,9 +139,7 @@ KickQ.config({
 ## Creating a Job
 
 ```js
-var Kickq = require('kickq');
-
-var kickq = new Kickq();
+var kickq = require('kickq');
 
 var data = {some:'stuff'};
 
@@ -150,11 +148,11 @@ var opts = {delay: 1000 };
 
 kickq.create('job name', data, opts, function(err, job) {
   // err = is something went wrong
-  // job = The Kickq.Job instance, see bellow.
+  // job = A job item, see bellow.
 });
 ```
 
-Read more about the callback's argument `job` in [The Job Instance](#the-job-instance).
+Read more about the callback's argument `job` in [The Job Item](#the-job-item).
 
 All Job options marked with **✓ per job option** can be used for each job individually, [check out all the options](#configuration-options).
 
@@ -210,7 +208,7 @@ kickq.create('job name', data, opts, function(err, job, hotjobPromise) {
   hotjobPromise.then(fnOnJobComplete, fnOnJobFailed);
 });
 ```
-Read more about the callback's argument `job` in [The Job Instance](#the-job-instance).
+Read more about the callback's argument `job` in [The Job Item](#the-job-item).
 
 
 #### Set hotjob Flag on Job Types
@@ -218,9 +216,9 @@ Read more about the callback's argument `job` in [The Job Instance](#the-job-ins
 Set a default hotjob flag per job type via config:
 
 ```js
-var KickQ = require('kickq');
+var kickq = require('kickq');
 
-KickQ.config({
+kickq.config({
   jobFlags: {
     'job name': {
       hotjob: true,
@@ -244,9 +242,9 @@ kickq.create('job name', data, opts);
 Or set a default retry flag per job type via config:
 
 ```js
-var KickQ = require('kickq');
+var kickq = require('kickq');
 
-KickQ.config({
+kickq.config({
   jobFlags: {
     'job name': {
       retry: true,
@@ -346,9 +344,9 @@ function processJob(job, data, cb) {
 k.delete(job.id);
 ```
 
-## The Job Instance
+## The Job Item
 
-The *Job Instance* contains all the essential information of a job. It is passed on every Kickq callback. All properties are read-only, the only way you can interact with the *Job Instance* is by invoking its methods.
+The *Job Item* contains all the essential information of a job. It is passed on every Kickq callback. The Job Item object is dispensable, it is a clone of the actual job item instance so you can manipulate it freely.
 
 This is the breakout:
 
@@ -381,6 +379,7 @@ This is the breakout:
 
   hotjob: false, // {boolean} ???? RENAME???.
   hotjobTimeout: 10, // {number} seconds.
+  hotjobPromise: null, // {when.Promise|null} The hotjob promise.
 
   data: null, // {*} Any type, passed data on job creation
 
