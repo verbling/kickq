@@ -13,6 +13,7 @@ var Kickq  = require('../../');
 var tester = require('../lib/tester');
 var jobTest = require('./jobClass.test');
 
+var noop = function(){};
 
 suite('Job Creation', function() {
 
@@ -172,33 +173,30 @@ suite('Job Creation', function() {
         ' a promise in the callback');
         assert.isFulfilled(promise.then(function(job) {
           assert.ok(job.complete, '"complete" property should be true');
-          assert.equal(job.name, 'hotjob_job', '"jobName" property should have proper value');
+          assert.equal(job.name, 'hotjob_job 1.4.2', '"jobName" property should have proper value');
         }), 'hotjob promise should resolve').notify(done);
+
+        kickq.process('hotjob_job 1.4.2', function(job, data, cb) {
+          cb();
+        });
+
       }
 
       kickq.create('hotjob_job 1.4.2', 'hotjob job data 1.4.2', opts, onJobCreate);
-      kickq.process('hotjob_job', function(job, data, cb) {
-        cb();
-      });
     });
 
     test('1.4.3 Create a "hotjob job" that will fail', function(done) {
 
-      function onJobCreate(err, id, promise) {
-        assert.ok( when.isPromise(promise), 'create callback should yield' +
-        ' a promise in the callback');
-
-        assert.isRejected( promise.otherwise(function(err) {
-          assert.equal( err, 'error message');
-        }), 'hotjob Promise should be rejected')
-          .notify(done);
+      function onJobCreate(err, job, promise) {
+        var testprom = assert.isRejected(promise,
+          'hotjob Promise should be rejected').notify(done);
 
         kickq.process('hotjob_job 1.4.3', function(job, data, cb) {
           cb('error message');
         });
       }
 
-      kickq.create('hotjob_job', 'hotjob job data', opts, onJobCreate);
+      kickq.create('hotjob_job 1.4.3', 'hotjob job data', opts, onJobCreate);
     });
 
     test('Create a "hotjob job" that will timeout using default timeout value', function(done) {
@@ -207,7 +205,7 @@ suite('Job Creation', function() {
       // raise timeout to 14s
       this.timeout(14000);
 
-      function onJobCreate(err, id, promise) {
+      function onJobCreate(err, job, promise) {
 
         startTime = new Date().getTime();
 
