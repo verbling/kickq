@@ -80,20 +80,23 @@ suite('2.0 Job Processing', function() {
     }, 1000);
   });
 
-  test('2.0.3 Process creates ghost by never reporting outcome', function(done){
-    var clock = sinon.useFakeTimers();
+  //
+  // TODO when we expose a .get() method so we can fetch the job and examine it
+  //
+  // test('2.0.3 Process creates ghost by never reporting outcome', function(done){
+  //   var clock = sinon.useFakeTimers();
 
-    var firstPop = true;
-    kickq.create('process-ghost', {processTimeout:2000}).then(function(){
-      kickq.process('process-ghost', function(jobObj, data, cb) {
-        if (firstPop) {
-          firstPop = false;
-          clock.tick(2100);
-          return;
-        }
-      });
-    });
-  });
+  //   var firstPop = true;
+  //   kickq.create('process-ghost', {processTimeout:2000}).then(function(){
+  //     kickq.process('process-ghost', function(jobObj, data, cb) {
+  //       if (firstPop) {
+  //         firstPop = false;
+  //         clock.tick(2100);
+  //         return;
+  //       }
+  //     });
+  //   });
+  // });
 
 
 });
