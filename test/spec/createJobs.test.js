@@ -83,11 +83,10 @@ suite('Job Creation', function() {
         kickq.process('create-check-jobItem 1.1.7', function(job, data, cb) {
           jobTest.testInstanceProps(job);
           assert.equal(job.state, 'processing', 'state of the job should be "processing"' );
-          done();
+          cb(null, done);
         });
       });
     });
-
   });
 
   suite('1.2 A "plain job" with Object Data', function() {
@@ -96,8 +95,7 @@ suite('Job Creation', function() {
         kickq.process('create-data-object', function(job, data, cb) {
           assert.deepEqual(data, tester.fix.plain.data, 'data provided should deep equal value passed');
           assert.equal(job.name, 'create-data-object', 'job name provided should equal value passed');
-          cb();
-          done();
+          cb(null, done);
         });
       });
     });
@@ -121,17 +119,18 @@ suite('Job Creation', function() {
 
     });
     test('1.3.2 Verify "delayed job" was created', function(done) {
-      this.timeout(3000);
-      kickq.process('delayed_job', function(job, data, cb) {
-        cb();
-
-        var processTime = new Date().getTime();
-        assert.ok( (processTime - startTime) > 800, 'job should get processed ' +
-          'at least after 800ms');
-        done();
+      this.timeout(2000);
+      startTime = Date.now();
+      kickq.create( 'delayed_job 1.3.2', 'data',  {delay: 1}, function(){
+        kickq.process('delayed_job 1.3.2', function(job, data, cb) {
+          var processTime = Date.now();
+          assert.ok( (processTime - startTime) > 800, 'job should get processed ' +
+            'at least after 800ms');
+          done();
+        });
       });
-    });
-  });
+    }); // test
+  }); // suite 1.3
 
   suite('1.4 A "hotjob job"', function() {
     var startTime;
