@@ -110,14 +110,21 @@ suite('Job Creation', function() {
   suite('1.3 A "delayed job"', function() {
     var startTime;
 
-    test('Create a "delayed job"', function(done) {
+    test('1.3.1 Create a "delayed job"', function(done) {
       this.timeout(3000);
-      kickq.create('delayed_job', 'delayed job data', {delay: 1}, function(err, job) {
-        startTime = new Date().getTime();
-        done();
-      });
+
+      var createPromise = kickq.create( 'delayed_job 1.3.1', 'data', {delay: 1},
+        function(err, job) {
+          assert.isNull(err, 'The "err" arg should be null');
+          assert.equal('delayed', job.state, 'Job item state should be "delayed"');
+        });
+
+      assert.isFulfilled( createPromise,
+        'The delayed job create operation should be successful')
+      .notify(done);
+
     });
-    test('Verify "delayed job" was created', function(done) {
+    test('1.3.2 Verify "delayed job" was created', function(done) {
       this.timeout(3000);
       kickq.process('delayed_job', function(job, data, cb) {
         cb();
@@ -153,8 +160,7 @@ suite('Job Creation', function() {
 
       function onJobCreate(err, job, promise) {
         assert.isFulfilled(promise, 'hotjob promise should resolve').notify(done);
-        promise.then(function(){
-        });
+
         kickq.process('hotjob_job 1.4.1', function(job, data, cb) {
           cb();
         });
