@@ -135,6 +135,35 @@ kickq.config({
 });
 ```
 
+### Scheduler Options
+
+#### Option :: 'schedulerOn'
+**Type**: `boolean` **Default**: `true`
+
+If this worker will also launch the scheduler loop.
+
+#### Option :: 'schedulerInterval'
+**Type**: `number` **Default**: `1000` milliseconds
+
+The interval the scheduler will check for jobs that need to be queued.
+
+#### Option :: 'schedulerFuzz'
+**Type**: `number` **Default**: `300` milliseconds
+
+The fuzz factor is to create some randomness in the interval so multiple workers will have a chance to spread out evenly. An interval of 1000 with a fuzzy factor of 300 means that the actual interval for scheduler checks will be anywhere between 700 and 1,300 milliseconds.
+
+#### Option :: 'schedulerLookAhead'
+**Type**: `number` **Default**: `1500` milliseconds
+
+When actually performing a db query, how far ahead to look for jobs that need to be moved to the process queue. Rule of thumb = `(schedulerInterval + schedulerFuzz) * ~15%`.
+
+
+### Advanced Options
+
+#### Option :: 'fetchTimeout'
+**Type**: `number` **Default**: `0` seconds, 0 for ever
+
+The [redis' `blpop` timeout](http://redis.io/commands/blpop). Used for fetching the next job in the queue, 0 means indefinite wait.
 
 ## Creating a Job
 
@@ -382,6 +411,9 @@ This is the breakout:
   hotjobPromise: null, // {when.Promise|null} The hotjob promise.
 
   data: null, // {*} Any type, passed data on job creation
+
+  // {number | null} JS timestamp of when this job has been scheduled for.
+  scheduledFor: null,
 
   // Processing runs performed for this job. Can be 1 up to n retries.
   // When the job is new this is an empty array.
