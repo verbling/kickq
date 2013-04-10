@@ -343,6 +343,9 @@ function processJob(job, data, cb) {
 
   cb('error'); // <-- error
   cb(); // <-- no error
+
+  // <-- no error and callback when post-process db ops are done
+  cb(null, function(){});
 }
 ```
 
@@ -392,6 +395,7 @@ This is the breakout:
 
   // the state can be one of:
   //   - new
+  //   - queued :: A job has been queued for re-processing
   //   - delayed
   //   - processing
   //   - retry
