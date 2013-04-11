@@ -42,7 +42,7 @@ suite('Job Creation', function() {
           assert.isNull(err, 'The "err" arg should be null');
           done();
         }),
-        'hotjob promise should resolve');
+        'kickq.create promise should resolve');
     });
     test('1.1.2 Verify "plain job" was created', function(done) {
       kickq.create( 'create-verify', 'data', {}, function(err) {
@@ -90,13 +90,13 @@ suite('Job Creation', function() {
 
   suite('1.2 A "plain job" with Object Data', function() {
     test('Verify "plain job" with Object Data was created', function(done) {
-      kickq.create('create-data-object', tester.fix.plain.data, function(){
-        kickq.process('create-data-object', function(job, data, cb) {
-          assert.deepEqual(data, tester.fix.plain.data, 'data provided should deep equal value passed');
-          assert.equal(job.name, 'create-data-object', 'job name provided should equal value passed');
-          cb(null, done);
-        });
+      kickq.create('create-data-object', tester.fix.plain.data);
+      kickq.process('create-data-object', function(job, data, cb) {
+        assert.deepEqual(data, tester.fix.plain.data, 'data provided should deep equal value passed');
+        assert.equal(job.name, 'create-data-object', 'job name provided should equal value passed');
+        cb(null, done);
       });
+
     });
   });
 
@@ -120,14 +120,16 @@ suite('Job Creation', function() {
     test('1.3.2 Verify "delayed job" gets processed in time', function(done) {
       this.timeout(5000);
       startTime = Date.now();
-      kickq.create( 'delayed_job 1.3.2', 'data',  {delay: 1000}, function(){
-        kickq.process('delayed_job 1.3.2', function(job, data, cb) {
-          var processTime = Date.now();
-          assert.ok( (processTime - startTime) > 800, 'job should get processed ' +
-            'at least after 800ms');
-          done();
-        });
+      kickq.create( 'delayed_job 1.3.2', 'data',  {delay: 1000});
+
+      kickq.process('delayed_job 1.3.2', function(job, data, cb) {
+        console.log('NEVER HERE');
+        var processTime = Date.now();
+        assert.ok( (processTime - startTime) > 800, 'job should get processed ' +
+          'at least after 800ms');
+        cb(null, done);
       });
+
     }); // test
   }); // suite 1.3
 
@@ -153,14 +155,16 @@ suite('Job Creation', function() {
     test('1.4.1 Create a "hotjob job"', function(done) {
 
       function onJobCreate(err, job, promise) {
-        assert.isFulfilled(promise, 'hotjob promise should resolve').notify(done);
+        assert.isFulfilled(promise, 'hotjob promise should resolve')
+          .notify(done);
 
         kickq.process('hotjob_job 1.4.1', function(job, data, cb) {
           cb();
         });
       }
 
-      kickq.create('hotjob_job 1.4.1', 'hotjob job data 1.4.1', opts, onJobCreate);
+      kickq.create('hotjob_job 1.4.1', 'hotjob job data 1.4.1', opts, onJobCreate)
+        .otherwise(done);
     });
 
     test('1.4.2 Create a "hotjob job" and test the promise response object',
