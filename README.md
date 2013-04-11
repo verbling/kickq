@@ -4,11 +4,13 @@ Kick Jobs out the door, quickly!
 
 [![Build Status](https://travis-ci.org/verbling/kickq.png?branch=master)](https://travis-ci.org/verbling/kickq)
 
-## Not there yet!
+## We are in beta!
 
-kickq is still under development. The API is scaffolded in the [test folder](test/).
+First beta is out. Not ready for production yet but all the functionality is there.
 
-**Ignore anything bellow this point, boilerplate**
+From here on it's bug fixing and strengthening the code.
+
+Checkout the API documentation in the [test folder](test/), pending a more expanded documentation.
 
 ## Install
 
