@@ -37,8 +37,8 @@
     "config": "~0.4.20",
     "yaml": "~0.2.3",
     "underscore": "~1.4.4",
-    "redis": "git://github.com/mranney/node_redis.git",
-    "when": "~2.0.0"
+    "when": "~2.0.0",
+    "redis": "~0.8.3"
   },
   "devDependencies": {
     "grunt-mocha-test": "~0.2.0",
