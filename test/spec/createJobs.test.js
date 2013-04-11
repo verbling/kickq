@@ -118,7 +118,7 @@ suite('Job Creation', function() {
 
     });
     test('1.3.2 Verify "delayed job" gets processed in time', function(done) {
-      this.timeout(2000);
+      this.timeout(5000);
       startTime = Date.now();
       kickq.create( 'delayed_job 1.3.2', 'data',  {delay: 1000}, function(){
         kickq.process('delayed_job 1.3.2', function(job, data, cb) {

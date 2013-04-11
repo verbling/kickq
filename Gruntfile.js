@@ -60,7 +60,7 @@ module.exports = function( grunt ) {
       itterative: {
         options: {
           // only add the tests that pass
-          grep: /(\s1\.1|\s1\.2|\s1\.4|\s1\.6|\s0\.0|\s2\.0|\s1\.3|\s1\.5)/,
+          // grep: /(\s1\.1|\s1\.2|\s1\.4|\s1\.6|\s0\.0|\s2\.0|\s1\.3|\s1\.5)/,
           // grep: /(\s1\.1\.7)/,
           //
           // Shell version:
