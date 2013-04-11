@@ -218,7 +218,7 @@ suite('Job Creation', function() {
 
           assert.isFulfilled( promise.then(
             noop, function( err ) {
-              var endTime = new Date().getTime();
+              var endTime = Date.now();
 
               assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
                 ' at least after 9000ms');
@@ -250,7 +250,7 @@ suite('Job Creation', function() {
 
           assert.isFulfilled( promise.then(
             noop, function( err ) {
-              var endTime = new Date().getTime();
+              var endTime = Date.now();
               assert.ok( (endTime - startTime) > 3000, 'Promise should timeout' +
               ' at least after 3000ms');
             }),
