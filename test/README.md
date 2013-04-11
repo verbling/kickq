@@ -56,14 +56,14 @@ Define the master key namespace for redis, that kickq will use to store data.
 
 #### Option :: `purgeTimeout`
 
-**Type**: `number` **Default**: `86400` (seconds, default is 1 day)
+**Type**: `number` **Default**: `86400000` (milliseconds, default is 1 day)
 
 When a job completes it moves to the purge queue. This timeout defines the time to wait before actually deleting the job record from redis.
 
 #### Option :: `processTimeout`
-**Type**: `number` **Default**: `10` (seconds) **✓ per job option**
+**Type**: `number` **Default**: `10000` (milliseconds) **✓ per job option**
 
-The global timeout for processing tasks, in seconds.
+The global timeout for processing tasks, in milliseconds.
 
 #### Option :: `delay`
 **Type**: `?number` **default** `null` **✓ per job option**
@@ -81,7 +81,7 @@ A job gets ghosted when the process function does not invoke the callback or ret
 How many times to retry processing a ghost job.
 
 #### Option :: `ghostInterval`
-**Type**: `number` **default** `1800` (half an hour) **✓ per job option**
+**Type**: `number` **default** `1800000` (ms, half an hour) **✓ per job option**
 
 A job gets ghosted when the process function does not invoke the callback or return a promise, triggering the `processTimeout` limit.
 
@@ -92,9 +92,9 @@ A job gets ghosted when the process function does not invoke the callback or ret
 Tombstoning allows for *run-time* invocation of the new job. The job creator has a chance to wait for the completion of the new job within the timeout defined.
 
 #### Option :: `hotjobTimeout`
-**Type**: `number` **default** `10` (seconds) **✓ per job option**
+**Type**: `number` **default** `10000` (milliseconds) **✓ per job option**
 
-Time to wait for a job to get processed before hotjob callbacks timeout, in seconds.
+Time to wait for a job to get processed before hotjob callbacks timeout, in milliseconds.
 
 #### Option :: `retry`
 **Type**: `boolean` **default** `false` **✓ per job option**
@@ -107,9 +107,9 @@ Allow for a failed job to retry execution.
 How many times to retry before finally giving up
 
 #### Option :: `retryInterval`
-**Type**: `number` **default** `1800` (half an hour) **✓ per job option**
+**Type**: `number` **default** `180000` (ms, half an hour) **✓ per job option**
 
-How long to wait before retrying in seconds.
+How long to wait before retrying in milliseconds.
 
 TODO: accept a function as value, which returns a number.
 
@@ -161,7 +161,7 @@ When actually performing a db query, how far ahead to look for jobs that need to
 ### Advanced Options
 
 #### Option :: 'fetchTimeout'
-**Type**: `number` **Default**: `0` seconds, 0 for ever
+**Type**: `number` **Default**: `0` **seconds**, 0 for ever
 
 The [redis' `blpop` timeout](http://redis.io/commands/blpop). Used for fetching the next job in the queue, 0 means indefinite wait.
 
@@ -229,7 +229,7 @@ function fnOnJobFailed(err) {};
 
 var opts = {
   hotjob: true,
-  hotjobTimeout: 10 // seconds, default set via kickQ.config()
+  hotjobTimeout: 10000 // 10 seconds, default set via kickQ.config()
 };
 kickq.create('job name', data, opts, function(err, job, hotjobPromise) {
   job.hotjobPromise === hotjobPromise; // same reference
@@ -251,7 +251,7 @@ kickq.config({
   jobFlags: {
     'job name': {
       hotjob: true,
-      hotjobTimeout: 10 // seconds
+      hotjobTimeout: 10000 // 10 seconds
     }
   }
 });
@@ -342,6 +342,7 @@ function processJob(job, data, cb) {
 
 
   cb('error'); // <-- error
+  cb(false); // <-- error
   cb(); // <-- no error
 
   // <-- no error and callback when post-process db ops are done
@@ -404,14 +405,14 @@ This is the breakout:
   //   - fail    :: 'complete' flag is true
   state: 'new',
 
-  delay: null, // {number | null} Delay in seconds.
+  delay: null, // {number | null} Delay in milliseconds.
 
   retry: false, // {boolean} If this job will retry.
   retryCount: 5, // {number} How many times to retry.
-  retryInterval: 1800, // {number} seconds of interval between retrying.
+  retryInterval: 1800000, // {number} milliseconds of interval between retrying.
 
-  hotjob: false, // {boolean} ???? RENAME???.
-  hotjobTimeout: 10, // {number} seconds.
+  hotjob: false, // {boolean} If this is a hotjob.
+  hotjobTimeout: 10000, // {number} milliseconds.
   hotjobPromise: null, // {when.Promise|null} The hotjob promise.
 
   data: null, // {*} Any type, passed data on job creation

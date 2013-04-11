@@ -4,7 +4,6 @@
 
 var sinon  = require('sinon');
 var chai = require('chai');
-var expect = chai.expect;
 var grunt  = require('grunt');
 var assert = require('chai').assert;
 var when   = require('when');
@@ -107,7 +106,7 @@ suite('Job Creation', function() {
     test('1.3.1 Create a "delayed job"', function(done) {
       this.timeout(3000);
 
-      var createPromise = kickq.create( 'delayed_job 1.3.1', 'data', {delay: 1},
+      var createPromise = kickq.create( 'delayed_job 1.3.1', 'data', {delay: 1000},
         function(err, job) {
           assert.isNull(err, 'The "err" arg should be null');
           assert.equal('delayed', job.state, 'Job item state should be "delayed"');
@@ -121,7 +120,7 @@ suite('Job Creation', function() {
     test('1.3.2 Verify "delayed job" gets processed in time', function(done) {
       this.timeout(2000);
       startTime = Date.now();
-      kickq.create( 'delayed_job 1.3.2', 'data',  {delay: 1}, function(){
+      kickq.create( 'delayed_job 1.3.2', 'data',  {delay: 1000}, function(){
         kickq.process('delayed_job 1.3.2', function(job, data, cb) {
           var processTime = Date.now();
           assert.ok( (processTime - startTime) > 800, 'job should get processed ' +
@@ -244,7 +243,7 @@ suite('Job Creation', function() {
 
         var opts = {
           hotjob: true,
-          hotjobTimeout: 4
+          hotjobTimeout: 4000
         };
         function onJobCreate(err, id, promise) {
           startTime = new Date().getTime();
@@ -268,28 +267,44 @@ suite('Job Creation', function() {
   });
 
   suite('1.5 A Job With Retries', function() {
-    test('Create a job with 3 retries with an interval of 1 second', function(done){
+    var clock;
+    setup(function() {
+      // clock = sinon.useFakeTimers( Date.now() );
+      kickq.config('schedulerInterval', 50);
+      kickq.config('schedulerFuzz', 10);
+      kickq.config('schedulerLookAhead', 50);
+    });
+
+    teardown(function() {
+      // clock.restore();
+      kickq.config('schedulerInterval', 1000);
+      kickq.config('schedulerFuzz', 300);
+      kickq.config('schedulerLookAhead', 1500);
+    });
+    test('Create a job with 3 retries with an interval of 20 ms', function(done){
+      var startTime = Date.now();
       var opts = {
         retry: true,
         retryCount: 3,
-        retryInterval: 1
+        retryInterval: 20
       };
 
-      var retryCount = 0;
-      var startTime = new Date().getTime();
-      this.timeout(7000);
+      var retryCount = [];
+
+      kickq.process('retry_job', function(job, data, cb) {
+        retryCount.push( Date.now() - startTime);
+        cb(false);
+      });
 
       kickq.create('retry_job', 'retry job data', opts);
-      kickq.process('retry_job', function(job, data, cb) {
-        retryCount++;
-        cb(false);
-        if (3 === retryCount) {
-          var endTime = new Date().getTime();
-          assert.ok( (endTime - startTime) > 4000, 'All 3 retries should complete' +
-            ' in less than 7000ms');
-          done();
-        }
-      });
+
+      function finalJudgement() {
+        assert.equal(3, retryCount.length, 'The job should be processed only 3 ' +
+          'times');
+        done();
+      }
+
+      setTimeout(finalJudgement, 500);
     });
   });
 
