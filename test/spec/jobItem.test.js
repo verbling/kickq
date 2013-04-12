@@ -25,26 +25,42 @@ var jobItem = module.exports = {};
  */
 jobItem.testItemProps = function( job, optDone ) {
   var done = optDone || function(){};
-  assert.isString(job.id, 'should have an "id" property, numeric');
-  assert.isString(job.name, 'should have a "name" property, string');
-  assert.isBoolean(job.complete, 'should have a "complete" property, boolean');
-  assert.isBoolean(job.success, 'should have a "success" property, boolean');
-  assert.isNumber(job.createTime, 'should have a "createTime" property, number');
+  var props  = {
+    id: assert.isString,
+    name: assert.isString,
+    complete: assert.isBoolean,
+    success: assert.isBoolean,
+    createTime: assert.isNumber,
+    updateTime: assert.isNumber,
+    finishTime: assert.isNull,
+    totalProcessTime: assert.isNull,
+    delay: assert.isNull,
+    processTimeout: assert.isNumber,
+    retry: assert.isBoolean,
+    retryTimes: assert.isNumber,
+    retryInterval: assert.isNumber,
+    hotjob: assert.isBoolean,
+    hotjobTimeout: assert.isNumber,
+    hotjobPromise: assert.isNull,
+    ghostRetry: assert.isBoolean,
+    ghostTimes: assert.isNumber,
+    ghostInterval: assert.isNumber,
+    data: assert.isNull,
+    lastError: assert.isNull,
+    scheduledFor: assert.isNull,
+    state: assert.isString,
+    runs: assert.isArray,
+  };
 
-  assert.isNull(job.finishTime, 'should have a "finishTime" property, null');
-  assert.isNull(job.totalProcessTime, 'should have a "totalProcessTime" property, null');
-  assert.isString(job.state, 'should have a "state" property, string');
-  assert.isBoolean(job.retry, 'should have a "retry" property, boolean');
-  assert.isNumber(job.retryTimes, 'should have a "retryTimes" property, number');
-  assert.isNumber(job.retryInterval, 'should have a "retryInterval" property, number');
-  assert.isBoolean(job.hotjob, 'should have a "hotjob" property, boolean');
-  assert.isNumber(job.hotjobTimeout, 'should have a "hotjobTimeout" property, number');
-  assert.isNull(job.hotjobPromise, 'should have a "hotjobPromise" property, null');
-  assert.isNull(job.data, 'should have a "data" property, null');
-  assert.isArray(job.runs, 'should have a "runs" property, Array');
+  var propsAr = _.keys(props);
+  propsAr.forEach(function(prop) {
+    props[prop](job[prop], 'Should have an "' + prop + '" propert.');
+  });
 
-  // 24
-  // console.log('key len:', _.keys(job).length);
+  var jobProps = _.keys(job);
+  var diff = _.difference(jobProps, propsAr);
+
+  assert.equal(0, diff.length, 'New props in Job Item: ' + diff.join(', '));
 
   done();
 };
@@ -95,7 +111,7 @@ suite('Job Item Status and Props', function() {
 
   suite('3.1 A new job has "new" state', function() {
     test('3.1.1 A new job has "new" state', function(done) {
-      kickq.process('statecheck plain job', function(){
+      kickq.process('statecheck plain job', function(job){
 
 
         done();
