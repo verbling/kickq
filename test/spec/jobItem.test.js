@@ -109,12 +109,24 @@ suite('Job Item Status and Props', function() {
   // The purpose is to provide a unique string so specific tests are
   // run by using the mocha --grep "1.1.1" option.
 
-  suite('3.1 A new job has "new" state', function() {
-    test('3.1.1 A new job has "new" state', function(done) {
+  suite('3.1 A new plain job item when processed', function() {
+    test('3.1.1 has state: "processing"', function(done) {
       kickq.process('statecheck plain job', function(job){
-
-
+        assert.equal('processing', job.state, 'state should be "process"');
         done();
+      });
+    });
+    test('3.1.2 passes all jobItem prop tests"', function(done) {
+      kickq.process('statecheck plain job', function(job){
+        jobItem.testItemProps(job, done);
+      });
+    });
+  });
+
+  suite('3.2 A new job fetched manualy', function() {
+    test('3.2.1 Passes the jobItem prop tests', function(done){
+      var prom = kickq.get(jobId, function(err, job){
+        jobItem.testItemProps(job, done);
       });
     });
   });
