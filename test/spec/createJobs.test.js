@@ -10,7 +10,7 @@ var when   = require('when');
 
 var kickq  = require('../../');
 var tester = require('../lib/tester');
-var jobTest = require('./jobClass.test');
+var jobItem = require('./jobItem.test');
 
 var noop = function(){};
 
@@ -80,7 +80,7 @@ suite('Job Creation', function() {
     test('1.1.7 Create a "plain job" and check the returned Job instance', function(done) {
       kickq.create('create-check-jobItem 1.1.7', function(){
         kickq.process('create-check-jobItem 1.1.7', function(job, data, cb) {
-          jobTest.testInstanceProps(job);
+          jobItem.testItemProps(job);
           assert.equal(job.state, 'processing', 'state of the job should be "processing"' );
           cb(null, done);
         });
@@ -123,7 +123,6 @@ suite('Job Creation', function() {
       kickq.create( 'delayed_job 1.3.2', 'data',  {delay: 1000});
 
       kickq.process('delayed_job 1.3.2', function(job, data, cb) {
-        console.log('NEVER HERE');
         var processTime = Date.now();
         assert.ok( (processTime - startTime) > 800, 'job should get processed ' +
           'at least after 800ms');
@@ -324,7 +323,7 @@ suite('Job Creation', function() {
     test('1.6.3 Job creation promise resolves with proper arguments', function(done) {
       var createPromise = kickq.create('create-promise-arguments');
       assert.isFulfilled(createPromise.then(function(job) {
-        jobTest.testInstanceProps(job);
+        jobItem.testItemProps(job);
         assert.equal(job.name, 'create-promise-arguments', '"job.name" ' +
           'property should have proper value');
       }), 'job create promise should resolve').notify(done);

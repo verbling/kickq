@@ -2,14 +2,13 @@
  * @fileOverview Processing Jobs with kickq
  */
 
-var sinon  = require('sinon'),
-    expect = require('chai').expect,
-    grunt  = require('grunt'),
-    assert = require('chai').assert,
-    kickq  = require('../../'),
-    tester = require('../lib/tester'),
-    jobTest = require('./jobClass.test'),
-    when   = require('when');
+var sinon  = require('sinon');
+var grunt = require('grunt');
+var assert = require('chai').assert;
+var kickq = require('../../');
+var tester = require('../lib/tester');
+var jobItem = require('./jobItem.test');
+var when   = require('when');
 
 var noop = function(){};
 
@@ -35,14 +34,14 @@ suite('2.0 Job Processing', function() {
       jobid = key;
     });
     kickq.process('process-test-one', function(job, data, cb) {
-      jobTest.testIntanceProps(job);
+      jobItem.testItemProps(job);
       assert.equal(jobid, job.id, 'The job id should be the same');
       assert.equal(job.name, 'process-test-one', 'The job name should be the same');
       assert.equal(job.state, 'processing', 'State should be "processing"');
       assert.equal(job.runs.length, 1, 'there should be one process item');
 
       var processItem = job.runs[0];
-      jobTest.testProcessItem(processItem);
+      jobItem.testPtemItem(processItem);
       assert.equal(processItem.count, 1, 'The process count should be 1 (the first)');
       assert.equal(processItem.state, 'processing', 'The process item should be "processing"');
 
