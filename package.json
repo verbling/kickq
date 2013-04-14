@@ -38,7 +38,8 @@
     "yaml": "~0.2.3",
     "underscore": "~1.4.4",
     "when": "~2.0.0",
-    "redis": "~0.8.3"
+    "redis": "~0.8.3",
+    "logg": "https://github.com/thanpolas/node-logg.git"
   },
   "devDependencies": {
     "grunt-mocha-test": "~0.2.0",
@@ -47,7 +48,10 @@
     "grunt-contrib-clean": "~0.4.0",
     "mocha-as-promised": "~1.2.1",
     "chai-as-promised": "~3.2.5",
-    "chai": "~1.5.0"
+    "chai": "~1.5.0",
+    "perf-time": "~0.1.0",
+    "profiler": "~1.2.1",
+    "nodetime": "~0.8.12"
   },
   "keywords": [
     "queue",
