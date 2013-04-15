@@ -9,7 +9,10 @@ var grunt  = require('grunt');
 var assert = require('chai').assert;
 var when   = require('when');
 var redis = require('redis');
-var PerfTime = require('perf-time');
+var Ptime = require('profy/time');
+var Pmem = require('profy/mem');
+
+
 
 var kickq  = require('../../');
 var tester = require('../lib/tester');
@@ -19,44 +22,40 @@ var noop = function(){};
 
 function stressTest(times, done) {
 
-  var mem = new tester.Mem();
+  var mem = new Pmem();
   mem.start();
-  var perf = new tester.Perf();
+  var perf = Ptime.getSingleton();
   perf.start();
 
   var promises = [];
   var promise;
   for(var i = 0; i < times; i++) {
-    perf.log();
+    perf.log('Test loop: ' + i);
     promise = kickq.create('stress test one');
     //promise = when.resolve();
     //promise.then(mem.log.bind(mem));
-    // promise.then(perf.log.bind(perf));
+    promise.then(perf.log.bind(perf, 'master resolve: ' + i));
     promises.push(promise);
   }
 
   var all = when.all(promises);
 
   all.then(function(){
-    perf.log();
-    var t = new PerfTime();
-    var nowTime = t.get();
+    perf.log('finish');
     //var memStats = mem.result();
     // assert.operator( 30, '>', memStats.stats.mean, 'Mean memory consumption' +
     //     ' is less than 30% from start point.');
 
     var perfres = perf.result();
-    // console.log('Diff perf.result():', t.get() - nowTime);
-    // console.log('Diff startTime:', nowTime - perfres.firstLog);
+    console.log(perfres.stats);
+    console.log('firstLog:', perfres.firstLog, perfres.lastLog);
 
-    // console.log(perfres.stats);
-    // console.log('firstLog:', perfres.firstLog, perfres.lastLog);
-    // console.log('all logs:', perfres.diffs.join(' '));
+    //console.log(perf.resultTable());
     done();
   },done).otherwise(done);
 }
 
-suite('Stress Tests', function() {
+suite('4. Stress Tests', function() {
 
   var jobId;
   var stubHmset;

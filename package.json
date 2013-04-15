@@ -51,7 +51,8 @@
     "chai": "~1.5.0",
     "perf-time": "~0.1.0",
     "profiler": "~1.2.1",
-    "nodetime": "~0.8.12"
+    "nodetime": "~0.8.12",
+    "profy": "0.0.1"
   },
   "keywords": [
     "queue",
