@@ -20,21 +20,31 @@ var tester = require('../lib/tester');
 var noop = function(){};
 
 
-function stressTest(times, done) {
+function stressTest(times) {
+  var def = when.defer();
+
+  function checkKickqPerf() {
+    return kickq.create('stress test one');
+  }
 
   var mem = new Pmem();
   mem.start();
   var perf = Ptime.getSingleton();
   perf.start();
 
+
+  //var gcDefer = when.defer();
+  //mem.on('finish', gcDefer.resolve);
+
   var promises = [];
   var promise;
   for(var i = 0; i < times; i++) {
     perf.log('Test loop: ' + i);
-    promise = kickq.create('stress test one');
+    mem.log('Test loop: ' + i);
+    promise = checkKickqPerf();
     //promise = when.resolve();
-    //promise.then(mem.log.bind(mem));
-    promise.then(perf.log.bind(perf, 'master resolve: ' + i));
+    // promise.then(mem.log.bind(mem, 'master resolve:' + i));
+    // promise.then(perf.log.bind(perf, 'master resolve: ' + i));
     promises.push(promise);
   }
 
@@ -42,17 +52,18 @@ function stressTest(times, done) {
 
   all.then(function(){
     perf.log('finish');
-    //var memStats = mem.result();
-    // assert.operator( 30, '>', memStats.stats.mean, 'Mean memory consumption' +
-    //     ' is less than 30% from start point.');
+    mem.log('loop-finish');
+    var timeRes = perf.result();
+    // console.log(timeRes.stats);
+    // console.log('firstLog:', timeRes.firstLog, timeRes.lastLog);
 
-    var perfres = perf.result();
-    console.log(perfres.stats);
-    console.log('firstLog:', perfres.firstLog, perfres.lastLog);
+    //
+    var memRes = mem.result();
+    //console.log(mem.resultTable(true));
+    def.resolve({memRes: memRes, timeRes: timeRes});
+  },def.reject).otherwise(def.reject);
 
-    //console.log(perf.resultTable());
-    done();
-  },done).otherwise(done);
+  return def.promise;
 }
 
 suite('4. Stress Tests', function() {
@@ -66,16 +77,7 @@ suite('4. Stress Tests', function() {
   var fakeJobId = 0;
 
   setup(function(done) {
-    stubHmset = sinon.stub(redis.RedisClient.prototype, 'hmset');
-    stubHmset.yields(null);
-    stubRpush = sinon.stub(redis.RedisClient.prototype, 'rpush');
-    stubRpush.yields(null);
-    stubZadd = sinon.stub(redis.RedisClient.prototype, 'zadd');
-    stubZadd.yields(null);
-    stubPublish = sinon.stub(redis.RedisClient.prototype, 'publish');
-    stubIncr = sinon.stub(redis.RedisClient.prototype, 'incr');
-    stubIncr.yields(null, ++fakeJobId);
-
+    tester.rBuster.stubWrite();
     kickq.reset();
     kickq.config({
       redisNamespace: tester.NS
@@ -84,19 +86,28 @@ suite('4. Stress Tests', function() {
   });
 
   teardown(function(done) {
-    stubHmset.restore();
-    stubIncr.restore();
-    stubRpush.restore();
-    stubPublish.restore();
-    stubZadd.restore();
+    tester.rBuster.stubWriteRestore();
     kickq.reset();
     tester.clear(done);
   });
 
   suite('4.1 Create Jobs', function(){
 
-    test('4.1.1 plain job creation 10 times', function(done){
-      stressTest(500, done);
+    test('4.1.1 plain job creation 500 times', function(done){
+      this.timeout(5000);
+      stressTest(100).then(function(results){
+        assert.operator(500, '>', results.timeRes.stats.total, 'Total execution time should not' +
+          ' exceed 1000ms');
+        assert.operator(1, '>', results.timeRes.stats.mean, 'Mean execution time should not' +
+          ' exceed 1ms');
+
+        // console.log('\n', );
+        // console.log(results.memRes.stats);
+        // console.log(results.memRes.percent);
+        // console.log(results.memRes.firstHeap);
+
+        done();
+      }, done).otherwise(done);
     });
   });
 

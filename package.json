@@ -31,13 +31,13 @@
     "test": "grunt test:console"
   },
   "dependencies": {
-    "grunt": "~0.4.0",
+    "grunt": "~0.4.1",
     "collections": "~0.1.17",
     "async": "~0.2.6",
     "config": "~0.4.20",
     "yaml": "~0.2.3",
     "underscore": "~1.4.4",
-    "when": "~2.0.0",
+    "when": "~1.8.1",
     "redis": "~0.8.3",
     "logg": "https://github.com/thanpolas/node-logg.git"
   },
@@ -49,10 +49,10 @@
     "mocha-as-promised": "~1.2.1",
     "chai-as-promised": "~3.2.5",
     "chai": "~1.5.0",
-    "perf-time": "~0.1.0",
     "profiler": "~1.2.1",
     "nodetime": "~0.8.12",
-    "profy": "0.0.1"
+    "profy": "~0.0.2",
+    "memwatch": "~0.2.2"
   },
   "keywords": [
     "queue",

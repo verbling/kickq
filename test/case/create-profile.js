@@ -3,14 +3,6 @@
  *   node --prof --prof_lazy --log create-profile.js
  */
 
-var nodetime = require('nodetime');
-// nodetime.profile({
-//   accountKey: 'd40b52c69611162d0e10224d4d4b2ee90c2a0615',
-//   appName: 'kickq',
-//   debug:true
-// });
-// nodetime.pause();
-
 var profiler = require('profiler');
 var sinon  = require('sinon');
 var _ = require('underscore');
@@ -54,33 +46,28 @@ kickq.config({
 var promise;
 var perf = Perf.getSingleton();
 
-// setTimeout(function(){
+console.log('starting kickq.create...');
 
-  console.log('starting kickq.create...');
+perf.start();
 
-  perf.start();
+profiler.resume();
+var promises = [];
 
-  profiler.resume();
-  var promises = [];
+perf.log('before for');
 
-  perf.log('before for');
-
-  for (var i = 0; i < 500; i++) {
-    perf.log(i);
-    promise = kickq.create('stress test one');
-    // promise.ensure(perf.log.bind(perf));
-    promises.push(promise);
-  }
-  perf.log('after for');
-  when.all(promises).then(restore).otherwise(restore);
-// }, 8);
+for (var i = 0; i < 500; i++) {
+  perf.log(i);
+  promise = kickq.create('stress test one');
+  // promise.ensure(perf.log.bind(perf));
+  promises.push(promise);
+}
+perf.log('after for');
+when.all(promises).then(restore).otherwise(restore);
 
 function restore(proms) {
-  // nodetime.pause();
   profiler.pause();
-  var t = new PerfTime();
   perf.log('in restore');
-  var nowTime = t.get();
+  var nowTime = Date.now();
   var res = perf.result();
   console.log('Diff startTime:', nowTime - res.firstLog);
 
