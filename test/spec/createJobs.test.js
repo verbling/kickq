@@ -19,7 +19,9 @@ suite('Job Creation', function() {
   setup(function(done) {
     kickq.reset();
     kickq.config({
-      redisNamespace: tester.NS
+      redisNamespace: tester.NS,
+      loggerFile: true,
+      loggerFileLevel: kickq.LogLevel.FINEST
     });
     tester.clear(done);
   });

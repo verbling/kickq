@@ -54,6 +54,12 @@ More specific options for the redis client [as defined in the redis package docs
 
 Define the master key namespace for redis, that kickq will use to store data.
 
+#### Option :: `debug`
+
+**Type**: `boolean` **Default**: `false`
+
+Will enable logging to console and log all messages generated.
+
 #### Option :: `purgeTimeout`
 
 **Type**: `number` **Default**: `86400000` (milliseconds, default is 1 day)
@@ -156,6 +162,60 @@ The fuzz factor is to create some randomness in the interval so multiple workers
 **Type**: `number` **Default**: `1500` milliseconds
 
 When actually performing a db query, how far ahead to look for jobs that need to be moved to the process queue. Rule of thumb = `(schedulerInterval + schedulerFuzz) * ~15%`.
+
+
+### Logger Options
+
+Kickq exposes a robust logging facility. The messages that kickq generates range from Severe errors, failing database, failed saving etc. Down to code debugging messages. The levels are represented by an integer, ranging from 0 (less important) to 1000 (severe).
+
+All levels are exposed as an enume by `kickq.LogLevel`:
+
+```js
+  // Values of the LogLevel Enum
+  kickq.LogLevel.SEVERE   = 1000;
+  kickq.LogLevel.DATABASE =  900;
+  kickq.LogLevel.WARN     =  800;
+  kickq.LogLevel.INFO     =  600;
+  kickq.LogLevel.FINE     =  400;
+  kickq.LogLevel.FINER    =  200;
+  kickq.LogLevel.FINEST   =  100;
+```
+
+#### Option :: 'loggerConsole'
+**Type**: `boolean` **Default**: `false`
+
+Log to console too, uses the `loggerLevel`.
+
+#### Option :: 'loggerLevel'
+**Type**: `boolean` **Default**: `800` (kickq.LogLevel.WARN)
+
+The minimum Logging Level messages that kickq will emit. The `debug` option overwrites this to `0`.
+
+#### Option :: 'loggerDb'
+**Type**: `boolean` **Default**: `true`
+
+Save the log to the db.
+
+#### Option :: 'loggerDbLevel'
+**Type**: `number` **Default**: `800` (kickq.LogLevel.WARN)
+
+The minimum Logging Level that will get stored. The `debug` option overwrites this to `0`.
+
+#### Option :: 'loggerFile'
+**Type**: `boolean` **Default**: `false` milliseconds
+
+Save the log to file. Only **warning** or **severe** level messages are saved.
+
+#### Option :: 'loggerFilename'
+**Type**: `string` **Default**: `"./log/kickq.log"`
+
+The logging file name.
+
+#### Option :: 'loggerFileLevel'
+**Type**: `number` **Default**: `800` (kickq.LogLevel.WARN)
+
+The minimum Logging Level that will get stored. The `debug` option overwrites this to `0`.
+
 
 
 ### Advanced Options
