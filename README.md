@@ -29,7 +29,12 @@ npm install kickq --save-dev
 * [@thanpolas][thanpolas]
 
 ## Release History
-- **v0.1.0**, *~Late Apr 2013*
+- **v0.0.2**, *16 Apr 2013*
+  - Added Logging facility.
+  - Performance optimizations.
+  - Implemented the `.get()` method for fetching job items.
+
+- **v0.0.1**, *11 Apr 2013*
   - Big Bang
 
 ## License
