@@ -191,12 +191,12 @@ Log to console too, uses the `loggerLevel`.
 
 The minimum Logging Level messages that kickq will emit. The `debug` option overwrites this to `0`.
 
-#### Option :: 'loggerDb'
+#### Option :: 'loggerSyslog'
 **Type**: `boolean` **Default**: `true`
 
-Save the log to the db.
+Save the log to syslog.
 
-#### Option :: 'loggerDbLevel'
+#### Option :: 'loggerSyslogLevel'
 **Type**: `number` **Default**: `800` (kickq.LogLevel.WARN)
 
 The minimum Logging Level that will get stored. The `debug` option overwrites this to `0`.
