@@ -29,6 +29,10 @@ npm install kickq --save-dev
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.4**, *18 Apr 2013*
+  - Created Worker Guard that ensures worker's health.
+  - kickq is now resilient to redis disconnections and errors.
+  - Worker error throttler refactored.
   - Now saves to syslog instead of db.
 - **v0.0.2**, *16 Apr 2013*
   - Added Logging facility.

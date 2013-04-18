@@ -1,7 +1,7 @@
 {
   "name": "kickq",
   "description": "Kick jobs out the door. Quickly. A job queue for node",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/verbling/kickq",
   "author": "Verbling",
   "repository": {
