@@ -39,7 +39,7 @@
     "underscore": "~1.4.4",
     "when": "~1.8.1",
     "redis": "~0.8.3",
-    "logg": "https://github.com/thanpolas/node-logg.git",
+    "logg": "git://github.com/thanpolas/node-logg.git",
     "node-syslog": "~1.1.7"
   },
   "devDependencies": {
