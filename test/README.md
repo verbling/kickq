@@ -143,22 +143,22 @@ kickq.config({
 
 ### Scheduler Options
 
-#### Option :: 'schedulerOn'
+#### Option :: `schedulerOn`
 **Type**: `boolean` **Default**: `true`
 
 If this worker will also launch the scheduler loop.
 
-#### Option :: 'schedulerInterval'
+#### Option :: `schedulerInterval`
 **Type**: `number` **Default**: `1000` milliseconds
 
 The interval the scheduler will check for jobs that need to be queued.
 
-#### Option :: 'schedulerFuzz'
+#### Option :: `schedulerFuzz`
 **Type**: `number` **Default**: `300` milliseconds
 
 The fuzz factor is to create some randomness in the interval so multiple workers will have a chance to spread out evenly. An interval of 1000 with a fuzzy factor of 300 means that the actual interval for scheduler checks will be anywhere between 700 and 1,300 milliseconds.
 
-#### Option :: 'schedulerLookAhead'
+#### Option :: `schedulerLookAhead`
 **Type**: `number` **Default**: `1500` milliseconds
 
 When actually performing a db query, how far ahead to look for jobs that need to be moved to the process queue. Rule of thumb = `(schedulerInterval + schedulerFuzz) * ~15%`.
@@ -168,7 +168,7 @@ When actually performing a db query, how far ahead to look for jobs that need to
 
 Kickq exposes a robust logging facility. The messages that kickq generates range from Severe errors, failing database, failed saving etc. Down to code debugging messages. The levels are represented by an integer, ranging from 0 (less important) to 1000 (severe).
 
-All levels are exposed as an enume by `kickq.LogLevel`:
+All levels are exposed as an enum by `kickq.LogLevel`:
 
 ```js
   // Values of the LogLevel Enum
@@ -181,37 +181,37 @@ All levels are exposed as an enume by `kickq.LogLevel`:
   kickq.LogLevel.FINEST   =  100;
 ```
 
-#### Option :: 'loggerConsole'
+#### Option :: `loggerConsole`
 **Type**: `boolean` **Default**: `false`
 
 Log to console too, uses the `loggerLevel`.
 
-#### Option :: 'loggerLevel'
+#### Option :: `loggerLevel`
 **Type**: `boolean` **Default**: `800` (kickq.LogLevel.WARN)
 
 The minimum Logging Level messages that kickq will emit. The `debug` option overwrites this to `0`.
 
-#### Option :: 'loggerSyslog'
+#### Option :: `loggerSyslog`
 **Type**: `boolean` **Default**: `true`
 
 Save the log to syslog.
 
-#### Option :: 'loggerSyslogLevel'
+#### Option :: `loggerSyslogLevel`
 **Type**: `number` **Default**: `800` (kickq.LogLevel.WARN)
 
 The minimum Logging Level that will get stored. The `debug` option overwrites this to `0`.
 
-#### Option :: 'loggerFile'
+#### Option :: `loggerFile`
 **Type**: `boolean` **Default**: `false` milliseconds
 
 Save the log to file. Only **warning** or **severe** level messages are saved.
 
-#### Option :: 'loggerFilename'
+#### Option :: `loggerFilename`
 **Type**: `string` **Default**: `"./log/kickq.log"`
 
 The logging file name.
 
-#### Option :: 'loggerFileLevel'
+#### Option :: `loggerFileLevel`
 **Type**: `number` **Default**: `800` (kickq.LogLevel.WARN)
 
 The minimum Logging Level that will get stored. The `debug` option overwrites this to `0`.
@@ -220,7 +220,7 @@ The minimum Logging Level that will get stored. The `debug` option overwrites th
 
 ### Advanced Options
 
-#### Option :: 'fetchTimeout'
+#### Option :: `fetchTimeout`
 **Type**: `number` **Default**: `0` **seconds**, 0 for ever
 
 The [redis' `blpop` timeout](http://redis.io/commands/blpop). Used for fetching the next job in the queue, 0 means indefinite wait.
