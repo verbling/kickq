@@ -227,7 +227,7 @@ The [redis' `blpop` timeout](http://redis.io/commands/blpop). Used for fetching 
 
 
 #### Option :: `guardInterval`
-**Type**: `number` **Default**: `2000` **milliseconds**
+**Type**: `number` **Default**: `30000` **milliseconds** (30s)
 
 How often the Worker Guard to run and check the worker is operating normally.
 
