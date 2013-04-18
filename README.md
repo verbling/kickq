@@ -29,6 +29,7 @@ npm install kickq --save-dev
 * [@thanpolas][thanpolas]
 
 ## Release History
+  - Now saves to syslog instead of db.
 - **v0.0.2**, *16 Apr 2013*
   - Added Logging facility.
   - Performance optimizations.
