@@ -225,6 +225,14 @@ The minimum Logging Level that will get stored. The `debug` option overwrites th
 
 The [redis' `blpop` timeout](http://redis.io/commands/blpop). Used for fetching the next job in the queue, 0 means indefinite wait.
 
+
+#### Option :: `guardInterval`
+**Type**: `number` **Default**: `2000` **milliseconds**
+
+How often the Worker Guard to run and check the worker is operating normally.
+
+
+
 ## Creating a Job
 
 ```js
@@ -486,11 +494,13 @@ This is the breakout:
     // a process item
     {
       count: 1, // {number} the process count of this process item.
-      start: 1364226587925, // {number} JS timestamp
-      time: null, // {?number} Processing time in ms or null
+      startTime: 1364226587925, // {number} JS timestamp
+      processTime: 10000, // {?number} Processing timeout in ms.
+      processTime: null, // {?number} Processing time in ms or null
 
       // same as job.state except states: 'new', 'delayed', 'retry'
-      state: 'processing'
+      state: 'processing',
+      errorMessage: null // {?string} Error message of processing item.
     }
   ]
 }
