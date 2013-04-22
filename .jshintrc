@@ -63,6 +63,9 @@
 
   "es5": true
 
+  // if Web Worker script symbols should be allowed
+  // "Worker" : false
+
   /**
    * TEMPORARY OPTIONS
    * =================
