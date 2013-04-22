@@ -1,7 +1,4 @@
-# Kickq API Scaffolding
-
-Kick jobs out the door. Quickly.
-A job queue for node.
+# Kickq API
 
 ## Configuration
 ```js
