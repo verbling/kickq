@@ -15,14 +15,8 @@ Checkout the API documentation in the [test folder](test/), pending a more expan
 ## Install
 
 ```shell
-npm install kickq --save-dev
+npm install kickq --save
 ```
-
-## Table Of Contents
-
-
-<sup>[↑ Back to TOC](#table-of-contents)</sup>
-
 
 ## Authors
 

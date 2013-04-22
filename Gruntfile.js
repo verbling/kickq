@@ -1,5 +1,5 @@
 /*jshint camelcase:false */
-/*
+/**
  * Kickq
  * Kick jobs out the door, quickly.
  *
