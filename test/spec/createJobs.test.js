@@ -28,7 +28,7 @@ suite('Job Creation', function() {
 
   teardown(function(done) {
     kickq.reset();
-    tester.clear(done);
+    done();
   });
 
 
