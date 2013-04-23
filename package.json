@@ -53,7 +53,8 @@
     "profiler": "~1.2.1",
     "nodetime": "~0.8.12",
     "profy": "~0.0.2",
-    "memwatch": "~0.2.2"
+    "memwatch": "~0.2.2",
+    "grunt-release": "~0.3.3"
   },
   "keywords": [
     "queue",

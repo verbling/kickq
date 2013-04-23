@@ -23,6 +23,10 @@ npm install kickq --save
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.5**, *23 Apr 2013*
+  - Created the Metrics module.
+  - Several bug fixes.
+  - Exposed more internal parts for better plugin integration.
 - **v0.0.4**, *18 Apr 2013*
   - Created Worker Guard that ensures worker's health.
   - kickq is now resilient to redis disconnections and errors.
@@ -32,7 +36,6 @@ npm install kickq --save
   - Added Logging facility.
   - Performance optimizations.
   - Implemented the `.get()` method for fetching job items.
-
 - **v0.0.1**, *11 Apr 2013*
   - Big Bang
 
