@@ -207,7 +207,7 @@ The minimum Logging Level that will get stored. The `debug` option overwrites th
 #### Option :: `loggerFile`
 **Type**: `boolean` **Default**: `false`
 
-Save the log to file. Only **warning** or **severe** level messages are saved.
+Save the log to file. By default **warning** or **severe** level messages are saved, use the `loggerFileLevel` to set the verbocity.
 
 #### Option :: `loggerFilename`
 **Type**: `string` **Default**: `"./log/kickq.log"`
