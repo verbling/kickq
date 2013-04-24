@@ -23,6 +23,10 @@ npm install kickq --save
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.7**, *24 Apr 2013*
+  - Enabled purging of completed jobs.
+  - More tests for job item.
+  - More logging is performed when kickq fails.
 - **v0.0.6**, *24 Apr 2013*
   - Fixed metrics stop bug.
   - Exposed more internal libs.
