@@ -132,7 +132,7 @@ suite('Job Item Status and Props', function() {
     });
     tester.clear(function(){
       // create a dummy job and get the id
-      kickq.create('statecheck plain job', function(err, job){
+      kickq.create('jobItem test plain job', function(err, job){
         if (err) {
           done(err);
           return;
@@ -144,18 +144,23 @@ suite('Job Item Status and Props', function() {
   });
 
   teardown(function(done) {
-    kickq.reset();
-    tester.clear(done);
   });
 
 
   // The numbering (e.g. 1.1.1) has nothing to do with order
   // The purpose is to provide a unique string so specific tests are
   // run by using the mocha --grep "1.1.1" option.
+  suite('3.0 A new job fetched manualy', function() {
+    test('3.0.1 Passes the jobItem prop tests', function(done){
+      var prom = kickq.get(jobId, function(err, jobItem){
+        jobItemTest.testNewItemPropsType(jobItem, done);
+      });
+    });
+  });
 
   suite('3.1 A new plain job item when processed', function() {
     test('3.1.0 Has the right properties', function(done) {
-      kickq.process('statecheck plain job', function(jobItem){
+      kickq.process('jobItem test plain job', function(jobItem){
         try {jobItemTest.testJobItemProps(jobItem);}
           catch(ex) {done(ex); return;}
         done();
@@ -163,24 +168,40 @@ suite('Job Item Status and Props', function() {
     });
 
     test('3.1.1 has state: "processing"', function(done) {
-      kickq.process('statecheck plain job', function(jobItem){
+      kickq.process('jobItem test plain job', function(jobItem){
         assert.equal('processing', jobItem.state, 'state should be "processing"');
         done();
       });
     });
     test('3.1.2 passes all jobItem prop tests"', function(done) {
-      kickq.process('statecheck plain job', function(jobItem){
+      kickq.process('jobItem test plain job', function(jobItem){
         try {jobItemTest.testNewItemPropsType(jobItem, done);}
           catch(ex){done(ex);}
       });
     });
   });
 
-  suite('3.2 A new job fetched manualy', function() {
-    test('3.2.1 Passes the jobItem prop tests', function(done){
-      var prom = kickq.get(jobId, function(err, jobItem){
-        jobItemTest.testNewItemPropsType(jobItem, done);
+  suite('3.2 A new plain job item after being processed successfully', function() {
+
+    setup(function(done) {
+      // create a dummy job and get the id
+      kickq.process('jobItem test plain job', function(jobItem, data, cb){
+        if (jobId !== jobItem.id) {
+          done('Different job id! Created: ' + jobId + ' processed: ' + jobItem.id);
+          return;
+        }
+        cb(null, done);
       });
+    });
+
+    teardown(function(done) {
+    });
+
+    test('3.2.1 Test proper props', function(done){
+      kickq.get(jobId).then(function(jobItem) {
+        jobItemTest.testJobItemProps(jobItem);
+        done();
+      }, done).otherwise(done);
     });
   });
 });
