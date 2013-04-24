@@ -112,13 +112,28 @@ jobItemTest.testNewItemPropsType = function( jobItem, optDone ) {
 /**
  * Test the process item that can be found in the 'runs' array of the job instance.
  *
- * @param  {Object} processItem The process item to test.
+ * @param  {kickq.JobItem.ProcessItem} processItem The process item to test.
  */
-jobItemTest.testProcessItem = function( processItem ) {
-  assert.isNumber(processItem.count, 'should have a "count" property, number');
-  assert.isNumber(processItem.start, 'should have a "start" property, number');
-  assert.isNull(processItem.time, 'should have a "time" property, null');
-  assert.isString(processItem.state, 'should have a "state" property, string');
+jobItemTest.testProcessItemProps = function( processItem ) {
+  var props = [
+    'count',
+    'startTime',
+    'processTime',
+    'processTimeout',
+    'state',
+    'errorMessage',
+    'timeout'
+  ];
+
+  props.forEach(function(prop) {
+    assert.property(processItem, prop, 'Should have a "' + prop + '" property.');
+  }, this);
+
+  var processProps = _.keys(processItem);
+  var diff = _.difference(processProps, props);
+
+  assert.equal(0, diff.length, 'New props in Process Item: ' + diff.join(', '));
+
 };
 
 suite('Job Item Status and Props', function() {
@@ -143,7 +158,7 @@ suite('Job Item Status and Props', function() {
     });
   });
 
-  teardown(function(done) {
+  teardown(function() {
   });
 
 
@@ -190,18 +205,60 @@ suite('Job Item Status and Props', function() {
           done('Different job id! Created: ' + jobId + ' processed: ' + jobItem.id);
           return;
         }
-        cb(null, done);
+        setInterval(function() {
+          cb(null, done);
+        });
       });
     });
 
-    teardown(function(done) {
-    });
+    teardown(function() {});
 
-    test('3.2.1 Test proper props', function(done){
+    test('3.2.0 Check proper props', function(done){
       kickq.get(jobId).then(function(jobItem) {
         jobItemTest.testJobItemProps(jobItem);
         done();
       }, done).otherwise(done);
     });
+    test('3.2.1 Check proper prop values', function(done){
+      kickq.get(jobId).then(function(jobItem) {
+        assert.ok(jobItem.complete, '"complete" prop should be true');
+        assert.ok(jobItem.success, '"success" prop should be true');
+        assert.isNumber(jobItem.finishTime, '"finishTime" prop should be a number');
+        assert.isNumber(jobItem.totalProcessTime, '"totalProcessTime" prop should be a number');
+
+        done();
+      }, done).otherwise(done);
+    });
+
+    test('3.2.2 Process Item count', function(done){
+      kickq.get(jobId).then(function(jobItem) {
+        assert.lengthOf(jobItem.runs, 1, 'Should have only 1 process item');
+        done();
+      }, done).otherwise(done);
+    });
+
+    test('3.2.3 Passes all Process Item props tests', function(done){
+      kickq.get(jobId).then(function(jobItem) {
+        var processItem = jobItem.runs[0];
+        jobItemTest.testProcessItemProps(processItem);
+        done();
+      }, done).otherwise(done);
+    });
+
+    test('3.2.4 Process Item has proper values', function(done){
+      kickq.get(jobId).then(function(jobItem) {
+        var processItem = jobItem.runs[0];
+
+        assert.equal(1, processItem.count, 'Process count No should be 1');
+        assert.isNumber(processItem.startTime, 'startTime must be a number');
+        assert.isNumber(processItem.processTime, 'processTime should be a number');
+        assert.operator(0, '<', processItem.processTime, 'processTime should be' +
+          ' larger than 0');
+        assert.equal(kickq.states.Job.SUCCESS, processItem.state, 'State should be "success"');
+        assert.isNull(processItem.errorMessage, 'errorMessage should be null');
+        done();
+      }, done).otherwise(done);
+    });
+
   });
 });
