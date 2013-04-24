@@ -57,6 +57,12 @@ Define the master key namespace for redis, that kickq will use to store data.
 
 Will enable logging to console and log all messages generated.
 
+#### Option :: `purgeJobs`
+
+**Type**: `boolean` **Default**: `true`
+
+Forever delete finished job items.
+
 #### Option :: `purgeTimeout`
 
 **Type**: `number` **Default**: `86400000` (milliseconds, default is 1 day)
