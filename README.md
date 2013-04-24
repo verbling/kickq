@@ -23,6 +23,10 @@ npm install kickq --save
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.6**, *24 Apr 2013*
+  - Fixed metrics stop bug.
+  - Exposed more internal libs.
+  - Auto-fetches ver info.
 - **v0.0.5**, *23 Apr 2013*
   - Created the Metrics module.
   - Several bug fixes.
