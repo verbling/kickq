@@ -14,16 +14,60 @@ var tester = require('../lib/tester');
 
 var noop = function(){};
 
-var jobItem = module.exports = {};
+var jobItemTest = module.exports = {};
 
 /**
- * Test the new job item has all properties expected.
+ * Checks if the job item has all the expected properties and no more.
  *
- * @param {Kickq.Job} job The job instance to examine.
- * @param {Function=} optDone the callback to call when all is done.
- * @param {string} testTitle [description]
+ * @param  {kickq.JobItem} jobItem a job item.
  */
-jobItem.testItemProps = function( job, optDone ) {
+jobItemTest.testJobItemProps = function( jobItem ) {
+  var props = [
+    'id',
+    'name',
+    'complete',
+    'success',
+    'createTime',
+    'updateTime',
+    'finishTime',
+    'totalProcessTime',
+    'delay',
+    'processTimeout',
+    'retry',
+    'retryTimes',
+    'retryInterval',
+    'hotjob',
+    'hotjobTimeout',
+    'hotjobPromise',
+    'ghostRetry',
+    'ghostTimes',
+    'ghostInterval',
+    'data',
+    'lastError',
+    'scheduledFor',
+    'state',
+    'runs'
+  ];
+
+  props.forEach(function(prop) {
+    assert.property(jobItem, prop, 'Should have a "' + prop + '" property.');
+  }, this);
+
+  var jobProps = _.keys(jobItem);
+  var diff = _.difference(jobProps, props);
+
+  assert.equal(0, diff.length, 'New props in Job Item: ' + diff.join(', '));
+
+
+};
+
+/**
+ * Test the props of a new Job Item.
+ *
+ * @param {kickq.JobItem} jobItem The job instance to examine.
+ * @param {Function=} optDone the callback to call when all is done.
+ */
+jobItemTest.testNewItemPropsType = function( jobItem, optDone ) {
   var done = optDone || function(){};
   var props  = {
     id: assert.isString,
@@ -54,10 +98,10 @@ jobItem.testItemProps = function( job, optDone ) {
 
   var propsAr = _.keys(props);
   propsAr.forEach(function(prop) {
-    props[prop](job[prop], 'Should have an "' + prop + '" propert.');
+    props[prop](jobItem[prop], 'Should have a "' + prop + '" property.');
   });
 
-  var jobProps = _.keys(job);
+  var jobProps = _.keys(jobItem);
   var diff = _.difference(jobProps, propsAr);
 
   assert.equal(0, diff.length, 'New props in Job Item: ' + diff.join(', '));
@@ -70,7 +114,7 @@ jobItem.testItemProps = function( job, optDone ) {
  *
  * @param  {Object} processItem The process item to test.
  */
-jobItem.testProcessItem = function( processItem ) {
+jobItemTest.testProcessItem = function( processItem ) {
   assert.isNumber(processItem.count, 'should have a "count" property, number');
   assert.isNumber(processItem.start, 'should have a "start" property, number');
   assert.isNull(processItem.time, 'should have a "time" property, null');
@@ -110,23 +154,32 @@ suite('Job Item Status and Props', function() {
   // run by using the mocha --grep "1.1.1" option.
 
   suite('3.1 A new plain job item when processed', function() {
+    test('3.1.0 Has the right properties', function(done) {
+      kickq.process('statecheck plain job', function(jobItem){
+        try {jobItemTest.testJobItemProps(jobItem);}
+          catch(ex) {done(ex); return;}
+        done();
+      });
+    });
+
     test('3.1.1 has state: "processing"', function(done) {
-      kickq.process('statecheck plain job', function(job){
-        assert.equal('processing', job.state, 'state should be "process"');
+      kickq.process('statecheck plain job', function(jobItem){
+        assert.equal('processing', jobItem.state, 'state should be "processing"');
         done();
       });
     });
     test('3.1.2 passes all jobItem prop tests"', function(done) {
-      kickq.process('statecheck plain job', function(job){
-        jobItem.testItemProps(job, done);
+      kickq.process('statecheck plain job', function(jobItem){
+        try {jobItemTest.testNewItemPropsType(jobItem, done);}
+          catch(ex){done(ex);}
       });
     });
   });
 
   suite('3.2 A new job fetched manualy', function() {
     test('3.2.1 Passes the jobItem prop tests', function(done){
-      var prom = kickq.get(jobId, function(err, job){
-        jobItem.testItemProps(job, done);
+      var prom = kickq.get(jobId, function(err, jobItem){
+        jobItemTest.testNewItemPropsType(jobItem, done);
       });
     });
   });

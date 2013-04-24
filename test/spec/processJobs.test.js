@@ -34,7 +34,7 @@ suite('2.0 Job Processing', function() {
       jobid = key;
     });
     kickq.process('process-test-one', function(job, data, cb) {
-      jobItem.testItemProps(job);
+      jobItem.testNewItemPropsType(job);
       assert.equal(jobid, job.id, 'The job id should be the same');
       assert.equal(job.name, 'process-test-one', 'The job name should be the same');
       assert.equal(job.state, 'processing', 'State should be "processing"');
