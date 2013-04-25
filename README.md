@@ -32,6 +32,10 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.10**, *26 Apr 2013*
+  - Simplified logger level configuration.
+  - More logging messages.
+  - Lax stress tests margins.
 - **v0.0.9**, *26 Apr 2013*
   - A mythical bug of epic proportions, redis client connected before config was set.
 - **v0.0.7**, *24 Apr 2013*
