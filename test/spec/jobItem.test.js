@@ -136,7 +136,7 @@ jobItemTest.testProcessItemProps = function( processItem ) {
 
 };
 
-suite('Job Item Status and Props', function() {
+suite('3. Job Item Status and Props', function() {
 
   var jobId;
 
@@ -259,6 +259,117 @@ suite('Job Item Status and Props', function() {
         done();
       }, done).otherwise(done);
     });
+  });
+});
+
+
+suite('3.3 Failure Conditions', function() {
+  var jobId;
+
+  setup(function(done) {
+    kickq.reset();
+    kickq.config({
+      redisNamespace: tester.NS,
+      processTimeout: 20,
+      ghostInterval: 200,
+      loggerConsole: true,
+      loggerLevel: kickq.LogLevel.FINE
+    });
+    tester.clear(function(){
+      // create a dummy job and get the id
+      kickq.create('jobItem test fail job', function(err, job){
+        if (err) {
+          done(err);
+          return;
+        }
+        jobId = job.id;
+        done();
+      });
+    });
+  });
+
+  teardown(function() {
+  });
+
+
+  suite('3.3.1 Ghost Jobs', function() {
+    setup(function(done) {
+      kickq.get(jobId).then(function(jobItem) {
+        console.log(jobItem);
+        done();
+      });
+    });
+
+    test('3.3.1.1 Will ghost and wait to reprocess', function(done){
+      var processTimes = 0;
+      kickq.process('jobItem test fail job', function(jobItem, data, cb) {
+        processTimes++;
+      });
+
+      setTimeout(function() {
+        assert.equal(2, processTimes, 'The job should be processed only two times');
+        done();
+      }, 1000);
+    });
 
   });
+
+});
+
+
+suite('3.4 Configuring Job Item', function() {
+  var jobId;
+
+  setup(function(done) {
+    kickq.reset();
+    kickq.config({
+      redisNamespace: tester.NS,
+      loggerConsole: true,
+      loggerLevel: kickq.LogLevel.FINE,
+      delay: 10,
+      ghostRetry: false,
+      processTimeout: 20,
+      ghostInterval: 200,
+      retry: true,
+      retryTimes: 5,
+      retryInterval: 100
+    });
+    tester.clear(function(){
+      // create a dummy job and get the id
+      kickq.create('jobItem test fail job', function(err, job){
+        if (err) {
+          done(err);
+          return;
+        }
+        jobId = job.id;
+        done();
+      });
+    });
+  });
+
+  teardown(function() {
+  });
+
+
+  suite('3.4.1 Global Cofiguration Options', function() {
+    var jobItem;
+    setup(function(done) {
+      kickq.get(jobId).then(function(jobItemFetched) {
+        jobItem = jobItemFetched;
+        done();
+      });
+    });
+
+    test('3.4.1.1 Proper values on configurable properties', function(done){
+      assert.equal(10, jobItem.delay, 'Prop "delay" should have proper value');
+      assert.equal(false, jobItem.ghostRetry, 'Prop "ghostRetry" should have proper value');
+      assert.equal(20, jobItem.processTimeout, 'Prop "processTimeout" should have proper value');
+      assert.equal(200, jobItem.ghostInterval, 'Prop "ghostInterval" should have proper value');
+      assert.equal(true, jobItem.retry, 'Prop "retry" should have proper value');
+      assert.equal(5, jobItem.retryTimes, 'Prop "retryTimes" should have proper value');
+      assert.equal(100, jobItem.retryInterval, 'Prop "retryInterval" should have proper value');
+    });
+
+  });
+
 });
