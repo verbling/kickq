@@ -32,6 +32,9 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.12**, *26 Apr 2013*
+  - Perform state record creation.
+  - More logging for debugging purposes.
 - **v0.0.10**, *26 Apr 2013*
   - Simplified logger level configuration.
   - More logging messages.
