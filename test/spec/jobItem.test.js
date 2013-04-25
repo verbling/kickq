@@ -269,11 +269,16 @@ suite('3.3 Failure Conditions', function() {
   setup(function(done) {
     kickq.reset();
     kickq.config({
+      // loggerConsole: true,
+      // loggerLevel: kickq.LogLevel.FINE,
       redisNamespace: tester.NS,
+      // rapid polling
+      schedulerInterval: 100,
+      schedulerFuzz: 50,
+      schedulerLookAhead: 150,
+      // short timeouts and intervals
       processTimeout: 20,
-      ghostInterval: 200,
-      loggerConsole: true,
-      loggerLevel: kickq.LogLevel.FINE
+      ghostInterval: 200
     });
     tester.clear(function(){
       // create a dummy job and get the id
@@ -294,10 +299,7 @@ suite('3.3 Failure Conditions', function() {
 
   suite('3.3.1 Ghost Jobs', function() {
     setup(function(done) {
-      kickq.get(jobId).then(function(jobItem) {
-        console.log(jobItem);
-        done();
-      });
+      done();
     });
 
     test('3.3.1.1 Will ghost and wait to reprocess', function(done){
@@ -312,6 +314,74 @@ suite('3.3 Failure Conditions', function() {
       }, 1000);
     });
 
+    test('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
+      var processTimes = 0;
+      kickq.process('jobItem test fail job', function(jobItem, data, cb) {
+        processTimes++;
+      });
+
+      // create 10 jobs
+      for (var i = 0; i < 10; i++) {
+        kickq.create('jobItem test fail job');
+      }
+
+      setTimeout(function() {
+        assert.equal(22, processTimes, 'The job should be processed only 22 times');
+        done();
+      }, 1000);
+    });
+
+    test('3.3.1.3 Will ghost and add a new worker in the mix', function(done){
+      var processTimes = 0;
+      kickq.process('jobItem test fail job', function(jobItem, data, cb) {
+        processTimes++;
+      });
+
+      // create 10 jobs
+      for (var i = 0; i < 10; i++) {
+        kickq.create('jobItem test fail job');
+      }
+
+      var noTimes = 0;
+      setTimeout(function() {
+        kickq.process('jobItem test fail job', function(){
+          noTimes++;
+        });
+
+        setTimeout(function() {
+          assert.equal(0, noTimes, 'No more job items should be processed');
+          done();
+        }, 500);
+      }, 1000);
+    });
+
+    test('3.3.1.4 Will ghost and examine the Job Item properties', function(done){
+      var processTimes = 0;
+      kickq.process('jobItem test fail job', function(jobItem, data, cb) {
+        processTimes++;
+      });
+
+      setTimeout(function() {
+        kickq.get(jobId).then(function(jobItemFetched) {
+          assert.equal(2, jobItemFetched.runs.length, 'There should be two' +
+            ' process items');
+
+          assert.equal(kickq.states.Job.FAIL, jobItemFetched.state,
+            'Job Item state should be "fail"');
+
+          assert.ok(jobItemFetched.complete, 'Job Item should be complete');
+          assert.ok(!jobItemFetched.success, 'Job Item should have success prop false');
+
+          assert.equal(kickq.states.Job.GHOST, jobItemFetched.runs[0].state,
+            'First process item state should be "ghost"');
+          assert.equal(kickq.states.Job.GHOST, jobItemFetched.runs[1].state,
+            'Second process item state should be "ghost"');
+          done();
+        }).otherwise(done);
+      }, 1000);
+    });
+
+
   });
 
 });
@@ -324,8 +394,8 @@ suite('3.4 Configuring Job Item', function() {
     kickq.reset();
     kickq.config({
       redisNamespace: tester.NS,
-      loggerConsole: true,
-      loggerLevel: kickq.LogLevel.FINE,
+      // loggerConsole: true,
+      // loggerLevel: kickq.LogLevel.FINE,
       delay: 10,
       ghostRetry: false,
       processTimeout: 20,
