@@ -23,6 +23,8 @@ npm install kickq --save
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.9**, *26 Apr 2013*
+  - A mythical bug of epic proportions, redis client connected before config was set.
 - **v0.0.7**, *24 Apr 2013*
   - Enabled purging of completed jobs.
   - More tests for job item.
