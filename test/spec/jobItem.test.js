@@ -368,6 +368,7 @@ suite('3.4 Configuring Job Item', function() {
       assert.equal(true, jobItem.retry, 'Prop "retry" should have proper value');
       assert.equal(5, jobItem.retryTimes, 'Prop "retryTimes" should have proper value');
       assert.equal(100, jobItem.retryInterval, 'Prop "retryInterval" should have proper value');
+      done();
     });
 
   });
