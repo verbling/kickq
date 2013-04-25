@@ -207,7 +207,7 @@ suite('Job Item Status and Props', function() {
         }
         setInterval(function() {
           cb(null, done);
-        });
+        }, 20);
       });
     });
 
