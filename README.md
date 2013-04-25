@@ -4,19 +4,28 @@ Kick Jobs out the door, quickly!
 
 [![Build Status](https://travis-ci.org/verbling/kickq.png?branch=master)](https://travis-ci.org/verbling/kickq)
 
-## We are in beta!
-
-First beta is out. Not ready for production yet but all the functionality is there.
-
-From here on it's bug fixing and strengthening the code.
-
-Checkout the API documentation in the [test folder](test/), pending a more expanded documentation.
-
 ## Install
 
 ```shell
 npm install kickq --save
 ```
+
+## Documentation
+
+The full documentation can be found in the [project's wiki](https://github.com/verbling/kickq/wiki).
+
+
+## The Core API
+
+* [Create Jobs](https://github.com/verbling/kickq/wiki/Create-Jobs)
+* [Process Jobs](https://github.com/verbling/kickq/wiki/Process-Jobs)
+* [Configure Kickq](https://github.com/verbling/kickq/wiki/Configure-Kickq)
+
+## Utilities and Helpers
+
+* [The Kickq Job Item](https://github.com/verbling/kickq/wiki/The-Kickq-Job-Item)
+* [All Kickq Methods and Properties](https://github.com/verbling/kickq/wiki/All-Kickq-Methods and-Properties)
+* [Kickq Metrics](https://github.com/verbling/kickq/wiki/Kickq-Metrics)
 
 ## Authors
 
