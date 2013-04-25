@@ -32,6 +32,10 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.13**, *26 Apr 2013*
+  - Global Job Item configuration options were not applied to new job items, fixed.
+  - Bug fixes on Job Item when processing timedout.
+  - More test cases.
 - **v0.0.12**, *26 Apr 2013*
   - Perform state record creation.
   - More logging for debugging purposes.
