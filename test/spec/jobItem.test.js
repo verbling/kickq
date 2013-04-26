@@ -441,6 +441,20 @@ suite('3.4 Configuring Job Item', function() {
       done();
     });
 
+    test('3.4.1.2 Testing setState method', function(done){
+      var jobIt = new kickq.JobItem(jobItem);
+
+      jobIt.setState(kickq.states.Job.QUEUED).then(function() {
+        kickq.get(jobId).then(function(jobItemFetched) {
+          assert.equal(kickq.states.Job.QUEUED, jobItemFetched.state, 'State of' +
+            ' fetched item should be "queued"');
+          done();
+        }, done).otherwise(done);
+
+
+      }, done);
+    });
+
   });
 
 });

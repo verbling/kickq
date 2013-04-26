@@ -5,6 +5,10 @@
 var jobOpts = require('../fixtures/jobOpts.fix');
 var rBuster = require('./redis-buster');
 
+var kickq = require('../..');
+
+kickq.config('loggerConsole', true);
+
 
 // setup promise env
 // https://github.com/domenic/mocha-as-promised#node

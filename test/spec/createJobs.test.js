@@ -279,6 +279,9 @@ suite('Job Creation', function() {
       kickq.config('schedulerInterval', 50);
       kickq.config('schedulerFuzz', 10);
       kickq.config('schedulerLookAhead', 50);
+
+      // kickq.config('loggerConsole', true);
+      // kickq.config('loggerLevel', kickq.LogLevel.FINE);
     });
 
     teardown(function() {
