@@ -32,6 +32,10 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 * [@thanpolas][thanpolas]
 
 ## Release History
+- **v0.0.15**, *27 Apr 2013*
+  - Now publishes on `kickq:delete` for all job ites that get deleted.
+  - Delete now removes all traces of job item.
+  - Bug fix when job failed and test case to avoid regression.
 - **v0.0.14**, *27 Apr 2013*
   - Added time index.
   - Fixed state bug when job failed.
