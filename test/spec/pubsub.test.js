@@ -19,7 +19,15 @@ suite('5. Kickq Redis Published Messages', function() {
   setup(function(done) {
     kickq.reset();
     kickq.config({
-      redisNamespace: tester.NS
+      redisNamespace: tester.NS,
+      // rapid polling
+      schedulerInterval: 100,
+      schedulerFuzz: 50,
+      schedulerLookAhead: 150,
+      // short timeouts and intervals
+      processTimeout: 20,
+      ghostInterval: 200
+
     });
     client = redis.createClient();
     tester.clear(done);
@@ -102,16 +110,15 @@ suite('5. Kickq Redis Published Messages', function() {
 
     client.on('message', function(channel, message){
       assert.equal(tester.NS + ':delete', channel, 'Channel should be the right one');
-
       var deleteItem = JSON.parse(message);
 
       assert.isString(deleteItem.id, '"id" prop of deleteItem should be of right type');
       assert.isString(deleteItem.queue, '"queue" prop of deleteItem should be of right type');
-      assert.isString(deleteItem.serializedJobItem, '"serializedJobItem" prop of deleteItem should be of right type');
-      assert.ok(deleteItem.status, '"status" prop of deleteItem should be true');
+      assert.isObject(deleteItem.jobItem, '"jobItem" prop of deleteItem should be of right type');
+      assert.isTrue(deleteItem.status, '"status" prop of deleteItem should be true');
       assert.equal('channels-test-delete', deleteItem.queue, '"queue" prop of deleteItem should have same name as job (queue)');
       assert.equal('channels-test-delete', deleteItem.jobItem.name, 'jobItem should have same name (queue)');
-      assert.equal('delete', deleteItem.jobItem.state, 'jobItem state should be delete');
+      assert.equal('success', deleteItem.jobItem.state, 'jobItem state should be delete');
       done();
     });
     client.subscribe(tester.NS + ':delete');
