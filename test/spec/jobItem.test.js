@@ -166,11 +166,29 @@ suite('3. Job Item Status and Props', function() {
   // The purpose is to provide a unique string so specific tests are
   // run by using the mocha --grep "1.1.1" option.
   suite('3.0 A new job fetched manualy', function() {
-    test('3.0.1 Passes the jobItem prop tests', function(done){
-      var prom = kickq.get(jobId, function(err, jobItem){
-        jobItemTest.testNewItemPropsType(jobItem, done);
+    var jobItem;
+    setup(function(done) {
+      kickq.get(jobId, function(err, job){
+        jobItem = job;
+        done(err);
       });
     });
+    test('3.0.1 Passes the jobItem prop tests', function(done){
+      jobItemTest.testNewItemPropsType(jobItem, done);
+    });
+    test('3.0.2 Check default values', function(){
+      assert.equal(10000, jobItem.processTimeout, 'processTimeout should have the proper default value');
+      assert.equal(null, jobItem.delay, 'delay should have the proper default value');
+      assert.equal(true, jobItem.ghostRetry, 'ghostRetry should have the proper default value');
+      assert.equal(1, jobItem.ghostTimes, 'ghostTimes should have the proper default value');
+      assert.equal(1800000, jobItem.ghostInterval, 'ghostInterval should have the proper default value');
+      assert.equal(false, jobItem.hotjob, 'hotjob should have the proper default value');
+      assert.equal(10000, jobItem.hotjobTimeout, 'hotjobTimeout should have the proper default value');
+      assert.equal(false, jobItem.retry, 'retry should have the proper default value');
+      assert.equal(3, jobItem.retryTimes, 'retryTimes should have the proper default value');
+      assert.equal(1800000, jobItem.retryInterval, 'retryInterval should have the proper default value');
+    });
+
   });
 
   suite('3.1 A new plain job item when processed', function() {
@@ -380,10 +398,27 @@ suite('3.3 Failure Conditions', function() {
         }).otherwise(done);
       }, 1000);
     });
-
-
   });
 
+  suite('3.3.2 Failed Jobs', function() {
+    var jobItem;
+
+    // process, reject and fetch the job.
+    setup(function(done) {
+      kickq.process('jobItem test fail job', function(job, data, cb) {
+        cb(false, function() {
+          kickq.get(job.id).then(function(fetchedJob) {
+            jobItem = fetchedJob;
+            done();
+          }, done);
+        });
+      });
+    });
+
+    test('3.3.2.1 Job item should have the proper values in its props', function(){
+      assert.equal('fail', jobItem.state, 'Job item should have a state of "fail"');
+    });
+  });
 });
 
 
