@@ -199,6 +199,21 @@ suite('3. Job Item Status and Props', function() {
         done();
       }, 100);
     });
+    test('3.0.4 Check .get error callback is of right type', function(done) {
+      var spy = sinon.spy();
+      kickq.get('does not exist', spy);
+
+      // wait a bit and check if callback called
+      setTimeout(function() {
+        var args = spy.getCall(0).args;
+        assert.equal(1, args.length, 'One argument should be present only');
+        assert.instanceOf(args[0], kickq.Error.NoRecord, 'should be instance of' +
+          'NoRecord Error');
+        done();
+      }, 100);
+    });
+
+
 
   });
 
