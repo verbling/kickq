@@ -40,7 +40,8 @@
     "when": "~1.8.1",
     "redis": "git://github.com/thanpolas/node_redis.git",
     "logg": "git://github.com/thanpolas/node-logg.git",
-    "node-syslog": "~1.1.7"
+    "node-syslog": "~1.1.7",
+    "profy": "0.0.5"
   },
   "devDependencies": {
     "grunt-mocha-test": "~0.2.0",
