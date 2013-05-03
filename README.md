@@ -32,6 +32,20 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 * [@thanpolas][thanpolas]
 
 ## Release History
+
+
+* aa0a2c5 2013-05-03 fix get not invoking callback, added error type test, closes #3
+* 2ac49e2 2013-05-03 Add test case for issue #3, get does't invoke callback
+* 40eaa7a 2013-05-03 Up profy ver
+* b152c21 2013-04-30 rename error to Error, it's an enum
+* 5a3638b 2013-04-30 error message smoothing
+* 33b1640 2013-04-30 Error Objects cleanup
+* 11471d3 2013-04-30 housekeeping
+
+- **v0.0.16**, *03 May 2013*
+  - Fixed back in `.get()` method, not invoking callback when no results.
+  - Renamed `kickq.error` to `kickq.Error` for semantic correctness.
+  - Cleaned up error objects.
 - **v0.0.15**, *27 Apr 2013*
   - Now publishes on `kickq:delete` for all job ites that get deleted.
   - Delete now removes all traces of job item.
