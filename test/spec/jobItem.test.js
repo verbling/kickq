@@ -189,6 +189,17 @@ suite('3. Job Item Status and Props', function() {
       assert.equal(1800000, jobItem.retryInterval, 'retryInterval should have the proper default value');
     });
 
+    test('3.0.3 Check .get callback is called when no results', function(done) {
+      var spy = sinon.spy();
+      kickq.get('does not exist', spy);
+
+      // wait a bit and check if callback called
+      setTimeout(function() {
+        assert.ok(spy.calledOnce, 'Callback should be called once');
+        done();
+      }, 100);
+    });
+
   });
 
   suite('3.1 A new plain job item when processed', function() {
