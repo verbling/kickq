@@ -20,8 +20,8 @@ suite('Job Creation', function() {
     kickq.reset();
     kickq.config({
       redisNamespace: tester.NS,
-      loggerFile: true,
-      loggerFileLevel: kickq.LogLevel.FINEST
+      loggerConsole: true,
+      loggerLevel: kickq.LogLevel.FINEST
     });
     tester.clear(done);
   });
