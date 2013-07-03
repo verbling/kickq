@@ -143,11 +143,14 @@ suite('3. Job Item Status and Props', function() {
   setup(function(done) {
     kickq.reset();
     kickq.config({
-      redisNamespace: tester.NS
+      redisNamespace: tester.NS,
+      // loggerConsole: true,
+      // loggerLevel: kickq.LogLevel.FINEST
+
     });
     tester.clear(function(){
       // create a dummy job and get the id
-      kickq.create('jobItem test plain job', function(err, job){
+      kickq.create('jobItem-test-plain-job', function(err, job){
         if (err) {
           done(err);
           return;
@@ -219,7 +222,7 @@ suite('3. Job Item Status and Props', function() {
 
   suite('3.1 A new plain job item when processed', function() {
     test('3.1.0 Has the right properties', function(done) {
-      kickq.process('jobItem test plain job', function(jobItem){
+      kickq.process('jobItem-test-plain-job', function(jobItem){
         try {jobItemTest.testJobItemProps(jobItem);}
           catch(ex) {done(ex); return;}
         done();
@@ -227,13 +230,13 @@ suite('3. Job Item Status and Props', function() {
     });
 
     test('3.1.1 has state: "processing"', function(done) {
-      kickq.process('jobItem test plain job', function(jobItem){
+      kickq.process('jobItem-test-plain-job', function(jobItem){
         assert.equal('processing', jobItem.state, 'state should be "processing"');
         done();
       });
     });
     test('3.1.2 passes all jobItem prop tests"', function(done) {
-      kickq.process('jobItem test plain job', function(jobItem){
+      kickq.process('jobItem-test-plain-job', function(jobItem){
         try {jobItemTest.testNewItemPropsType(jobItem, done);}
           catch(ex){done(ex);}
       });
@@ -243,13 +246,14 @@ suite('3. Job Item Status and Props', function() {
   suite('3.2 A new plain job item after being processed successfully', function() {
 
     setup(function(done) {
+
       // create a dummy job and get the id
-      kickq.process('jobItem test plain job', function(jobItem, data, cb){
+      kickq.process('jobItem-test-plain-job', function(jobItem, data, cb){
         if (jobId !== jobItem.id) {
           done('Different job id! Created: ' + jobId + ' processed: ' + jobItem.id);
           return;
         }
-        setInterval(function() {
+        setTimeout(function() {
           cb(null, done);
         }, 20);
       });
@@ -304,10 +308,10 @@ suite('3. Job Item Status and Props', function() {
       }, done).otherwise(done);
     });
   });
+
 });
 
-
-suite('3.3 Failure Conditions', function() {
+suite('3.4 Failure Conditions', function() {
   var jobId;
 
   setup(function(done) {
@@ -341,12 +345,12 @@ suite('3.3 Failure Conditions', function() {
   });
 
 
-  suite('3.3.1 Ghost Jobs', function() {
+  suite('3.4.1 Ghost Jobs', function() {
     setup(function(done) {
       done();
     });
 
-    test('3.3.1.1 Will ghost and wait to reprocess', function(done){
+    test('3.4.1.1 Will ghost and wait to reprocess', function(done){
       var processTimes = 0;
       kickq.process('jobItem test fail job', function(jobItem, data, cb) {
         processTimes++;
@@ -358,7 +362,7 @@ suite('3.3 Failure Conditions', function() {
       }, 1000);
     });
 
-    test('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
+    test('3.4.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
       var processTimes = 0;
       kickq.process('jobItem test fail job', function(jobItem, data, cb) {
         processTimes++;
@@ -375,7 +379,7 @@ suite('3.3 Failure Conditions', function() {
       }, 1000);
     });
 
-    test('3.3.1.3 Will ghost and add a new worker in the mix', function(done){
+    test('3.4.1.3 Will ghost and add a new worker in the mix', function(done){
       var processTimes = 0;
       kickq.process('jobItem test fail job', function(jobItem, data, cb) {
         processTimes++;
@@ -399,7 +403,7 @@ suite('3.3 Failure Conditions', function() {
       }, 1000);
     });
 
-    test('3.3.1.4 Will ghost and examine the Job Item properties', function(done){
+    test('3.4.1.4 Will ghost and examine the Job Item properties', function(done){
       var processTimes = 0;
       kickq.process('jobItem test fail job', function(jobItem, data, cb) {
         processTimes++;
@@ -426,7 +430,7 @@ suite('3.3 Failure Conditions', function() {
     });
   });
 
-  suite('3.3.2 Failed Jobs', function() {
+  suite('3.4.2 Failed Jobs', function() {
     var jobItem;
 
     // process, reject and fetch the job.
@@ -441,14 +445,14 @@ suite('3.3 Failure Conditions', function() {
       });
     });
 
-    test('3.3.2.1 Job item should have the proper values in its props', function(){
+    test('3.4.2.1 Job item should have the proper values in its props', function(){
       assert.equal('fail', jobItem.state, 'Job item should have a state of "fail"');
     });
   });
 });
 
 
-suite('3.4 Configuring Job Item', function() {
+suite('3.5 Configuring Job Item', function() {
   var jobId;
 
   setup(function(done) {
@@ -482,7 +486,7 @@ suite('3.4 Configuring Job Item', function() {
   });
 
 
-  suite('3.4.1 Global Cofiguration Options', function() {
+  suite('3.5.1 Global Cofiguration Options', function() {
     var jobItem;
     setup(function(done) {
       kickq.get(jobId).then(function(jobItemFetched) {
@@ -491,7 +495,7 @@ suite('3.4 Configuring Job Item', function() {
       });
     });
 
-    test('3.4.1.1 Proper values on configurable properties', function(done){
+    test('3.5.1.1 Proper values on configurable properties', function(done){
       assert.equal(10, jobItem.delay, 'Prop "delay" should have proper value');
       assert.equal(false, jobItem.ghostRetry, 'Prop "ghostRetry" should have proper value');
       assert.equal(20, jobItem.processTimeout, 'Prop "processTimeout" should have proper value');
@@ -502,7 +506,7 @@ suite('3.4 Configuring Job Item', function() {
       done();
     });
 
-    test('3.4.1.2 Testing setState method', function(done){
+    test('3.5.1.2 Testing setState method', function(done){
       var jobIt = new kickq.JobItem(jobItem);
 
       jobIt.setState(kickq.states.Job.QUEUED).then(function() {
