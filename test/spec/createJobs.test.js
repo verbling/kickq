@@ -37,14 +37,12 @@ suite('Job Creation', function() {
   // run by using the mocha --grep "1.1.1" option.
 
   suite('1.1 A "plain job"', function() {
-    test('1.1.1 Create a "plain job"', function(done) {
+    test('1.1.1 Create a "plain job"', function() {
       // use the promised pattern so errors are visible
-      assert.isFulfilled( kickq.create( tester.fix.jobname, 'data', {},
+      return kickq.create( tester.fix.jobname, 'data', {},
         function(err, job) {
           assert.isNull(err, 'The "err" arg should be null');
-          done();
-        }),
-        'kickq.create promise should resolve');
+        });
     });
     test('1.1.2 Verify "plain job" was created', function(done) {
       kickq.create( 'create-verify', 'data', {}, function(err) {
@@ -157,8 +155,7 @@ suite('Job Creation', function() {
     test('1.4.1 Create a "hotjob job"', function(done) {
 
       function onJobCreate(err, job, promise) {
-        assert.isFulfilled(promise, 'hotjob promise should resolve')
-          .notify(done);
+        promise.then(done, done);
 
         kickq.process('hotjob_job 1.4.1', function(job, data, cb) {
           cb();
@@ -175,14 +172,16 @@ suite('Job Creation', function() {
       function onJobCreate(err, job, promise) {
         assert.ok( when.isPromise(promise), 'create callback should yield' +
         ' a promise in the callback');
-        assert.isFulfilled(promise.then(function(job) {
-          assert.ok(job.complete, '"complete" property should be true');
-          assert.equal(job.name, 'hotjob_job 1.4.2', '"jobName" property should have proper value');
-        }), 'hotjob promise should resolve').notify(done);
 
         kickq.process('hotjob_job 1.4.2', function(job, data, cb) {
           cb();
         });
+
+        promise.then(function(job) {
+          assert.ok(job.complete, '"complete" property should be true');
+          assert.equal(job.name, 'hotjob_job 1.4.2', '"jobName" property should have proper value');
+        })
+          .then(done, done);
 
       }
 
@@ -222,16 +221,13 @@ suite('Job Creation', function() {
         function onJobCreate(err, job, promise) {
           startTime = new Date().getTime();
 
-          assert.isFulfilled( promise.then(
-            noop, function( err ) {
-              var endTime = Date.now();
+          promise.then(noop, function( err ) {
+            var endTime = Date.now();
 
-              assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
-                ' at least after 9000ms');
-            }),
-            'hotjob Promise should be fulfilled'
-          )
-          .notify(done);
+            assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
+              ' at least after 9000ms');
+          })
+            .then(done, done);
 
           clock.tick(10100);
           // clock.restore();
@@ -254,15 +250,13 @@ suite('Job Creation', function() {
         function onJobCreate(err, id, promise) {
           startTime = new Date().getTime();
 
-          assert.isFulfilled( promise.then(
+          promise.then(
             noop, function( err ) {
               var endTime = Date.now();
               assert.ok( (endTime - startTime) > 3000, 'Promise should timeout' +
               ' at least after 3000ms');
-            }),
-            'hotjob Promise should be fulfilled'
-          )
-          .notify(done);
+            })
+            .then(done, done);
 
           clock.tick(4100);
           // clock.restore();
@@ -322,27 +316,27 @@ suite('Job Creation', function() {
       var createPromise = kickq.create('create-promise-test');
       assert.ok(when.isPromise(createPromise), 'create job should return a promise');
     });
-    test('1.6.2 Job creation promise resolves', function(done) {
-      var createPromise = kickq.create('create-promise-arguments');
-      assert.isFulfilled(createPromise, 'job create promise should resolve').notify(done);
+    test('1.6.2 Job creation promise resolves', function() {
+      return kickq.create('create-promise-arguments');
     });
     test('1.6.3 Job creation promise resolves with proper arguments', function(done) {
-      var createPromise = kickq.create('create-promise-arguments');
-      assert.isFulfilled(createPromise.then(function(job) {
-        jobItem.testNewItemPropsType(job);
-        assert.equal(job.name, 'create-promise-arguments', '"job.name" ' +
-          'property should have proper value');
-      }), 'job create promise should resolve').notify(done);
+      return kickq.create('create-promise-arguments')
+        .then(function(job) {
+          jobItem.testNewItemPropsType(job);
+          assert.equal(job.name, 'create-promise-arguments', '"job.name" ' +
+            'property should have proper value');
+        })
+        .then(done, done);
     });
 
     test('1.6.4 hotjob creation', function(done) {
       var opts = {hotjob:true};
-      var createPromise = kickq.create('create-promise-arguments', 'data', opts);
-
-      assert.isFulfilled(createPromise.then(function(job) {
-        assert.ok(job.hotjob, 'job.hotjob flag should be true in job instance');
-        assert.ok(when.isPromise(job.hotjobPromise), 'job.hotjobPromise should be a promise');
-      }), 'job create promise should resolve').notify(done);
+      return kickq.create('create-promise-arguments', 'data', opts)
+        .then(function(job) {
+          assert.ok(job.hotjob, 'job.hotjob flag should be true in job instance');
+          assert.ok(when.isPromise(job.hotjobPromise), 'job.hotjobPromise should be a promise');
+        })
+        .then(done, done);
     });
 
   });
