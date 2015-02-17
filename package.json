@@ -41,7 +41,7 @@
     "node-syslog": "~1.1.7",
     "profy": "0.0.5",
     "logg": "~0.3.0",
-    "redis": "^0.12.1"
+    "redis": "0.12.1"
   },
   "devDependencies": {
     "sinon": "~1.12.2",
