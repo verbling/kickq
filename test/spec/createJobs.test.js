@@ -103,19 +103,14 @@ suite('Job Creation', function() {
   suite('1.3 A "delayed job"', function() {
     var startTime;
 
-    test('1.3.1 Create a "delayed job"', function(done) {
+    test('1.3.1 Create a "delayed job"', function() {
       this.timeout(3000);
 
-      var createPromise = kickq.create( 'delayed_job 1.3.1', 'data', {delay: 1000},
+      return kickq.create( 'delayed_job 1.3.1', 'data', {delay: 1000},
         function(err, job) {
           assert.isNull(err, 'The "err" arg should be null');
           assert.equal('delayed', job.state, 'Job item state should be "delayed"');
         });
-
-      assert.isFulfilled( createPromise,
-        'The delayed job create operation should be successful')
-      .notify(done);
-
     });
     test('1.3.2 Verify "delayed job" gets processed in time', function(done) {
 
@@ -155,7 +150,7 @@ suite('Job Creation', function() {
     test('1.4.1 Create a "hotjob job"', function(done) {
 
       function onJobCreate(err, job, promise) {
-        promise.then(done, done);
+        promise.then(done.bind(null, null), done);
 
         kickq.process('hotjob_job 1.4.1', function(job, data, cb) {
           cb();
@@ -191,8 +186,7 @@ suite('Job Creation', function() {
     test('1.4.3 Create a "hotjob job" that will fail', function(done) {
 
       function onJobCreate(err, job, promise) {
-        var testprom = assert.isRejected(promise,
-          'hotjob Promise should be rejected').notify(done);
+        promise.then(function() {done('should not invoke');}, done.bind(null, null));
 
         kickq.process('hotjob_job 1.4.3', function(job, data, cb) {
           cb('error message');
