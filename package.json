@@ -39,7 +39,6 @@
     "underscore": "~1.7.0",
     "when": "~1.8.1",
     "strong-fork-syslog": "~1.2.3",
-    "profy": "0.0.5",
     "logg": "^0.3.0",
     "redis": "^0.12.1"
   },
