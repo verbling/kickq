@@ -33,6 +33,8 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 
 ## Release History
 
+- **v0.2.0**, *26 Mar 2015*
+  - Made Kickq compatible with node 0.12.0 and **incompatible** with node 0.8.0, thankyou [@lbeschastny](https://github.com/lbeschastny)
 - **v0.1.0**, *17 Feb 2015*
   - Updated all dependencies to latest.
   - Adjusted unit tests.
