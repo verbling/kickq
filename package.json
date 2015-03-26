@@ -25,7 +25,7 @@
   ],
   "main": "lib/kickq.main.js",
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 0.10.0"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha -b test/spec -u tdd -R spec"
@@ -38,8 +38,7 @@
     "yaml": "~0.2.3",
     "underscore": "~1.7.0",
     "when": "~1.8.1",
-    "node-syslog": "~1.1.7",
-    "profy": "0.0.5",
+    "strong-fork-syslog": "~1.2.3",
     "logg": "^0.3.0",
     "redis": "^0.12.1"
   },
