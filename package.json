@@ -39,7 +39,7 @@
     "node-syslog": "^1.2.0",
     "redis": "^0.12.1",
     "underscore": "~1.8.3",
-    "when": "~3.7.2",
+    "when": "~1.8.1",
     "yaml": "~0.2.3"
   },
   "devDependencies": {
