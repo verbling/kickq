@@ -3,7 +3,7 @@
  *   node --prof --prof_lazy --log create-profile.js
  */
 
-var profiler = require('profiler');
+// var profiler = require('profiler');
 var sinon  = require('sinon');
 var _ = require('underscore');
 var chai = require('chai');
@@ -50,7 +50,7 @@ console.log('starting kickq.create...');
 
 perf.start();
 
-profiler.resume();
+// profiler.resume();
 var promises = [];
 
 perf.log('before for');
@@ -65,7 +65,7 @@ perf.log('after for');
 when.all(promises).then(restore).otherwise(restore);
 
 function restore(proms) {
-  profiler.pause();
+  // profiler.pause();
   perf.log('in restore');
   var nowTime = Date.now();
   var res = perf.result();
