@@ -33,6 +33,8 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 
 ## Release History
 
+- **v0.2.2**, *22 Apr 2015*
+  - Restore node-syslog package and test vs 0.12 in travis.
 - **v0.2.1**, *04 Apr 2015*
   - Set the log level properly.
 - **v0.2.0**, *26 Mar 2015*

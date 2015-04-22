@@ -31,28 +31,25 @@
     "test": "./node_modules/.bin/mocha -b test/spec -u tdd -R spec"
   },
   "dependencies": {
-    "grunt": "~0.4.5",
-    "collections": "~1.2.1",
     "async": "~0.9.0",
-    "config": "~1.11.0",
-    "yaml": "~0.2.3",
-    "underscore": "~1.7.0",
-    "when": "~1.8.1",
-    "strong-fork-syslog": "~1.2.3",
+    "collections": "~1.2.2",
+    "config": "~1.12.0",
+    "grunt": "~0.4.5",
     "logg": "^0.3.0",
-    "redis": "^0.12.1"
+    "node-syslog": "^1.2.0",
+    "redis": "^0.12.1",
+    "underscore": "~1.8.3",
+    "when": "~1.8.1",
+    "yaml": "~0.2.3"
   },
   "devDependencies": {
-    "sinon": "~1.12.2",
+    "sinon": "~1.14.1",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-contrib-clean": "~0.6.0",
-    "chai": "~2.0.0",
-    "profiler": "~1.2.3",
-    "nodetime": "~0.8.15",
-    "profy": "~0.0.6",
-    "memwatch": "~0.2.2",
-    "grunt-release": "~0.11.0",
-    "mocha": "^2.1.0"
+    "chai": "~2.2.0",
+    "profy": "~0.1.1",
+    "grunt-release": "~0.12.0",
+    "mocha": "^2.2.4"
   },
   "keywords": [
     "queue",
