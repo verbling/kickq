@@ -1,0 +1,16 @@
+kickq-*.tgz
+
+.editorconfig
+.gitattributes
+.gitignore
+.gitmodules
+.jshintrc
+.npmignore
+.travis.yml
+
+Gruntfile.js
+
+config/
+tasks/
+temp/
+test/
