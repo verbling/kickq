@@ -33,6 +33,8 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 
 ## Release History
 
+- **v0.2.4**, *30 Jun 2015*
+  - Lightened up the npm install bundle using npmingore and better devdeps, thankyou [@lbeschastny](https://github.com/lbeschastny)
 - **v0.2.3**, *16 Jun 2015*
   - Accept any truthy value as an error callback in job processing.
 - **v0.2.2**, *22 Apr 2015*
