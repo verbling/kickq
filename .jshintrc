@@ -1,6 +1,5 @@
 /**
  * Project specific jshint linting options.
- * Front end version
  *
  * Forked from Airbnb JSHint settings.
  *
@@ -16,10 +15,10 @@
    */
 
   // Define globals exposed by modern browsers.
-  "browser": true,
+  "browser": false,
 
   // Define globals exposed by jQuery.
-  "jquery": true,
+  "jquery": false,
 
   // Define globals exposed by Node.js.
   "node": true,
@@ -114,6 +113,12 @@
   // latter are used for alignmnent only. The technique is called SmartTabs.
   "smarttabs": false,
 
+  /** Fucking disco https://github.com/petkaantonov/bluebird/issues/301 */
+  "predef": [
+    "-Promise"
+  ],
+
+
   /**
    * TEMPORARY OPTIONS
    * =================
@@ -121,13 +126,6 @@
    * These are provisional options for legacy code.
    *
    */
-  /** Fucking disco https://github.com/petkaantonov/bluebird/issues/301 */
-  "predef": [
-    "-Promise",
-    "-Map",
-    "-Worker"
-  ],
-
 
   /**
    * PROJECT GLOBALS
@@ -135,5 +133,19 @@
    *
    */
   "globals": {
+    "Map": true,
+
+    /* MOCHA */
+    "suite": false,
+    "test": false,
+    "describe": false,
+    "it": false,
+    "setup": false,
+    "before": false,
+    "beforeEach": false,
+    "after": false,
+    "afterEach": false,
+    "teardown": false,
+    "assert": false
   }
 }
