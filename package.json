@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "bluebird": "^2.9.34",
+    "cip": "^1.0.0",
     "collections": "~1.2.3",
     "logg": "^0.3.0",
     "node-syslog": "^1.2.0",
