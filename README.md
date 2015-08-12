@@ -1,6 +1,8 @@
-# kickq
+# Kickq
 
 Kick Jobs out the door, quickly!
+
+A Robust Node.js queueing service based on redis.
 
 [![Build Status](https://travis-ci.org/verbling/kickq.png?branch=master)](https://travis-ci.org/verbling/kickq)
 
