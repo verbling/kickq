@@ -28,7 +28,7 @@
     "node": ">= 0.10.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha -b test/spec -u tdd -R spec"
+    "test": "./node_modules/.bin/mocha -b test/spec"
   },
   "dependencies": {
     "collections": "~1.2.2",
