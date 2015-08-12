@@ -31,6 +31,7 @@
     "test": "./node_modules/.bin/mocha -b test/spec"
   },
   "dependencies": {
+    "bluebird": "^2.9.34",
     "collections": "~1.2.3",
     "logg": "^0.3.0",
     "node-syslog": "^1.2.0",
