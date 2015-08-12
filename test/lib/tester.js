@@ -8,6 +8,7 @@ var rBuster = require('./redis-buster');
 var kickq = require('../..');
 
 kickq.config('loggerConsole', true);
+kickq.config('loggerLevel', 100);
 
 // setup promise env
 // https://github.com/domenic/mocha-as-promised#node
