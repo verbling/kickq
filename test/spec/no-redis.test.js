@@ -11,7 +11,7 @@ var kickq  = require('../../');
 var tester = require('../lib/tester');
 
 
-suite.only('No Redis', function() {
+suite.skip('No Redis', function() {
   setup(function() {
     kickq.reset();
     kickq.config({

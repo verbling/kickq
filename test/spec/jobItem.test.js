@@ -4,15 +4,12 @@
 
 var sinon  = require('sinon');
 var _ = require('underscore');
-var chai = require('chai');
-var grunt  = require('grunt');
 var assert = require('chai').assert;
-var when   = require('when');
 
 var kickq  = require('../../');
 var tester = require('../lib/tester');
 
-var noop = function(){};
+// var noop = function(){};
 
 var jobItemTest = module.exports = {};
 
@@ -348,7 +345,7 @@ suite('3.3 Failure Conditions', function() {
 
     test('3.3.1.1 Will ghost and wait to reprocess', function(done){
       var processTimes = 0;
-      kickq.process('jobItem test fail job', function(jobItem, data, cb) {
+      kickq.process('jobItem test fail job', function() {
         processTimes++;
       });
 
@@ -360,7 +357,7 @@ suite('3.3 Failure Conditions', function() {
 
     test('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
       var processTimes = 0;
-      kickq.process('jobItem test fail job', function(jobItem, data, cb) {
+      kickq.process('jobItem test fail job', function() {
         processTimes++;
       });
 
@@ -377,7 +374,7 @@ suite('3.3 Failure Conditions', function() {
 
     test('3.3.1.3 Will ghost and add a new worker in the mix', function(done){
       var processTimes = 0;
-      kickq.process('jobItem test fail job', function(jobItem, data, cb) {
+      kickq.process('jobItem test fail job', function() {
         processTimes++;
       });
 
@@ -401,7 +398,7 @@ suite('3.3 Failure Conditions', function() {
 
     test('3.3.1.4 Will ghost and examine the Job Item properties', function(done){
       var processTimes = 0;
-      kickq.process('jobItem test fail job', function(jobItem, data, cb) {
+      kickq.process('jobItem test fail job', function() {
         processTimes++;
       });
 

@@ -2,15 +2,13 @@
  * @fileOverview Processing Jobs with kickq
  */
 
-var sinon  = require('sinon');
-var grunt = require('grunt');
+var Promise = require('bluebird');
 var assert = require('chai').assert;
 var kickq = require('../../');
 var tester = require('../lib/tester');
 var jobItem = require('./jobItem.test');
-var when   = require('when');
 
-var noop = function(){};
+// var noop = function(){};
 
 suite('2.0 Job Processing', function() {
 
@@ -27,7 +25,7 @@ suite('2.0 Job Processing', function() {
     tester.clear(done);
   });
 
-  test('2.0.1 The job instance argument', function() {
+  test('2.0.1 The job instance argument', function(done) {
     var jobid;
 
     kickq.create('process-test-one', 'data', {}, function(err, key) {
@@ -61,12 +59,10 @@ suite('2.0 Job Processing', function() {
     }
 
     var jobProcessCount = 0;
-    var jobProcessQueue = [];
     function startProcess() {
       var opts = {concurrentJobs: 10};
-      kickq.process('process-test-Concurrent', opts, function(jobObj, data, cb) {
+      kickq.process('process-test-Concurrent', opts, function() {
         jobProcessCount++;
-
       });
       // allow for all to-process jobs to be collected
       setTimeout(function(){
@@ -75,7 +71,8 @@ suite('2.0 Job Processing', function() {
       }, 3000);
     }
 
-    when.all(jobPromises).then(startProcess);
+    Promise.all(jobPromises)
+      .then(startProcess);
   });
 
   //

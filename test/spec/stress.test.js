@@ -2,80 +2,60 @@
  * @fileOverview Job item status and props
  */
 
-var sinon  = require('sinon');
-var _ = require('underscore');
-var chai = require('chai');
-var grunt  = require('grunt');
+var Promise = require('bluebird');
 var assert = require('chai').assert;
-var when   = require('when');
-var redis = require('redis');
 var Ptime = require('profy/time');
 var Pmem = require('profy/mem');
-
-
 
 var kickq  = require('../../');
 var tester = require('../lib/tester');
 
-var noop = function(){};
-
-
 function stressTest(times) {
-  var def = when.defer();
+  return new Promise(function(resolve, reject) {
 
-  function checkKickqPerf() {
-    return kickq.create('stress test one');
-  }
+    function checkKickqPerf() {
+      return kickq.create('stress test one');
+    }
 
-  var mem = new Pmem();
-  mem.start();
-  var perf = Ptime.getSingleton();
-  perf.start();
+    var mem = new Pmem();
+    mem.start();
+    var perf = Ptime.getSingleton();
+    perf.start();
 
 
-  //var gcDefer = when.defer();
-  //mem.on('finish', gcDefer.resolve);
+    //var gcDefer = when.defer();
+    //mem.on('finish', gcDefer.resolve);
 
-  var promises = [];
-  var promise;
-  for(var i = 0; i < times; i++) {
-    perf.log('Test loop: ' + i);
-    mem.log('Test loop: ' + i);
-    promise = checkKickqPerf();
-    //promise = when.resolve();
-    // promise.then(mem.log.bind(mem, 'master resolve:' + i));
-    // promise.then(perf.log.bind(perf, 'master resolve: ' + i));
-    promises.push(promise);
-  }
+    var promises = [];
+    var promise;
+    for(var i = 0; i < times; i++) {
+      perf.log('Test loop: ' + i);
+      mem.log('Test loop: ' + i);
+      promise = checkKickqPerf();
+      //promise = when.resolve();
+      // promise.then(mem.log.bind(mem, 'master resolve:' + i));
+      // promise.then(perf.log.bind(perf, 'master resolve: ' + i));
+      promises.push(promise);
+    }
 
-  var all = when.all(promises);
+    Promise.all(promises)
+      .then(function(){
+        perf.log('finish');
+        mem.log('loop-finish');
+        var timeRes = perf.result();
+        // console.log(timeRes.stats);
+        // console.log('firstLog:', timeRes.firstLog, timeRes.lastLog);
 
-  all.then(function(){
-    perf.log('finish');
-    mem.log('loop-finish');
-    var timeRes = perf.result();
-    // console.log(timeRes.stats);
-    // console.log('firstLog:', timeRes.firstLog, timeRes.lastLog);
-
-    //
-    var memRes = mem.result();
-    //console.log(mem.resultTable(true));
-    def.resolve({memRes: memRes, timeRes: timeRes});
-  },def.reject).otherwise(def.reject);
-
-  return def.promise;
+        //
+        var memRes = mem.result();
+        //console.log(mem.resultTable(true));
+        resolve({memRes: memRes, timeRes: timeRes});
+      })
+      .catch(reject);
+  });
 }
 
 suite('4. Stress Tests', function() {
-
-  var jobId;
-  var stubHmset;
-  var stubIncr;
-  var stubRpush;
-  var stubPublish;
-  var stubZadd;
-  var fakeJobId = 0;
-
   setup(function(done) {
     tester.rBuster.stubWrite();
     kickq.reset();
@@ -110,5 +90,4 @@ suite('4. Stress Tests', function() {
       }, done).otherwise(done);
     });
   });
-
 });

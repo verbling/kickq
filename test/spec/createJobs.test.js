@@ -3,10 +3,8 @@
  */
 
 var sinon  = require('sinon');
-var chai = require('chai');
-var grunt  = require('grunt');
+// var chai = require('chai');
 var assert = require('chai').assert;
-var when   = require('when');
 
 var kickq  = require('../../');
 var tester = require('../lib/tester');
@@ -40,12 +38,12 @@ suite('Job Creation', function() {
     test('1.1.1 Create a "plain job"', function() {
       // use the promised pattern so errors are visible
       return kickq.create( tester.fix.jobname, 'data', {},
-        function(err, job) {
+        function(err) {
           assert.isNull(err, 'The "err" arg should be null');
         });
     });
     test('1.1.2 Verify "plain job" was created', function(done) {
-      kickq.create( 'create-verify', 'data', {}, function(err) {
+      kickq.create( 'create-verify', 'data', {}, function() {
         kickq.process('create-verify', function(job, data, cb) {
           cb(null, done);
         });
@@ -58,14 +56,14 @@ suite('Job Creation', function() {
       });
     });
     test('1.1.4 Create a "plain job" with no options', function(done) {
-      kickq.create('create-no-options', 'data', function(err, key) {
+      kickq.create('create-no-options', 'data', function() {
         kickq.process('create-no-options', function(job, data, cb) {
           cb(null, done);
         });
       });
     });
     test('1.1.5 Create a "plain job" with no data and no options', function(done) {
-      kickq.create('create-no-data', function(err, key) {
+      kickq.create('create-no-data', function() {
         kickq.process('create-no-data', function(job, data, cb) {
           cb(null, done);
         });
@@ -129,15 +127,13 @@ suite('Job Creation', function() {
   }); // suite 1.3
 
   suite('1.4 A "hotjob job"', function() {
-    var startTime;
     var opts = {
       hotjob: true
     };
 
     test('1.4.0 create callback returns a promise to use for hotjobs', function(done) {
-
       function onJobCreate(err, job, promise) {
-        assert.ok( when.isPromise(promise), 'create callback should yield' +
+        assert.ok( typeof promise.then === 'function', 'create callback should yield' +
         ' a promise in the callback');
 
         done();
@@ -165,7 +161,7 @@ suite('Job Creation', function() {
       function(done) {
 
       function onJobCreate(err, job, promise) {
-        assert.ok( when.isPromise(promise), 'create callback should yield' +
+        assert.ok( typeof promise.then === 'function', 'create callback should yield' +
         ' a promise in the callback');
 
         kickq.process('hotjob_job 1.4.2', function(job, data, cb) {
@@ -215,7 +211,7 @@ suite('Job Creation', function() {
         function onJobCreate(err, job, promise) {
           startTime = new Date().getTime();
 
-          promise.then(noop, function( err ) {
+          promise.then(noop, function() {
             var endTime = Date.now();
 
             assert.ok( (endTime - startTime) > 9000, 'Promise should timeout' +
@@ -245,7 +241,7 @@ suite('Job Creation', function() {
           startTime = new Date().getTime();
 
           promise.then(
-            noop, function( err ) {
+            noop, function() {
               var endTime = Date.now();
               assert.ok( (endTime - startTime) > 3000, 'Promise should timeout' +
               ' at least after 3000ms');
@@ -261,7 +257,6 @@ suite('Job Creation', function() {
   });
 
   suite('1.5 A Job With Retries', function() {
-    var clock;
     setup(function() {
       // clock = sinon.useFakeTimers( Date.now() );
       kickq.config('schedulerInterval', 50);
@@ -308,7 +303,7 @@ suite('Job Creation', function() {
   suite('1.6 Job Creation returns a Promise', function() {
     test('1.6.1 Job Creation returns a promise', function() {
       var createPromise = kickq.create('create-promise-test');
-      assert.ok(when.isPromise(createPromise), 'create job should return a promise');
+      assert.ok(typeof createPromise.then === 'function', 'create job should return a promise');
     });
     test('1.6.2 Job creation promise resolves', function() {
       return kickq.create('create-promise-arguments');
@@ -328,7 +323,7 @@ suite('Job Creation', function() {
       return kickq.create('create-promise-arguments', 'data', opts)
         .then(function(job) {
           assert.ok(job.hotjob, 'job.hotjob flag should be true in job instance');
-          assert.ok(when.isPromise(job.hotjobPromise), 'job.hotjobPromise should be a promise');
+          assert.ok(typeof job.hotjobPromise.then === 'function', 'job.hotjobPromise should be a promise');
         })
         .then(done, done);
     });

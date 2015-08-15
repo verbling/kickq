@@ -2,11 +2,8 @@
  * @fileOverview The kickq API
  */
 
-var sinon  = require('sinon'),
-    expect = require('chai').expect,
-    grunt  = require('grunt'),
-    assert = require('chai').assert,
-    kickq  = require('../../');
+var assert = require('chai').assert;
+var kickq  = require('../../');
 
 suite('0.0 API scaffolding', function() {
   test('0.0.1 Static Functions', function() {
