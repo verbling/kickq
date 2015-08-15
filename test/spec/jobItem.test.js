@@ -137,11 +137,9 @@ suite('3. Job Item Status and Props', function() {
 
   var jobId;
 
+
+  setup(tester.reset);
   setup(function(done) {
-    kickq.reset();
-    kickq.config({
-      redisNamespace: tester.NS
-    });
     tester.clear(function(){
       // create a dummy job and get the id
       kickq.create('jobItem test plain job', function(err, job){
@@ -217,8 +215,12 @@ suite('3. Job Item Status and Props', function() {
   suite('3.1 A new plain job item when processed', function() {
     test('3.1.0 Has the right properties', function(done) {
       kickq.process('jobItem test plain job', function(jobItem){
-        try {jobItemTest.testJobItemProps(jobItem);}
-          catch(ex) {done(ex); return;}
+        try {
+          jobItemTest.testJobItemProps(jobItem);
+        } catch(ex) {
+          done(ex);
+          return;
+        }
         done();
       });
     });
