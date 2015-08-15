@@ -256,51 +256,50 @@ suite('3. Job Item Status and Props', function() {
 
     teardown(function() {});
 
-    test('3.2.0 Check proper props', function(done){
-      kickq.get(jobId).then(function(jobItem) {
-        jobItemTest.testJobItemProps(jobItem);
-        done();
-      }, done).otherwise(done);
+    test('3.2.0 Check proper props', function(){
+      return kickq.get(jobId)
+        .then(function(jobItem) {
+          jobItemTest.testJobItemProps(jobItem);
+        });
     });
-    test('3.2.1 Check proper prop values', function(done){
-      kickq.get(jobId).then(function(jobItem) {
-        assert.ok(jobItem.complete, '"complete" prop should be true');
-        assert.ok(jobItem.success, '"success" prop should be true');
-        assert.isNumber(jobItem.finishTime, '"finishTime" prop should be a number');
-        assert.isNumber(jobItem.totalProcessTime, '"totalProcessTime" prop should be a number');
-
-        done();
-      }, done).otherwise(done);
-    });
-
-    test('3.2.2 Process Item count', function(done){
-      kickq.get(jobId).then(function(jobItem) {
-        assert.lengthOf(jobItem.runs, 1, 'Should have only 1 process item');
-        done();
-      }, done).otherwise(done);
+    test('3.2.1 Check proper prop values', function(){
+      return kickq.get(jobId)
+        .then(function(jobItem) {
+          assert.ok(jobItem.complete, '"complete" prop should be true');
+          assert.ok(jobItem.success, '"success" prop should be true');
+          assert.isNumber(jobItem.finishTime, '"finishTime" prop should be a number');
+          assert.isNumber(jobItem.totalProcessTime, '"totalProcessTime" prop should be a number');
+        });
     });
 
-    test('3.2.3 Passes all Process Item props tests', function(done){
-      kickq.get(jobId).then(function(jobItem) {
-        var processItem = jobItem.runs[0];
-        jobItemTest.testProcessItemProps(processItem);
-        done();
-      }, done).otherwise(done);
+    test('3.2.2 Process Item count', function(){
+      return kickq.get(jobId)
+        .then(function(jobItem) {
+          assert.lengthOf(jobItem.runs, 1, 'Should have only 1 process item');
+        });
     });
 
-    test('3.2.4 Process Item has proper values', function(done){
-      kickq.get(jobId).then(function(jobItem) {
-        var processItem = jobItem.runs[0];
+    test('3.2.3 Passes all Process Item props tests', function(){
+      return kickq.get(jobId)
+        .then(function(jobItem) {
+          var processItem = jobItem.runs[0];
+          jobItemTest.testProcessItemProps(processItem);
+        });
+    });
 
-        assert.equal(1, processItem.count, 'Process count No should be 1');
-        assert.isNumber(processItem.startTime, 'startTime must be a number');
-        assert.isNumber(processItem.processTime, 'processTime should be a number');
-        assert.operator(0, '<', processItem.processTime, 'processTime should be' +
-          ' larger than 0');
-        assert.equal(kickq.states.Job.SUCCESS, processItem.state, 'State should be "success"');
-        assert.isNull(processItem.errorMessage, 'errorMessage should be null');
-        done();
-      }, done).otherwise(done);
+    test('3.2.4 Process Item has proper values', function(){
+      return kickq.get(jobId)
+        .then(function(jobItem) {
+          var processItem = jobItem.runs[0];
+
+          assert.equal(1, processItem.count, 'Process count No should be 1');
+          assert.isNumber(processItem.startTime, 'startTime must be a number');
+          assert.isNumber(processItem.processTime, 'processTime should be a number');
+          assert.operator(0, '<', processItem.processTime, 'processTime should be' +
+            ' larger than 0');
+          assert.equal(kickq.states.Job.SUCCESS, processItem.state, 'State should be "success"');
+          assert.isNull(processItem.errorMessage, 'errorMessage should be null');
+        });
     });
   });
 });
@@ -309,8 +308,8 @@ suite('3. Job Item Status and Props', function() {
 suite('3.3 Failure Conditions', function() {
   var jobId;
 
+  setup(tester.reset);
   setup(function(done) {
-    kickq.reset();
     kickq.config({
       // loggerConsole: true,
       // loggerLevel: kickq.LogLevel.FINE,
@@ -348,6 +347,7 @@ suite('3.3 Failure Conditions', function() {
     test('3.3.1.1 Will ghost and wait to reprocess', function(done){
       var processTimes = 0;
       kickq.process('jobItem test fail job', function() {
+        console.log('PROCESS INVOKE');
         processTimes++;
       });
 
@@ -405,22 +405,24 @@ suite('3.3 Failure Conditions', function() {
       });
 
       setTimeout(function() {
-        kickq.get(jobId).then(function(jobItemFetched) {
-          assert.equal(2, jobItemFetched.runs.length, 'There should be two' +
-            ' process items');
+        kickq.get(jobId)
+          .then(function(jobItemFetched) {
+            assert.equal(2, jobItemFetched.runs.length, 'There should be two' +
+              ' process items');
 
-          assert.equal(kickq.states.Job.FAIL, jobItemFetched.state,
-            'Job Item state should be "fail"');
+            assert.equal(kickq.states.Job.FAIL, jobItemFetched.state,
+              'Job Item state should be "fail"');
 
-          assert.ok(jobItemFetched.complete, 'Job Item should be complete');
-          assert.ok(!jobItemFetched.success, 'Job Item should have success prop false');
+            assert.ok(jobItemFetched.complete, 'Job Item should be complete');
+            assert.ok(!jobItemFetched.success, 'Job Item should have success prop false');
 
-          assert.equal(kickq.states.Job.GHOST, jobItemFetched.runs[0].state,
-            'First process item state should be "ghost"');
-          assert.equal(kickq.states.Job.GHOST, jobItemFetched.runs[1].state,
-            'Second process item state should be "ghost"');
-          done();
-        }).otherwise(done);
+            assert.equal(kickq.states.Job.GHOST, jobItemFetched.runs[0].state,
+              'First process item state should be "ghost"');
+            assert.equal(kickq.states.Job.GHOST, jobItemFetched.runs[1].state,
+              'Second process item state should be "ghost"');
+            done();
+          })
+          .catch(done);
       }, 1000);
     });
   });
@@ -450,8 +452,8 @@ suite('3.3 Failure Conditions', function() {
 suite('3.4 Configuring Job Item', function() {
   var jobId;
 
+  setup(tester.reset);
   setup(function(done) {
-    kickq.reset();
     kickq.config({
       redisNamespace: tester.NS,
       // loggerConsole: true,
@@ -509,7 +511,7 @@ suite('3.4 Configuring Job Item', function() {
           assert.equal(kickq.states.Job.QUEUED, jobItemFetched.state, 'State of' +
             ' fetched item should be "queued"');
           done();
-        }, done).otherwise(done);
+        }, done).catch(done);
 
 
       }, done);
