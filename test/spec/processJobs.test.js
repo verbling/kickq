@@ -12,20 +12,10 @@ var jobItem = require('./jobItem.test');
 
 suite('2.0 Job Processing', function() {
 
-  setup(function(done) {
-    kickq.reset();
-    kickq.config({
-      redisNamespace: tester.NS
-    });
-    tester.clear(done);
-  });
+  setup(tester.reset);
+  setup(tester.clear);
 
-  teardown(function(done) {
-    kickq.reset();
-    tester.clear(done);
-  });
-
-  test('2.0.1 The job instance argument', function(done) {
+  test.only('2.0.1 The job instance argument', function(done) {
     var jobid;
 
     kickq.create('process-test-one', 'data', {}, function(err, key) {

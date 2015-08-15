@@ -14,21 +14,8 @@ var noop = function(){};
 
 suite('Job Creation', function() {
 
-  setup(function(done) {
-    kickq.reset();
-    kickq.config({
-      redisNamespace: tester.NS,
-      loggerFile: true,
-      loggerFileLevel: kickq.LogLevel.FINEST
-    });
-    tester.clear(done);
-  });
-
-  teardown(function(done) {
-    kickq.reset();
-    done();
-  });
-
+  setup(tester.reset);
+  setup(tester.clear);
 
   // The numbering (e.g. 1.1.1) has nothing to do with order
   // The purpose is to provide a unique string so specific tests are
@@ -154,7 +141,7 @@ suite('Job Creation', function() {
       }
 
       kickq.create('hotjob_job 1.4.1', 'hotjob job data 1.4.1', opts, onJobCreate)
-        .otherwise(done);
+        .catch(done);
     });
 
     test('1.4.2 Create a "hotjob job" and test the promise response object',

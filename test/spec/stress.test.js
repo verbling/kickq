@@ -87,7 +87,7 @@ suite('4. Stress Tests', function() {
         // console.log(results.memRes.firstHeap);
 
         done();
-      }, done).otherwise(done);
+      }, done).catch(done);
     });
   });
 });
