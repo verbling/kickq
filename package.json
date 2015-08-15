@@ -36,6 +36,7 @@
     "collections": "~1.2.3",
     "logg": "^0.3.0",
     "node-syslog": "^1.2.0",
+    "nodeon-error": "^0.2.1",
     "redis": "^0.12.1",
     "underscore": "~1.8.3"
   },
