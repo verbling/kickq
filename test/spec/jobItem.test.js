@@ -45,8 +45,8 @@ suite('3. Job Item Status and Props', function() {
         done(err);
       });
     });
-    test('3.0.1 Passes the jobItem prop tests', function(done){
-      jobItemTest.testNewItemPropsType(jobItem, done);
+    test('3.0.1 Passes the jobItem prop tests', function(){
+      jobItemTest.testNewItemPropsType(jobItem);
     });
     test('3.0.2 Check default values', function(){
       assert.equal(10000, jobItem.processTimeout, 'processTimeout should have the proper default value');
@@ -110,8 +110,12 @@ suite('3. Job Item Status and Props', function() {
     });
     test('3.1.2 passes all jobItem prop tests"', function(done) {
       kickq.process('jobItem test plain job', function(jobItem){
-        try {jobItemTest.testNewItemPropsType(jobItem, done);}
-          catch(ex){done(ex);}
+        try {
+          jobItemTest.testNewItemPropsType(jobItem);
+          done();
+        } catch(ex){
+          done(ex);
+        }
       });
     });
   });
