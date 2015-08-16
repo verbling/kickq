@@ -28,7 +28,7 @@
     "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha -b test/spec && .node_modules/.bin/grunt jshint"
+    "test": "./node_modules/.bin/mocha -b test/spec && ./node_modules/.bin/grunt jshint"
   },
   "dependencies": {
     "bluebird": "^2.9.34",
