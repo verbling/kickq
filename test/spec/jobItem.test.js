@@ -3,140 +3,17 @@
  */
 
 var sinon  = require('sinon');
-var _ = require('underscore');
 var assert = require('chai').assert;
 
 var kickq  = require('../../');
 var tester = require('../lib/tester');
+var jobItemTest = require('../asserts/jobitem.assert');
 
 // var noop = function(){};
-
-var jobItemTest = module.exports = {};
-
-/**
- * Checks if the job item has all the expected properties and no more.
- *
- * @param  {kickq.JobItem} jobItem a job item.
- */
-jobItemTest.testJobItemProps = function( jobItem ) {
-  var props = [
-    'id',
-    'name',
-    'complete',
-    'success',
-    'createTime',
-    'updateTime',
-    'finishTime',
-    'totalProcessTime',
-    'delay',
-    'processTimeout',
-    'retry',
-    'retryTimes',
-    'retryInterval',
-    'hotjob',
-    'hotjobTimeout',
-    'hotjobPromise',
-    'ghostRetry',
-    'ghostTimes',
-    'ghostInterval',
-    'data',
-    'lastError',
-    'scheduledFor',
-    'state',
-    'runs'
-  ];
-
-  props.forEach(function(prop) {
-    assert.property(jobItem, prop, 'Should have a "' + prop + '" property.');
-  }, this);
-
-  var jobProps = _.keys(jobItem);
-  var diff = _.difference(jobProps, props);
-
-  assert.equal(0, diff.length, 'New props in Job Item: ' + diff.join(', '));
-
-
-};
-
-/**
- * Test the props of a new Job Item.
- *
- * @param {kickq.JobItem} jobItem The job instance to examine.
- * @param {Function=} optDone the callback to call when all is done.
- */
-jobItemTest.testNewItemPropsType = function( jobItem, optDone ) {
-  var done = optDone || function(){};
-  var props  = {
-    id: assert.isString,
-    name: assert.isString,
-    complete: assert.isBoolean,
-    success: assert.isBoolean,
-    createTime: assert.isNumber,
-    updateTime: assert.isNumber,
-    finishTime: assert.isNull,
-    totalProcessTime: assert.isNull,
-    delay: assert.isNull,
-    processTimeout: assert.isNumber,
-    retry: assert.isBoolean,
-    retryTimes: assert.isNumber,
-    retryInterval: assert.isNumber,
-    hotjob: assert.isBoolean,
-    hotjobTimeout: assert.isNumber,
-    hotjobPromise: assert.isNull,
-    ghostRetry: assert.isBoolean,
-    ghostTimes: assert.isNumber,
-    ghostInterval: assert.isNumber,
-    lastError: assert.isNull,
-    data: assert.ok,
-    scheduledFor: assert.isNull,
-    state: assert.isString,
-    runs: assert.isArray,
-  };
-
-  var propsAr = _.keys(props);
-  propsAr.forEach(function(prop) {
-    props[prop](jobItem[prop], 'Should have a "' + prop + '" property.');
-  });
-
-  var jobProps = _.keys(jobItem);
-  var diff = _.difference(jobProps, propsAr);
-
-  assert.equal(0, diff.length, 'New props in Job Item: ' + diff.join(', '));
-
-  done();
-};
-
-/**
- * Test the process item that can be found in the 'runs' array of the job instance.
- *
- * @param  {kickq.JobItem.ProcessItem} processItem The process item to test.
- */
-jobItemTest.testProcessItemProps = function( processItem ) {
-  var props = [
-    'count',
-    'startTime',
-    'processTime',
-    'processTimeout',
-    'state',
-    'errorMessage',
-    'timeout'
-  ];
-
-  props.forEach(function(prop) {
-    assert.property(processItem, prop, 'Should have a "' + prop + '" property.');
-  }, this);
-
-  var processProps = _.keys(processItem);
-  var diff = _.difference(processProps, props);
-
-  assert.equal(0, diff.length, 'New props in Process Item: ' + diff.join(', '));
-
-};
 
 suite('3. Job Item Status and Props', function() {
 
   var jobId;
-
 
   setup(tester.reset);
   setup(function(done) {

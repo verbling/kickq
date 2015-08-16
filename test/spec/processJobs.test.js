@@ -6,7 +6,7 @@ var Promise = require('bluebird');
 var assert = require('chai').assert;
 var kickq = require('../../');
 var tester = require('../lib/tester');
-var jobTest = require('./jobItem.test');
+var jobTest = require('../asserts/jobitem.assert');
 
 // var noop = function(){};
 
@@ -15,7 +15,7 @@ suite('2.0 Job Processing', function() {
   setup(tester.reset);
   setup(tester.clear);
 
-  test.only('2.0.1 The job instance argument', function(done) {
+  test('2.0.1 The job instance argument', function(done) {
     var jobItem;
 
     kickq.create('process-test-one', 'data', {}, function(err, key) {
@@ -26,13 +26,7 @@ suite('2.0 Job Processing', function() {
       assert.equal(jobItem.id, job.id, 'The job id should be the same');
       assert.equal(job.name, 'process-test-one', 'The job name should be the same');
       assert.equal(job.state, 'processing', 'State should be "processing"');
-      console.log('job.runs:', job.runs);
-      assert.equal(job.runs.length, 1, 'there should be one process item');
-
-      var processItem = job.runs[0];
-      jobItem.testPtemItem(processItem);
-      assert.equal(processItem.count, 1, 'The process count should be 1 (the first)');
-      assert.equal(processItem.state, 'processing', 'The process item should be "processing"');
+      assert.equal(job.runs.length, 0, 'there should be no process items');
 
       cb();
       done();

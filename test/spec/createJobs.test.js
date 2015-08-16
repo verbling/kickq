@@ -8,7 +8,7 @@ var assert = require('chai').assert;
 
 var kickq  = require('../../');
 var tester = require('../lib/tester');
-var jobItem = require('./jobItem.test');
+var jobItemTest = require('../asserts/jobitem.assert');
 
 var noop = function(){};
 
@@ -63,9 +63,9 @@ suite('Job Creation', function() {
       }), 300);
     });
     test('1.1.7 Create a "plain job" and check the returned Job instance', function(done) {
-      kickq.create('create-check-jobItem 1.1.7', function(){
+      kickq.create('create-check-jobItem 1.1.7', function() {
         kickq.process('create-check-jobItem 1.1.7', function(job, data, cb) {
-          jobItem.testNewItemPropsType(job);
+          jobItemTest.testNewItemPropsType(job);
           assert.equal(job.state, 'processing', 'state of the job should be "processing"' );
           cb(null, done);
         });
@@ -298,7 +298,7 @@ suite('Job Creation', function() {
     test('1.6.3 Job creation promise resolves with proper arguments', function(done) {
       return kickq.create('create-promise-arguments')
         .then(function(job) {
-          jobItem.testNewItemPropsType(job);
+          jobItemTest.testNewItemPropsType(job);
           assert.equal(job.name, 'create-promise-arguments', '"job.name" ' +
             'property should have proper value');
         })
