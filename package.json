@@ -25,10 +25,10 @@
   ],
   "main": "lib/kickq.main.js",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 0.12.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha -b test/spec"
+    "test": "./node_modules/.bin/mocha -b test/spec && .node_modules/.bin/grunt jshint"
   },
   "dependencies": {
     "bluebird": "^2.9.34",
