@@ -122,7 +122,7 @@ suite('Job Creation', function() {
       function onJobCreate(err, job, promise) {
         assert.ok( typeof promise.then === 'function', 'create callback should yield' +
         ' a promise in the callback');
-
+        promise.catch(noop);
         done();
       }
 
@@ -134,6 +134,7 @@ suite('Job Creation', function() {
 
       function onJobCreate(err, job, promise) {
         promise.then(done.bind(null, null), done);
+        promise.catch(noop);
 
         kickq.process('hotjob_job 1.4.1', function(job, data, cb) {
           cb();
@@ -150,6 +151,7 @@ suite('Job Creation', function() {
       function onJobCreate(err, job, promise) {
         assert.ok( typeof promise.then === 'function', 'create callback should yield' +
         ' a promise in the callback');
+        promise.catch(noop);
 
         kickq.process('hotjob_job 1.4.2', function(job, data, cb) {
           cb();
@@ -170,6 +172,7 @@ suite('Job Creation', function() {
 
       function onJobCreate(err, job, promise) {
         promise.then(function() {done('should not invoke');}, done.bind(null, null));
+        promise.catch(noop);
 
         kickq.process('hotjob_job 1.4.3', function(job, data, cb) {
           cb('error message');
@@ -197,6 +200,7 @@ suite('Job Creation', function() {
 
         function onJobCreate(err, job, promise) {
           startTime = new Date().getTime();
+          promise.catch(noop);
 
           promise.then(noop, function() {
             var endTime = Date.now();
@@ -227,6 +231,7 @@ suite('Job Creation', function() {
         function onJobCreate(err, id, promise) {
           startTime = new Date().getTime();
 
+          promise.catch(noop);
           promise.then(
             noop, function() {
               var endTime = Date.now();
