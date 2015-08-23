@@ -187,7 +187,7 @@ suite('3. Job Item Status and Props', function() {
 });
 
 
-suite.only('3.3 Failure Conditions', function() {
+suite('3.3 Failure Conditions', function() {
   setup(tester.reset);
   setup(function(done) {
     kickq.config({
@@ -248,7 +248,7 @@ suite.only('3.3 Failure Conditions', function() {
       }, 1000);
     });
 
-    test.only('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
+    test('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
       var processTimes = 0;
       kickq.process('jobItem test fail job2', function() {
         processTimes++;
