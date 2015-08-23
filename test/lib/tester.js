@@ -30,6 +30,6 @@ tester.reset = function() {
   kickq.config({
     redisNamespace: tester.NS,
     loggerConsole: true,
-    loggerLevel: 100,
+    loggerLevel: 0,
   });
 };
