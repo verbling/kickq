@@ -43,7 +43,7 @@ More robust Promises patterns were applied throughout the codebase.
 
 ### Refactored Worker Controller
 
-The Worker controller is the module responsible for fetching job from the queue and providing them to the cosumer worker for processing. The whole system has been refactored and rehauled to be more robust and handle all outcomes (error or not) more diligently and specifically.
+The Worker controller is the module responsible for fetching job from the queue and providing them to the consumer worker for processing. The whole system has been refactored and rehauled to be more robust and handle all outcomes (error or not) more diligently and specifically.
 
 ### Redis connectivity monitor
 
@@ -53,7 +53,7 @@ Thus Kickq will now handle Redis disconnects way more softly and patiently wait 
 
 ### Logging
 
-We've lowered the logging verbocity quite a bit and restructured the logs so they make more sense.
+We've lowered the logging verbosity quite a bit and restructured the logs so they make more sense.
 
 ### General Styling
 
@@ -66,6 +66,12 @@ The whole of the codebase has been brought up to 2015 Node state in regards to s
 
 ## Release History
 
+- **v1.0.0**, *23 Aug 2015*
+  - Major rehaul and refactoring of Kickq.
+  - Changed core Promises Library from When to Bluebird.
+  - Rewritten the Worker Controller which is responsible for fetching and providing the jobs to the consumer worker.
+  - Introduced the master Redis Connectivity monitor, Kickq now handles disconnects way more gracefully, and will restore operations when Redis re-connection occures.
+  - Reduced Logging verbosity and tweaked existing one to be more informant.
 - **v0.2.4**, *30 Jun 2015*
   - Lightened up the npm install bundle using npmingore and better devdeps, thankyou [@lbeschastny](https://github.com/lbeschastny)
 - **v0.2.3**, *16 Jun 2015*
