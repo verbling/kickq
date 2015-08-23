@@ -238,7 +238,6 @@ suite('3.3 Failure Conditions', function() {
     test('3.3.1.1 Will ghost and wait to reprocess', function(done){
       var processTimes = 0;
       kickq.process('jobItem test fail job1', function() {
-        console.log('PROCESS INVOKE');
         processTimes++;
       });
 
@@ -248,7 +247,7 @@ suite('3.3 Failure Conditions', function() {
       }, 1000);
     });
 
-    test('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
+    test('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done) {
       var processTimes = 0;
       kickq.process('jobItem test fail job2', function() {
         processTimes++;
