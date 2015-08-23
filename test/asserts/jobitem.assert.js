@@ -89,7 +89,7 @@ jobItemTest.testProcessItemProps = function( processItem ) {
     'processTime',
     'processTimeout',
     'state',
-    'errorMessage',
+    'error',
     'timeout'
   ]);
 };
