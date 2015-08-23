@@ -1,6 +1,7 @@
 /**
  * @fileOverview Job item status and props
  */
+var Promise = require('bluebird');
 
 var sinon  = require('sinon');
 var assert = require('chai').assert;
@@ -179,16 +180,14 @@ suite('3. Job Item Status and Props', function() {
           assert.operator(0, '<', processItem.processTime, 'processTime should be' +
             ' larger than 0');
           assert.equal(kickq.states.Job.SUCCESS, processItem.state, 'State should be "success"');
-          assert.isNull(processItem.errorMessage, 'errorMessage should be null');
+          assert.isNull(processItem.error, 'errorMessage should be null');
         });
     });
   });
 });
 
 
-suite('3.3 Failure Conditions', function() {
-  var jobId;
-
+suite.only('3.3 Failure Conditions', function() {
   setup(tester.reset);
   setup(function(done) {
     kickq.config({
@@ -203,16 +202,27 @@ suite('3.3 Failure Conditions', function() {
       processTimeout: 20,
       ghostInterval: 200
     });
+
+    var self = this;
     tester.clear(function(){
-      // create a dummy job and get the id
-      kickq.create('jobItem test fail job', function(err, job){
-        if (err) {
-          done(err);
-          return;
-        }
-        jobId = job.id;
-        done();
-      });
+      // create a dummy jobs and get the id
+      Promise.all([
+        kickq.create('jobItem test fail job1'),
+        kickq.create('jobItem test fail job2'),
+        kickq.create('jobItem test fail job3'),
+        kickq.create('jobItem test fail job4'),
+        kickq.create('jobItem test fail job5'),
+      ])
+        .bind(self)
+        .spread(function(jobItem1, jobItem2, jobItem3, jobItem4, jobItem5) {
+          this.jobItem1 = jobItem1;
+          this.jobItem2 = jobItem2;
+          this.jobItem3 = jobItem3;
+          this.jobItem4 = jobItem4;
+          this.jobItem5 = jobItem5;
+        })
+        .then(done)
+        .catch(done);
     });
   });
 
@@ -227,7 +237,7 @@ suite('3.3 Failure Conditions', function() {
 
     test('3.3.1.1 Will ghost and wait to reprocess', function(done){
       var processTimes = 0;
-      kickq.process('jobItem test fail job', function() {
+      kickq.process('jobItem test fail job1', function() {
         console.log('PROCESS INVOKE');
         processTimes++;
       });
@@ -238,15 +248,15 @@ suite('3.3 Failure Conditions', function() {
       }, 1000);
     });
 
-    test('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
+    test.only('3.3.1.2 Will ghost and wait to reprocess 11 jobs', function(done){
       var processTimes = 0;
-      kickq.process('jobItem test fail job', function() {
+      kickq.process('jobItem test fail job2', function() {
         processTimes++;
       });
 
       // create 10 jobs
       for (var i = 0; i < 10; i++) {
-        kickq.create('jobItem test fail job');
+        kickq.create('jobItem test fail job2');
       }
 
       setTimeout(function() {
@@ -257,18 +267,18 @@ suite('3.3 Failure Conditions', function() {
 
     test('3.3.1.3 Will ghost and add a new worker in the mix', function(done){
       var processTimes = 0;
-      kickq.process('jobItem test fail job', function() {
+      kickq.process('jobItem test fail job3', function() {
         processTimes++;
       });
 
       // create 10 jobs
       for (var i = 0; i < 10; i++) {
-        kickq.create('jobItem test fail job');
+        kickq.create('jobItem test fail job3');
       }
 
       var noTimes = 0;
       setTimeout(function() {
-        kickq.process('jobItem test fail job', function(){
+        kickq.process('jobItem test fail job3', function(){
           noTimes++;
         });
 
@@ -281,12 +291,13 @@ suite('3.3 Failure Conditions', function() {
 
     test('3.3.1.4 Will ghost and examine the Job Item properties', function(done){
       var processTimes = 0;
-      kickq.process('jobItem test fail job', function() {
+      kickq.process('jobItem test fail job4', function() {
         processTimes++;
       });
 
+      var self = this;
       setTimeout(function() {
-        kickq.get(jobId)
+        kickq.get(self.jobItem4.id)
           .then(function(jobItemFetched) {
             assert.equal(2, jobItemFetched.runs.length, 'There should be two' +
               ' process items');
@@ -313,7 +324,7 @@ suite('3.3 Failure Conditions', function() {
 
     // process, reject and fetch the job.
     setup(function(done) {
-      kickq.process('jobItem test fail job', function(job, data, cb) {
+      kickq.process('jobItem test fail job5', function(job, data, cb) {
         cb(false, function() {
           kickq.get(job.id).then(function(fetchedJob) {
             jobItem = fetchedJob;
