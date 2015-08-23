@@ -11,8 +11,8 @@ var kickq  = require('../../');
 var tester = require('../lib/tester');
 
 
-suite('No Redis', function() {
-  suite.skip('No Redis from the start', function() {
+suite.skip('No Redis', function() {
+  suite('No Redis from the start', function() {
     setup(function() {
       tester.reset();
       kickq.config({
@@ -36,7 +36,7 @@ suite('No Redis', function() {
     });
   });
 
-  suite.only('No Redis from the start', function() {
+  suite('No Redis from the start', function() {
     this.timeout(300000);
 
     setup(function() {
