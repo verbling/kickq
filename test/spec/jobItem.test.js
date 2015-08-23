@@ -262,7 +262,7 @@ suite.only('3.3 Failure Conditions', function() {
       setTimeout(function() {
         assert.equal(22, processTimes, 'The job should be processed only 22 times');
         done();
-      }, 1000);
+      }, 2000);
     });
 
     test('3.3.1.3 Will ghost and add a new worker in the mix', function(done){
