@@ -12,6 +12,8 @@ var client = redis.createClient();
 
 buster.KEY = '_test_queue';
 
+client.on('error', function(){});
+
 /**
  * Clean all records created by tests
  *
