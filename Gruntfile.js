@@ -24,7 +24,7 @@ if ( 'true' === process.env.TRAVIS) {
 module.exports = function( grunt ) {
 
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-release');
   grunt.loadTasks('tasks');
@@ -45,6 +45,13 @@ module.exports = function( grunt ) {
         files: ['*.js', 'lib/**/*.js', 'tasks/**/*.js', 'test/spec/**/*.js'],
         tasks: ['test']
       }
+    },
+
+    jshint: {
+      options: {
+        jshintrc: true,
+      },
+      library: ['lib/**/*.js'],
     },
 
     /**

@@ -1,6 +1,8 @@
-# kickq
+# Kickq
 
 Kick Jobs out the door, quickly!
+
+A Robust Node.js queueing service based on redis.
 
 [![Build Status](https://travis-ci.org/verbling/kickq.png?branch=master)](https://travis-ci.org/verbling/kickq)
 
@@ -27,12 +29,49 @@ The full documentation can be found in the [project's wiki](https://github.com/v
 * [All Kickq Methods and Properties](https://github.com/verbling/kickq/wiki/All-Kickq-Methods and-Properties)
 * [Kickq Metrics](https://github.com/verbling/kickq/wiki/Kickq-Metrics)
 
+## Notes on v1.x.x Upgrade
+
+On August 23rd 2015 Kickq got a major version bump from `v0.2.4` to `v1.0.0`. The whole of the Kickq codebase has been rehauled and updated using the latest libraries and patterns in Node.js, no API changes were made, Kickq should continue to operate as it was. A very small change has happened in a single processing object attribute which is insignificant and you probably didn't ever care about, id you did [read more about it in the wiki](https://github.com/verbling/kickq/wiki/Moving-from-0.x-to-1.x).
+
+What changed:
+
+### Moved to Bluebird Promises library
+
+We've let go of when in favor of Bluebird. This is a major change in how Kickq operates as when Kickq was first built Promise libraries where not very performant so we used a specific version of When (1.8.1) which resolved promises Synchronously (vs asynchronously as the spec dictates). We've come a long way since then so the core Promise library change was long overdue.
+
+More robust Promises patterns were applied throughout the codebase.
+
+### Refactored Worker Controller
+
+The Worker controller is the module responsible for fetching job from the queue and providing them to the consumer worker for processing. The whole system has been refactored and rehauled to be more robust and handle all outcomes (error or not) more diligently and specifically.
+
+### Redis connectivity monitor
+
+We've created a master Redis Connectivity monitor which is responsible for letting the rest of the system know of Redis Connectivity State and emit events when a change occurs, Redis goes down or comes up.
+
+Thus Kickq will now handle Redis disconnects way more softly and patiently wait for the connection to be re-established.
+
+### Logging
+
+We've lowered the logging verbosity quite a bit and restructured the logs so they make more sense.
+
+### General Styling
+
+The whole of the codebase has been brought up to 2015 Node state in regards to styling.
+
+
 ## Authors
 
 * [@thanpolas][thanpolas]
 
 ## Release History
 
+- **v1.0.0**, *23 Aug 2015*
+  - Major rehaul and refactoring of Kickq.
+  - Changed core Promises Library from When to Bluebird.
+  - Rewritten the Worker Controller which is responsible for fetching and providing the jobs to the consumer worker.
+  - Introduced the master Redis Connectivity monitor, Kickq now handles disconnects way more gracefully, and will restore operations when Redis re-connection occures.
+  - Reduced Logging verbosity and tweaked existing one to be more informant.
 - **v0.2.4**, *30 Jun 2015*
   - Lightened up the npm install bundle using npmingore and better devdeps, thankyou [@lbeschastny](https://github.com/lbeschastny)
 - **v0.2.3**, *16 Jun 2015*

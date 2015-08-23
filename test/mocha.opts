@@ -1,0 +1,3 @@
+--timeout 4000
+-u tdd
+-R spec

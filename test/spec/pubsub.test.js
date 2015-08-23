@@ -2,17 +2,11 @@
  * @fileoverview Test kickq's publishing messages.
  */
 
-var sinon  = require('sinon');
-var grunt = require('grunt');
 var assert = require('chai').assert;
-var when   = require('when');
 var redis = require('redis');
 
 var kickq = require('../../');
 var tester = require('../lib/tester');
-var jobItem = require('./jobItem.test');
-
-var noop = function(){};
 
 suite('5. Kickq Redis Published Messages', function() {
   var client;
@@ -102,7 +96,7 @@ suite('5. Kickq Redis Published Messages', function() {
     client.subscribe(tester.NS + ':fail');
 
     kickq.create('channels-test-ghost');
-    kickq.process('channels-test-ghost', function(jobItem, data, cb) {});
+    kickq.process('channels-test-ghost', function() {});
   });
   test('5.0.6 DELETE Job Channel', function(done) {
 

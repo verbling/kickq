@@ -8,11 +8,11 @@ var rBuster = require('./redis-buster');
 var kickq = require('../..');
 
 kickq.config('loggerConsole', true);
+kickq.config('loggerLevel', 100);
 
 // setup promise env
 // https://github.com/domenic/mocha-as-promised#node
 // https://github.com/domenic/chai-as-promised/#installation-and-setup
-var chai = require('chai');
 
 var tester = module.exports = {};
 
@@ -24,3 +24,12 @@ tester.NS = rBuster.KEY;
 tester.clear = rBuster.clear;
 
 tester.rBuster = rBuster;
+
+tester.reset = function() {
+  kickq.reset();
+  kickq.config({
+    redisNamespace: tester.NS,
+    loggerConsole: true,
+    loggerLevel: 0,
+  });
+};
