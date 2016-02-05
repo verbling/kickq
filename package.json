@@ -51,7 +51,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-release": "^0.13.0",
     "mocha": "^2.4.5",
-    "profy": "^0.1.1",
+    "profy": "^1.0.0",
     "sinon": "^1.17.3",
     "yaml": "^0.2.3"
   },
