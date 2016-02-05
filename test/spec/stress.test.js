@@ -4,8 +4,8 @@
 
 var Promise = require('bluebird');
 var assert = require('chai').assert;
-var Ptime = require('profy/time');
-var Pmem = require('profy/mem');
+// var Ptime = require('profy/time');
+// var Pmem = require('profy/mem');
 
 var kickq  = require('../../');
 var tester = require('../lib/tester');
@@ -48,7 +48,7 @@ function stressTest(times) {
   });
 }
 
-suite('4. Stress Tests', function() {
+suite.skip('4. Stress Tests', function() {
   setup(function(done) {
     tester.rBuster.stubWrite();
     kickq.reset();
