@@ -35,7 +35,6 @@
     "cip": "^1.0.0",
     "collections": "^3.0.0",
     "logg": "^0.3.1",
-    "node-syslog": "^1.2.0",
     "nodeon-error": "^0.2.1",
     "redis": "^2.4.2",
     "underscore": "^1.8.3"
