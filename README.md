@@ -66,6 +66,9 @@ The whole of the codebase has been brought up to 2015 Node state in regards to s
 
 ## Release History
 
+- **v1.1.0**, *05 Feb 2016*
+  - Removed node-syslog package and logging to syslog functionality.
+  - Upgraded all packages to latest.
 - **v1.0.0**, *23 Aug 2015*
   - Major rehaul and refactoring of Kickq.
   - Changed core Promises Library from When to Bluebird.
