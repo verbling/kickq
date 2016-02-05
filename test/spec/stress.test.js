@@ -70,10 +70,10 @@ suite('4. Stress Tests', function() {
       this.timeout(5000);
       stressTest(100)
         .then(function(results) {
-          assert.operator(1000, '>', results.timeRes.stats.total, 'Total execution time should not' +
-            ' exceed 1000ms');
-          assert.operator(10, '>', results.timeRes.stats.mean, 'Mean execution time should not' +
-            ' exceed 10ms (travis is slow)');
+          assert.operator(4000, '>', results.timeRes.stats.total, 'Total execution time should not' +
+            ' exceed 4000ms');
+          assert.operator(40, '>', results.timeRes.stats.mean, 'Mean execution time should not' +
+            ' exceed 40ms (travis is slow)');
 
           // console.log('\n', );
           // console.log(results.memRes.stats);
