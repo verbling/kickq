@@ -31,29 +31,28 @@
     "test": "./node_modules/.bin/mocha -b test/spec && ./node_modules/.bin/grunt jshint"
   },
   "dependencies": {
-    "bluebird": "^2.9.34",
+    "bluebird": "^3.2.1",
     "cip": "^1.0.0",
-    "collections": "~1.2.3",
-    "logg": "^0.3.0",
-    "node-syslog": "^1.2.0",
+    "collections": "^3.0.0",
+    "logg": "^0.3.1",
     "nodeon-error": "^0.2.1",
-    "redis": "^0.12.1",
-    "underscore": "~1.8.3"
+    "redis": "^2.4.2",
+    "underscore": "^1.8.3"
   },
+  "license": "MIT",
   "devDependencies": {
-    "async": "~1.4.2",
-    "chai": "~3.2.0",
-    "config": "~1.15.0",
-    "grunt": "~0.4.5",
+    "async": "^1.5.2",
+    "chai": "^3.5.0",
+    "config": "^1.19.0",
+    "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
-    "grunt-contrib-clean": "~0.6.0",
-    "grunt-contrib-jshint": "^0.11.2",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-release": "~0.13.0",
-    "mocha": "^2.2.5",
-    "profy": "~0.1.1",
-    "sinon": "~1.15.4",
-    "yaml": "~0.2.3"
+    "grunt-contrib-clean": "^0.7.0",
+    "grunt-contrib-jshint": "^0.12.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-release": "^0.13.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3",
+    "yaml": "^0.2.3"
   },
   "keywords": [
     "queue",
