@@ -136,7 +136,8 @@ The whole of the codebase has been brought up to 2015 Node state in regards to s
   - Big Bang
 
 ## License
-Copyright 2012 Verbling (Fluency Forums Corporation)
+
+Copyright 2016 Verbling (Fluency Forums Corporation)
 
 Licensed under the [MIT License](LICENSE-MIT)
 
